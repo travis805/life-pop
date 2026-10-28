@@ -30,9 +30,9 @@ GRADERS = [  # code, name, url, method
     ("CGC", "CGC Cards", "https://www.cgccards.com/population-report/tcg/life-tcg/55/", "scrape"),
     ("AGS", "AGS (Robograding)", "https://app.agscard.com/pop/categories/102", "scrape"),
     ("TAG", "TAG Grading", "https://my.taggrading.com/pop-report/Nature", "browser"),
-    ("PSA", "PSA", "https://www.psacard.com/pop", "manual"),
+    ("PSA", "PSA", "https://www.psacard.com/pop", "browser"),
     ("BGS", "Beckett (BGS)", "https://www.beckett.com/grading/pop-report", "browser"),
-    ("SGC", "SGC", "https://gosgc.com/population-report", "manual"),
+    ("SGC", "SGC", "https://gosgc.com/population-report", "browser"),
     ("ACE", "ACE Grading", "https://acegrading.com/pop", "browser"),
 ]
 GRADER_URL = {g[0]: g[2] for g in GRADERS}
@@ -60,6 +60,11 @@ def is_authentic(label):
 def is_gem(grader, numeric):
     """Gem tier: 10 and above everywhere, except BGS where 9.5 Gem Mint and up counts."""
     return numeric >= (9.5 if grader == "BGS" else 10)
+
+
+def is_qualified(label):
+    """PSA qualified grades ("9Q"): numeric, but never gem."""
+    return bool(re.fullmatch(r"\d+(\.\d)?q", label.strip().lower()))
 
 
 # AGS never states a variant; TAG's pop page leaves it blank for many holo cards. For these graders
@@ -117,6 +122,8 @@ def norm_variant(desc, qualifier, grader):
     dl = d.lower().replace("-", " ")
     base = {"": "Base", "rare": "Base", "base": "Base", "holo": "Holo", "full art": "Full Art",
             "extended art": "Extended Art", "uncommon": "Uncommon", "common": "Common"}.get(dl, d)
+    if base.lower() == "wwf":
+        base = "WWF (logo on back)"
     if q:
         return q if base == "Base" else f"{base} - {q}"
     return base
@@ -288,13 +295,15 @@ def main():
     for (date, grader, cid, label), cnt in sorted(pop.items(), key=lambda kv: (kv[0][0], kv[0][1], by_id[kv[0][2]]["id"], kv[0][3])):
         num = grade_numeric(label)
         auth = is_authentic(label)
-        pop_rows.append((date, grader, by_id[cid]["id"], label, num, 1 if (not auth and is_gem(grader, num)) else 0, 1 if auth else 0, cnt))
+        pop_rows.append((date, grader, by_id[cid]["id"], label, num, 1 if (not auth and not is_qualified(label) and is_gem(grader, num)) else 0, 1 if auth else 0, cnt))
     db.executemany("INSERT INTO pop VALUES (?,?,?,?,?,?,?,?)", pop_rows)
     db.executemany("INSERT INTO my_certs VALUES (?,?,?,?)", [(cert, g, c["id"], gr) for cert, g, c, gr in certs])
     notes = {}
     for f in glob.glob(str(DATA / "raw" / "*.meta.json")):
         meta = json.load(open(f))
-        if meta.get("published_total") is not None:
+        if meta.get("note"):
+            notes[(meta["date"], meta["grader"])] = meta["note"]
+        elif meta.get("published_total") is not None:
             notes[(meta["date"], meta["grader"])] = f"Source reported {meta['published_total']} graded" + (" (grade plus half-grade '+' rows)" if meta["grader"] == "AGS" else "")
     db.executemany("INSERT INTO snapshots VALUES (?,?,?,?,?)",
                    [(d, g, GRADER_URL.get(g), t, notes.get((d, g))) for (d, g), t in sorted(snapshot_rows.items())])
@@ -348,7 +357,7 @@ def main():
         if m and m.get("published_total") is not None:
             head += f", page headline {m['published_total']}"
         print(head)
-        pub = {s["set"]: s["published_total"] for s in m["sets"]} if m else {}
+        pub = {s["set"]: s["published_total"] for s in m.get("sets", [])} if m else {}
         for rs in sorted(k[2] for k in raw_totals if k[0] == g and k[1] == d):
             ld = raw_totals[(g, d, rs)]
             if pub:

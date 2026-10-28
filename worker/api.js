@@ -16,7 +16,10 @@ async function latestSnapshots(db) {
 }
 
 export async function summary(db) {
-  const snaps = await latestSnapshots(db)
+  const allSnaps = await latestSnapshots(db)
+  // Graders whose latest snapshot is 0 (checked, nothing graded) are listed separately, not charted.
+  const snaps = allSnaps.filter(s => s.total_graded > 0)
+  const noData = allSnaps.filter(s => s.total_graded === 0).map(s => ({ grader: s.grader, name: s.name, as_of: s.as_of, notes: s.notes }))
   const perGrader = await all(db, `
     SELECT grader, SUM(count) AS total,
            SUM(CASE WHEN is_top_grade = 1 THEN count ELSE 0 END) AS gems,
@@ -49,6 +52,7 @@ export async function summary(db) {
     gem_rate: rate(gems, numericGraded),
     cards_graded: distinct.n,
     graders,
+    no_data: noData,
     distribution: dist,
     taclaco: {
       grader: 'TAG',
@@ -127,7 +131,7 @@ export async function cards(db, { set, grader, q }) {
       mine: mineBy.get(c.id) || 0,
     })
   }
-  const graders = (await all(db, 'SELECT DISTINCT grader FROM snapshots ORDER BY grader')).map(r => r.grader)
+  const graders = (await all(db, 'SELECT DISTINCT grader FROM snapshots WHERE total_graded > 0 ORDER BY grader')).map(r => r.grader)
   return { graders, cards: out }
 }
 
@@ -156,6 +160,6 @@ export async function history(db) {
              WHERE p.snapshot_date = s.snapshot_date AND p.grader = s.grader AND p.is_top_grade = 1) AS gems,
            (SELECT COALESCE(SUM(p.count), 0) FROM pop p
              WHERE p.snapshot_date = s.snapshot_date AND p.grader = s.grader AND p.is_authentic = 1) AS authentic
-    FROM snapshots s ORDER BY s.snapshot_date, s.grader`)
+    FROM snapshots s WHERE s.total_graded > 0 ORDER BY s.snapshot_date, s.grader`)
   return { history: rows.map(r => ({ ...r, gem_rate: rate(r.gems, r.total_graded - r.authentic) })) }
 }

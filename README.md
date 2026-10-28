@@ -14,7 +14,8 @@ database from public pop reports. A Cloudflare Worker serves a read-only API and
 | TAG | browser | TAG's API returns 403 to direct fetches, so `scripts/tag_extract.js` is pasted into a browser tab on `my.taggrading.com/pop-report/Nature` (TAG files LIFE under Nature). Claude does this in the in-app browser. |
 | BGS (Beckett) | browser | Claude pulls it in Travis's Chrome (Claude in Chrome extension). Search "LIFE TCG" on Beckett's pop report, then read each set page at `/grading/pop-report/list-of-cards?type=set&query=<set>&sports=Gaming`. Saved as `data/raw/bgs-<date>.json`. |
 | ACE | browser | Same Chrome route: `https://acegrading.com/pop?q=Mammals` and `?q=Birds`, paging with `&page=N` (25 rows per page) and keeping only LIFE rows (set "Mammals" or "Birds"). The pasted source text is kept in `data/raw/source/ace-<date>.txt` and converted to `data/raw/ace-<date>.json`. |
-| PSA, SGC | manual | Blocked for automation (login or human checks). Fill `data/manual/<grader>.csv` (psa, sgc) by hand. |
+| PSA | browser | PSA's pop report needs a login, so Claude reads it in Travis's logged-in Chrome. `data/psa_sets.json` lists the set URLs (2023 Mammals, 2024 and 2025 1st Edition Promos, 2025 Birds, 2026 Special Edition, Photography, Kickstarter). Open each URL, parse the table rows (each grade cell holds three values: grade, "+" half grade, "Q" qualified), and save `data/raw/psa-<date>.json`. Labels: `9`, `9+` (9.5), `9Q` (qualified, never gem), `Auth` (authentic, excluded from gem rate). Gem is 10. The pasted text is kept in `data/raw/source/psa-<date>-*.txt`. |
+| SGC | checked, zero | No LIFE TCG results in SGC's pop report search (checked 2026-10-28). Recorded as a zero snapshot (`data/raw/sgc-<date>.json` is `[]` plus a `.meta.json` note). Re-check monthly; zero-snapshot graders show only as "SGC: 0 graded" in the page header and footer, not as tiles or charts. |
 
 Everything lands in `data/raw/<grader>-<date>.json` as `{year,set,num,name,variant,grades:{label:count,TOTAL}}`
 (CGC and AGS also write a `.meta.json` with the published totals used for reconciliation).
@@ -45,7 +46,7 @@ Grade scale: `grade_numeric` is 10.75 for CGC Perfect 10, 10.5 for Pristine and 
 
 1. `pip install -r requirements.txt` (first time only), then `python3 scripts/scrape_cgc.py` and `python3 scripts/scrape_ags.py`.
 2. Ask Claude to run `scripts/tag_extract.js` in the in-app browser on the TAG Nature pop page and save the result to `data/raw/tag-<YYYY-MM-DD>.json`.
-3. Optional: add rows to `data/manual/psa.csv` and `sgc.csv` with columns `snapshot_date,set,num,name,variant,grade,count` (one row per grade).
+3. Optional: if a grader ever has to be entered by hand, add `data/manual/<grader>.csv` (grader code in the file name) with columns `snapshot_date,set,num,name,variant,grade,count` (one row per grade).
    When Travis sends new cards to TAG: `python3 scripts/export_my_certs.py` re-reads the Grading Batches workbook into `data/my_certs.csv`.
 4. `python3 scripts/build_db.py` and read the reconciliation it prints plus `data/alias_report.txt`.
 5. `npx wrangler d1 execute life-pop --remote --file data/d1_load.sql`

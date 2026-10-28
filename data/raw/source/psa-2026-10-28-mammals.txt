@@ -1,0 +1,110 @@
+2023 Life TCG Mammals
+0 ~ Earth 1st Edition | 5:1 8:3 9:5 10:3 | 12 0 0
+0 ~ Earth 1st Edition Holo 1/1 | 10:1 | 1 0 0
+0 ~ Earth Kickstarter-1st Edition | 8:2 | 2 0 0
+1 ~ South China Tiger 1st Edition | 7:2 8:5 9:9 10:2 | 18 0 0
+1 ~ South China Tiger Kickstarter-1st Edition | 5:1 | 1 0 0
+2 ~ Vaquita 1st Edition | 10:2 | 2 0 0
+2 ~ Vaquita 1st Edition Holo | 9:1 | 1 0 0
+2 ~ Vaquita Kickstarter-1st Edition | 10:1 | 1 0 0
+2 ~ Vaquita Kickstarter-1st Edition Holo | 8:1 | 1 0 0
+3 ~ Hainan Gibbon 1st Edition Holo | 10:1 | 1 0 0
+3 ~ Hainan Gibbon Kickstarter-1st Edition Holo | 8:1 9:1 | 2 0 0
+4 ~ Wondiwoi Tree Kangaroo 1st Edition | 9:1 10:1 | 2 0 0
+4 ~ Wondiwoi Tree Kangaroo 1st Edition Holo | 9:1 | 1 0 0
+4 ~ Wondiwoi Tree Kangaroo Kickstarter-1st Edition Holo | 8:1 | 1 0 0
+5 ~ Amur Leopard 1st Edition | 9:1 | 1 0 0
+5 ~ Amur Leopard 1st Edition Holo | 8:1 9:5 10:3 | 9 0 0
+6 ~ Pygmy Sloth 1st Edition Holo | 8:1 9:2 10:4 | 7 0 0
+6 ~ Pygmy Three-Toed Sloth Kickstarter-1st Edition Holo | 5:1 6:1 | 2 0 0
+7 ~ Gervais Beaked Whale 1st Edition Holo | 9:2 10:1 | 3 0 0
+7 ~ Gervais Beaked Whale Kickstarter-1st Edition Holo | 6:1 | 1 0 0
+8 ~ Seychelles Sheath-Tailed Bat 1st Edition Holo | 8:1 | 1 0 0
+9 ~ Saola 1st Edition | 9:1 | 1 0 0
+9 ~ Saola 1st Edition Holo | 9:3 | 3 0 0
+9 ~ Saola Kickstarter-1st Edition | 8:1 | 1 0 0
+9 ~ Saola Kickstarter-1st Edition Holo | 9:1 | 1 0 0
+10 ~ Brown Headed Spider Monkey 1st Edition Holo | 9:4 10:2 | 6 0 0
+10 ~ Brown Headed Spider Monkey Kickstarter-1st Edition Holo | 9:2 | 2 0 0
+11 ~ Vancouver Island Marmot 1st Edition | 10:1 | 1 0 0
+11 ~ Vancouver Island Marmot 1st Edition Holo | 9:3 10:4 | 7 0 0
+12 ~ Northern Hairy-Nosed Wombat 1st Edition Holo | 8:1 9:4 10:1 | 6 0 0
+12 ~ Northern Hairy-Nosed Wombat Kickstarter-1st Edition Holo | 8:1 10:1 | 2 0 0
+13 ~ Cozumel Raccoon 1st Edition Holo | 9:2 10:2 | 4 0 0
+13 ~ Cozumel Raccoon Kickstarter-1st Edition | 8:1 | 1 0 0
+13 ~ Cozumel Raccoon Kickstarter-1st Edition Holo | 8:1 | 1 0 0
+14 ~ Black Footed Ferret 1st Edition Holo | 8:1 9:5 10:4 | 10 0 0
+14 ~ Black Footed Ferret Kickstarter-1st Edition Holo | 8:2 10:1 | 3 0 0
+15 ~ Hirola 1st Edition Holo | 9:6 10:3 | 9 0 0
+15 ~ Hirola Kickstarter-1st Edition Holo | 8:1 | 1 0 0
+16 ~ African Wild Ass 1st Edition | 9:1 | 1 0 0
+16 ~ African Wild Ass 1st Edition Holo | 8:1 9:5 10:3 | 9 0 0
+16 ~ African Wild Ass Kickstarter-1st Edition Holo | 8:1 9:1 | 2 0 0
+17 ~ Darwin's Fox 1st Edition Holo | 9:2 10:11 | 13 0 0
+17 ~ Darwin's Fox Kickstarter-1st Edition Holo | 8:1 | 1 0 0
+18 ~ Mountain Gorilla 1st Edition Holo | 7:1 8:1 9:6 10:5 | 13 0 0
+18 ~ Mountain Gorilla Kickstarter-1st Edition Holo | 9:1 10:1 | 2 0 0
+19 ~ Ili Pika 1st Edition Holo | 8:1 9:2 10:3 | 6 0 0
+19 ~ Ili Pika Kickstarter-1st Edition Holo | 7:1 8:1 9:1 | 3 0 0
+20 ~ Wild Bactrian Camel 1st Edition Holo | 8:2 9:7 10:5 | 14 0 0
+20 ~ Wild Bactrian Camel Kickstarter-1st Edition Holo | 8:1 | 1 0 0
+21 ~ Black Panther 1st Edition Holo | 8:1 9:8 10:11 | 20 0 0
+21 ~ Black Panther Kickstarter-1st Edition Holo | 10:1 | 1 0 0
+22 ~ Borneo Pygmy Elephant 1st Edition Holo | 8:1 9:6 10:7 | 14 0 0
+22 ~ Borneo Pygmy Elephant Kickstarter-1st Edition Holo | 9:1 10:1 | 2 0 0
+23 ~ Giant Panda 1st Edition Holo | 9:6 10:12 | 18 0 0
+23 ~ Giant Panda Kickstarter-1st Edition Holo | 8:1 10:1 | 2 0 0
+24 ~ Ring-Tailed Lemur 1st Edition Holo | 8:1 9:1 10:8 | 10 0 0
+24 ~ Ring-Tailed Lemur Kickstarter-1st Edition Holo | 9:3 | 3 0 0
+25 ~ Bengal Tiger 1st Edition Holo | 9:7 10:13 | 20 0 0
+25 ~ Bengal Tiger Kickstarter-1st Edition Holo | 9:2 10:1 | 3 0 0
+26 ~ Wild Water Buffalo 1st Edition Holo | 8:2 9:5 10:5 | 12 0 0
+27 ~ Giant Anteater 1st Edition Holo | 9:1 10:1 | 2 0 0
+27 ~ Giant Anteater Kickstarter-1st Edition Holo | 10:1 | 1 0 0
+28 ~ Baird's Tapir 1st Edition Holo | 9:1 10:3 | 4 0 0
+29 ~ Giant Otter 1st Edition | 9:1 | 1 0 0
+29 ~ Giant Otter 1st Edition Holo | 9:3 10:1 | 4 0 0
+30 ~ Okapi 1st Edition Holo | 10:2 | 2 0 0
+31 ~ African Wild Dog 1st Edition Holo | 8:1 9:2 10:1 | 4 0 0
+32 ~ Snow Leopard 1st Edition Holo | 8:1 9:4 10:10 | 15 0 0
+32 ~ Snow Leopard Kickstarter-1st Edition Holo | 9:2 | 2 0 0
+33 ~ Cheetah 1st Edition Holo | 8:2 9:6 10:4 | 12 0 0
+33 ~ Cheetah Kickstarter-1st Edition Holo | 8:2 | 2 0 0
+34 ~ Red Panda 1st Edition Holo | 8:1 9:3 10:4 | 8 0 0
+35 ~ Southern White Rhino 1st Edition Holo | 8:1 9:3 10:4 | 8 0 0
+35 ~ Southern White Rhino Kickstarter-1st Edition Holo | 9:1 | 1 0 0
+36 ~ Manatee 1st Edition Holo | 9:3 10:1 | 4 0 0
+36 ~ Manatee Kickstarter-1st Edition Holo | 9:1 | 1 0 0
+37 ~ Wild Yak 1st Edition Holo | 8:1 10:1 | 2 0 0
+37 ~ Wild Yak Kickstarter-1st Edition Holo | 8:1 | 1 0 0
+38 ~ Jaguar 1st Edition Holo | 9:1 10:4 | 5 0 0
+38 ~ Jaguar Kickstarter-1st Edition Holo | 9:3 10:2 | 5 0 0
+39 ~ African Lion 1st Edition Holo | 9:8 10:8 | 16 0 0
+39 ~ African Lion Kickstarter-1st Edition Holo | 8:2 | 2 0 0
+40 ~ Tasmanian Devil 1st Edition Holo | 10:4 | 4 0 0
+40 ~ Tasmanian Devil Kickstarter-1st Edition Holo | 9:2 | 2 0 0
+41 ~ Gray-Faced Sengi 1st Edition Holo | 9:1 10:1 | 2 0 0
+42 ~ Blue Whale 1st Edition Holo | 9:3 10:3 | 6 0 0
+42 ~ Blue Whale Kickstarter-1st Edition Holo | 8:1 9:1 | 2 0 0
+43 ~ Maned Wolf 1st Edition Holo | 9:2 10:2 | 4 0 0
+43 ~ Maned Wolf Kickstarter-1st Edition Holo | 8:1 9:2 | 3 0 0
+44 ~ Gaur 1st Edition Holo | 8:1 | 1 0 0
+44 ~ Gaur Kickstarter-1st Edition Holo | 8:1 | 1 0 0
+45 ~ Polar Bear 1st Edition Holo | 9:3 | 3 0 0
+45 ~ Polar Bear Kickstarter-1st Edition Holo | 8:1 | 1 0 0
+46 ~ Wolverine 1st Edition Holo | 9:1 10:1 | 2 0 0
+46 ~ Wolverine Kickstarter-1st Edition Holo | 8:1 9:2 | 3 0 0
+47 ~ Dugong 1st Edition Holo | 9:1 10:3 | 4 0 0
+47 ~ Dugong Kickstarter-1st Edition Holo | 8:1 9:5 | 6 0 0
+48 ~ Alpine Ibex 1st Edition Holo | 9:1 10:1 | 2 0 0
+49 ~ Canadian Lynx 1st Edition Holo | 10:1 | 1 0 0
+49 ~ Canadian Lynx Kickstarter-1st Edition Holo | 8:1 9:3 | 4 0 0
+50 ~ Spotted Hyena 1st Edition Holo | 10:1 | 1 0 0
+50 ~ Spotted Hyena Kickstarter-1st Edition Holo | 8:2 9:1 | 3 0 0
+51 ~ Orca 1st Edition Holo | 10:7 | 7 0 0
+51 ~ Orca Kickstarter-1st Edition Holo | 9:2 | 2 0 0
+52 ~ Koala 1st Edition Holo | 9:3 10:4 | 7 0 0
+52 ~ Koala Kickstarter-1st Edition Holo | 8:2 9:3 | 5 0 0
+53 ~ Humpback Whale 1st Edition Holo | 8:3 9:2 | 5 0 0
+53 ~ Humpback Whale Kickstarter-1st Edition Holo | 8:3 9:4 | 7 0 0
+101 ~ Human Kickstarter-1st Edition Holo | 6:2 7:1 8:2 9:1 | 6 0 0

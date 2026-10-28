@@ -1,0 +1,2816 @@
+[
+{
+"year": "2023",
+"set": "Mammals",
+"num": "0",
+"name": "Earth",
+"variant": null,
+"grades": {
+"5": 1,
+"8": 3,
+"9": 5,
+"10": 3,
+"TOTAL": 12
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "0",
+"name": "Earth",
+"variant": "Holo 1/1",
+"grades": {
+"10": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "0",
+"name": "Earth",
+"variant": null,
+"grades": {
+"8": 2,
+"TOTAL": 2
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "1",
+"name": "South China Tiger",
+"variant": null,
+"grades": {
+"7": 2,
+"8": 5,
+"9": 9,
+"10": 2,
+"TOTAL": 18
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "1",
+"name": "South China Tiger",
+"variant": null,
+"grades": {
+"5": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "2",
+"name": "Vaquita",
+"variant": null,
+"grades": {
+"10": 2,
+"TOTAL": 2
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "2",
+"name": "Vaquita",
+"variant": "Holo",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "2",
+"name": "Vaquita",
+"variant": null,
+"grades": {
+"10": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "2",
+"name": "Vaquita",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "3",
+"name": "Hainan Gibbon",
+"variant": "Holo",
+"grades": {
+"10": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "3",
+"name": "Hainan Gibbon",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"9": 1,
+"TOTAL": 2
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "4",
+"name": "Wondiwoi Tree Kangaroo",
+"variant": null,
+"grades": {
+"9": 1,
+"10": 1,
+"TOTAL": 2
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "4",
+"name": "Wondiwoi Tree Kangaroo",
+"variant": "Holo",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "4",
+"name": "Wondiwoi Tree Kangaroo",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "5",
+"name": "Amur Leopard",
+"variant": null,
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "5",
+"name": "Amur Leopard",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"9": 5,
+"10": 3,
+"TOTAL": 9
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "6",
+"name": "Pygmy Sloth",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"9": 2,
+"10": 4,
+"TOTAL": 7
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "6",
+"name": "Pygmy Three-Toed Sloth",
+"variant": "Holo",
+"grades": {
+"5": 1,
+"6": 1,
+"TOTAL": 2
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "7",
+"name": "Gervais Beaked Whale",
+"variant": "Holo",
+"grades": {
+"9": 2,
+"10": 1,
+"TOTAL": 3
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "7",
+"name": "Gervais Beaked Whale",
+"variant": "Holo",
+"grades": {
+"6": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "8",
+"name": "Seychelles Sheath-Tailed Bat",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "9",
+"name": "Saola",
+"variant": null,
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "9",
+"name": "Saola",
+"variant": "Holo",
+"grades": {
+"9": 3,
+"TOTAL": 3
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "9",
+"name": "Saola",
+"variant": null,
+"grades": {
+"8": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "9",
+"name": "Saola",
+"variant": "Holo",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "10",
+"name": "Brown Headed Spider Monkey",
+"variant": "Holo",
+"grades": {
+"9": 4,
+"10": 2,
+"TOTAL": 6
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "10",
+"name": "Brown Headed Spider Monkey",
+"variant": "Holo",
+"grades": {
+"9": 2,
+"TOTAL": 2
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "11",
+"name": "Vancouver Island Marmot",
+"variant": null,
+"grades": {
+"10": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "11",
+"name": "Vancouver Island Marmot",
+"variant": "Holo",
+"grades": {
+"9": 3,
+"10": 4,
+"TOTAL": 7
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "12",
+"name": "Northern Hairy-Nosed Wombat",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"9": 4,
+"10": 1,
+"TOTAL": 6
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "12",
+"name": "Northern Hairy-Nosed Wombat",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"10": 1,
+"TOTAL": 2
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "13",
+"name": "Cozumel Raccoon",
+"variant": "Holo",
+"grades": {
+"9": 2,
+"10": 2,
+"TOTAL": 4
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "13",
+"name": "Cozumel Raccoon",
+"variant": null,
+"grades": {
+"8": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "13",
+"name": "Cozumel Raccoon",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "14",
+"name": "Black Footed Ferret",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"9": 5,
+"10": 4,
+"TOTAL": 10
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "14",
+"name": "Black Footed Ferret",
+"variant": "Holo",
+"grades": {
+"8": 2,
+"10": 1,
+"TOTAL": 3
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "15",
+"name": "Hirola",
+"variant": "Holo",
+"grades": {
+"9": 6,
+"10": 3,
+"TOTAL": 9
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "15",
+"name": "Hirola",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "16",
+"name": "African Wild Ass",
+"variant": null,
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "16",
+"name": "African Wild Ass",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"9": 5,
+"10": 3,
+"TOTAL": 9
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "16",
+"name": "African Wild Ass",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"9": 1,
+"TOTAL": 2
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "17",
+"name": "Darwin's Fox",
+"variant": "Holo",
+"grades": {
+"9": 2,
+"10": 11,
+"TOTAL": 13
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "17",
+"name": "Darwin's Fox",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "18",
+"name": "Mountain Gorilla",
+"variant": "Holo",
+"grades": {
+"7": 1,
+"8": 1,
+"9": 6,
+"10": 5,
+"TOTAL": 13
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "18",
+"name": "Mountain Gorilla",
+"variant": "Holo",
+"grades": {
+"9": 1,
+"10": 1,
+"TOTAL": 2
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "19",
+"name": "Ili Pika",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"9": 2,
+"10": 3,
+"TOTAL": 6
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "19",
+"name": "Ili Pika",
+"variant": "Holo",
+"grades": {
+"7": 1,
+"8": 1,
+"9": 1,
+"TOTAL": 3
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "20",
+"name": "Wild Bactrian Camel",
+"variant": "Holo",
+"grades": {
+"8": 2,
+"9": 7,
+"10": 5,
+"TOTAL": 14
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "20",
+"name": "Wild Bactrian Camel",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "21",
+"name": "Black Panther",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"9": 8,
+"10": 11,
+"TOTAL": 20
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "21",
+"name": "Black Panther",
+"variant": "Holo",
+"grades": {
+"10": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "22",
+"name": "Borneo Pygmy Elephant",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"9": 6,
+"10": 7,
+"TOTAL": 14
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "22",
+"name": "Borneo Pygmy Elephant",
+"variant": "Holo",
+"grades": {
+"9": 1,
+"10": 1,
+"TOTAL": 2
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "23",
+"name": "Giant Panda",
+"variant": "Holo",
+"grades": {
+"9": 6,
+"10": 12,
+"TOTAL": 18
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "23",
+"name": "Giant Panda",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"10": 1,
+"TOTAL": 2
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "24",
+"name": "Ring-Tailed Lemur",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"9": 1,
+"10": 8,
+"TOTAL": 10
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "24",
+"name": "Ring-Tailed Lemur",
+"variant": "Holo",
+"grades": {
+"9": 3,
+"TOTAL": 3
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "25",
+"name": "Bengal Tiger",
+"variant": "Holo",
+"grades": {
+"9": 7,
+"10": 13,
+"TOTAL": 20
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "25",
+"name": "Bengal Tiger",
+"variant": "Holo",
+"grades": {
+"9": 2,
+"10": 1,
+"TOTAL": 3
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "26",
+"name": "Wild Water Buffalo",
+"variant": "Holo",
+"grades": {
+"8": 2,
+"9": 5,
+"10": 5,
+"TOTAL": 12
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "27",
+"name": "Giant Anteater",
+"variant": "Holo",
+"grades": {
+"9": 1,
+"10": 1,
+"TOTAL": 2
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "27",
+"name": "Giant Anteater",
+"variant": "Holo",
+"grades": {
+"10": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "28",
+"name": "Baird's Tapir",
+"variant": "Holo",
+"grades": {
+"9": 1,
+"10": 3,
+"TOTAL": 4
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "29",
+"name": "Giant Otter",
+"variant": null,
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "29",
+"name": "Giant Otter",
+"variant": "Holo",
+"grades": {
+"9": 3,
+"10": 1,
+"TOTAL": 4
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "30",
+"name": "Okapi",
+"variant": "Holo",
+"grades": {
+"10": 2,
+"TOTAL": 2
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "31",
+"name": "African Wild Dog",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"9": 2,
+"10": 1,
+"TOTAL": 4
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "32",
+"name": "Snow Leopard",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"9": 4,
+"10": 10,
+"TOTAL": 15
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "32",
+"name": "Snow Leopard",
+"variant": "Holo",
+"grades": {
+"9": 2,
+"TOTAL": 2
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "33",
+"name": "Cheetah",
+"variant": "Holo",
+"grades": {
+"8": 2,
+"9": 6,
+"10": 4,
+"TOTAL": 12
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "33",
+"name": "Cheetah",
+"variant": "Holo",
+"grades": {
+"8": 2,
+"TOTAL": 2
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "34",
+"name": "Red Panda",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"9": 3,
+"10": 4,
+"TOTAL": 8
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "35",
+"name": "Southern White Rhino",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"9": 3,
+"10": 4,
+"TOTAL": 8
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "35",
+"name": "Southern White Rhino",
+"variant": "Holo",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "36",
+"name": "Manatee",
+"variant": "Holo",
+"grades": {
+"9": 3,
+"10": 1,
+"TOTAL": 4
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "36",
+"name": "Manatee",
+"variant": "Holo",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "37",
+"name": "Wild Yak",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"10": 1,
+"TOTAL": 2
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "37",
+"name": "Wild Yak",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "38",
+"name": "Jaguar",
+"variant": "Holo",
+"grades": {
+"9": 1,
+"10": 4,
+"TOTAL": 5
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "38",
+"name": "Jaguar",
+"variant": "Holo",
+"grades": {
+"9": 3,
+"10": 2,
+"TOTAL": 5
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "39",
+"name": "African Lion",
+"variant": "Holo",
+"grades": {
+"9": 8,
+"10": 8,
+"TOTAL": 16
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "39",
+"name": "African Lion",
+"variant": "Holo",
+"grades": {
+"8": 2,
+"TOTAL": 2
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "40",
+"name": "Tasmanian Devil",
+"variant": "Holo",
+"grades": {
+"10": 4,
+"TOTAL": 4
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "40",
+"name": "Tasmanian Devil",
+"variant": "Holo",
+"grades": {
+"9": 2,
+"TOTAL": 2
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "41",
+"name": "Gray-Faced Sengi",
+"variant": "Holo",
+"grades": {
+"9": 1,
+"10": 1,
+"TOTAL": 2
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "42",
+"name": "Blue Whale",
+"variant": "Holo",
+"grades": {
+"9": 3,
+"10": 3,
+"TOTAL": 6
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "42",
+"name": "Blue Whale",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"9": 1,
+"TOTAL": 2
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "43",
+"name": "Maned Wolf",
+"variant": "Holo",
+"grades": {
+"9": 2,
+"10": 2,
+"TOTAL": 4
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "43",
+"name": "Maned Wolf",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"9": 2,
+"TOTAL": 3
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "44",
+"name": "Gaur",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "44",
+"name": "Gaur",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "45",
+"name": "Polar Bear",
+"variant": "Holo",
+"grades": {
+"9": 3,
+"TOTAL": 3
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "45",
+"name": "Polar Bear",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "46",
+"name": "Wolverine",
+"variant": "Holo",
+"grades": {
+"9": 1,
+"10": 1,
+"TOTAL": 2
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "46",
+"name": "Wolverine",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"9": 2,
+"TOTAL": 3
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "47",
+"name": "Dugong",
+"variant": "Holo",
+"grades": {
+"9": 1,
+"10": 3,
+"TOTAL": 4
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "47",
+"name": "Dugong",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"9": 5,
+"TOTAL": 6
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "48",
+"name": "Alpine Ibex",
+"variant": "Holo",
+"grades": {
+"9": 1,
+"10": 1,
+"TOTAL": 2
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "49",
+"name": "Canadian Lynx",
+"variant": "Holo",
+"grades": {
+"10": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "49",
+"name": "Canadian Lynx",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"9": 3,
+"TOTAL": 4
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "50",
+"name": "Spotted Hyena",
+"variant": "Holo",
+"grades": {
+"10": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "50",
+"name": "Spotted Hyena",
+"variant": "Holo",
+"grades": {
+"8": 2,
+"9": 1,
+"TOTAL": 3
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "51",
+"name": "Orca",
+"variant": "Holo",
+"grades": {
+"10": 7,
+"TOTAL": 7
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "51",
+"name": "Orca",
+"variant": "Holo",
+"grades": {
+"9": 2,
+"TOTAL": 2
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "52",
+"name": "Koala",
+"variant": "Holo",
+"grades": {
+"9": 3,
+"10": 4,
+"TOTAL": 7
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "52",
+"name": "Koala",
+"variant": "Holo",
+"grades": {
+"8": 2,
+"9": 3,
+"TOTAL": 5
+}
+},
+{
+"year": "2023",
+"set": "Mammals",
+"num": "53",
+"name": "Humpback Whale",
+"variant": "Holo",
+"grades": {
+"8": 3,
+"9": 2,
+"TOTAL": 5
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "53",
+"name": "Humpback Whale",
+"variant": "Holo",
+"grades": {
+"8": 3,
+"9": 4,
+"TOTAL": 7
+}
+},
+{
+"year": "2023",
+"set": "Mammals Kickstarter",
+"num": "101",
+"name": "Human",
+"variant": "Holo",
+"grades": {
+"6": 2,
+"7": 1,
+"8": 2,
+"9": 1,
+"TOTAL": 6
+}
+},
+{
+"year": "2024",
+"set": "1st Edition Promos",
+"num": "103",
+"name": "Mountain Lion",
+"variant": "Full Art",
+"grades": {
+"7": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2024",
+"set": "1st Edition Promos",
+"num": "104",
+"name": "Amazonian Manatee",
+"variant": "Full Art",
+"grades": {
+"6": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2024",
+"set": "1st Edition Promos",
+"num": "105",
+"name": "Margay",
+"variant": "Full Art",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2024",
+"set": "1st Edition Promos",
+"num": "106",
+"name": "Reticulated Giraffe",
+"variant": "Full Art",
+"grades": {
+"9": 2,
+"TOTAL": 2
+}
+},
+{
+"year": "2024",
+"set": "1st Edition Promos",
+"num": "107",
+"name": "Utah Prairie Dog",
+"variant": "Full Art",
+"grades": {
+"8": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2024",
+"set": "1st Edition Promos",
+"num": "108",
+"name": "Aye Aye",
+"variant": "Full Art",
+"grades": {
+"8": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2024",
+"set": "1st Edition Promos",
+"num": "109",
+"name": "Kit Fox",
+"variant": "Full Art",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2024",
+"set": "1st Edition Promos",
+"num": "110",
+"name": "Fossa",
+"variant": "Full Art",
+"grades": {
+"8": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2024",
+"set": "1st Edition Promos",
+"num": "112",
+"name": "Tapanuli Orangutan",
+"variant": "Full Art",
+"grades": {
+"8": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2024",
+"set": "1st Edition Promos",
+"num": "113",
+"name": "Asiatic Lion",
+"variant": "Full Art",
+"grades": {
+"8": 2,
+"9": 2,
+"TOTAL": 4
+}
+},
+{
+"year": "2024",
+"set": "1st Edition Promos",
+"num": "114",
+"name": "Siberian Tiger",
+"variant": "Full Art",
+"grades": {
+"7": 1,
+"8": 2,
+"9": 1,
+"10": 1,
+"TOTAL": 5
+}
+},
+{
+"year": "2024",
+"set": "1st Edition Promos",
+"num": "115",
+"name": "Spirit Bear",
+"variant": "Full Art",
+"grades": {
+"9": 2,
+"TOTAL": 2
+}
+},
+{
+"year": "2024",
+"set": "1st Edition Promos",
+"num": "116",
+"name": "Javan Rhino",
+"variant": null,
+"grades": {
+"8": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2024",
+"set": "1st Edition Promos",
+"num": "116",
+"name": "Javan Rhino",
+"variant": "Full Art",
+"grades": {
+"8": 1,
+"9": 1,
+"TOTAL": 2
+}
+},
+{
+"year": "2024",
+"set": "1st Edition Promos",
+"num": "118",
+"name": "Giant Panda",
+"variant": "Holo",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "1st Edition Promos",
+"num": "101",
+"name": "Human",
+"variant": null,
+"grades": {
+"9": 3,
+"10": 1,
+"TOTAL": 4
+}
+},
+{
+"year": "2025",
+"set": "1st Edition Promos",
+"num": "118",
+"name": "Giant Panda",
+"variant": "Holo",
+"grades": {
+"9": 2,
+"10": 1,
+"TOTAL": 3
+}
+},
+{
+"year": "2025",
+"set": "1st Edition Promos",
+"num": "118",
+"name": "Giant Panda",
+"variant": "WWF",
+"grades": {
+"8": 1,
+"9": 1,
+"TOTAL": 2
+}
+},
+{
+"year": "2025",
+"set": "1st Edition Promos",
+"num": "119",
+"name": "Qinling Panda",
+"variant": null,
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "1st Edition Promos",
+"num": "119",
+"name": "Qinling Panda",
+"variant": "Holo",
+"grades": {
+"9": 2,
+"10": 4,
+"TOTAL": 6
+}
+},
+{
+"year": "2025",
+"set": "1st Edition Promos",
+"num": "120",
+"name": "Albino Giant Panda",
+"variant": null,
+"grades": {
+"8": 1,
+"9": 2,
+"TOTAL": 3
+}
+},
+{
+"year": "2026",
+"set": "Mammals Special Edition",
+"num": "0",
+"name": "Earth",
+"variant": null,
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2026",
+"set": "Mammals Special Edition",
+"num": "1",
+"name": "South China Tiger",
+"variant": null,
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2026",
+"set": "Mammals Special Edition",
+"num": "5",
+"name": "Amur Leopard",
+"variant": "Extended Art",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2026",
+"set": "Mammals Special Edition",
+"num": "22",
+"name": "Borneo Pygmy Elephant",
+"variant": "Extended Art",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2026",
+"set": "Mammals Special Edition",
+"num": "25",
+"name": "Bengal Tiger",
+"variant": "Extended Art",
+"grades": {
+"8": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2026",
+"set": "Mammals Special Edition",
+"num": "35",
+"name": "Southern White Rhino",
+"variant": "Extended Art",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2026",
+"set": "Mammals Special Edition",
+"num": "45",
+"name": "Polar Bear",
+"variant": "Extended Art",
+"grades": {
+"10": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2026",
+"set": "Mammals Special Edition",
+"num": "52",
+"name": "Koala",
+"variant": "Extended Art",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2026",
+"set": "Mammals Special Edition",
+"num": "117",
+"name": "Migaloo",
+"variant": null,
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2026",
+"set": "Photography Series 1",
+"num": "1",
+"name": "Cheetah",
+"variant": null,
+"grades": {
+"7": 1,
+"8": 2,
+"9": 3,
+"10": 1,
+"TOTAL": 7
+}
+},
+{
+"year": "2026",
+"set": "Photography Series 1",
+"num": "2",
+"name": "Zebra",
+"variant": null,
+"grades": {
+"8": 2,
+"9": 4,
+"10": 1,
+"TOTAL": 7
+}
+},
+{
+"year": "2026",
+"set": "Photography Series 1",
+"num": "3",
+"name": "Humpback Whale",
+"variant": null,
+"grades": {
+"7": 1,
+"8": 1,
+"9": 4,
+"10": 1,
+"TOTAL": 7
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "1",
+"name": "Stresemann's Bristlefront",
+"variant": null,
+"grades": {
+"7": 1,
+"8": 1,
+"9": 4,
+"10": 2,
+"TOTAL": 8
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "3",
+"name": "New Caledonian Owlet-Nightjar",
+"variant": "Holo",
+"grades": {
+"8": 4,
+"9": 1,
+"TOTAL": 5
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "4",
+"name": "Imperial Amazon",
+"variant": "Full Art",
+"grades": {
+"10": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "4",
+"name": "Imperial Amazon",
+"variant": "Holo",
+"grades": {
+"9": 2,
+"TOTAL": 2
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "5",
+"name": "Bali Myna",
+"variant": "Full Art",
+"grades": {
+"8": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "5",
+"name": "Bali Myna",
+"variant": "Holo",
+"grades": {
+"10": 2,
+"TOTAL": 2
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "6",
+"name": "Madagascar Pochard",
+"variant": null,
+"grades": {
+"10": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "6",
+"name": "Madagascar Pochard",
+"variant": "Full Art",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "6",
+"name": "Madagascar Pochard",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"9": 3,
+"10": 1,
+"TOTAL": 5
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "7",
+"name": "Orange-Bellied Parrot",
+"variant": null,
+"grades": {
+"9": 1,
+"10": 1,
+"TOTAL": 2
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "7",
+"name": "Orange-Bellied Parrot",
+"variant": "Holo",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "8",
+"name": "Cebu Flowerpecker",
+"variant": null,
+"grades": {
+"9": 1,
+"10": 1,
+"TOTAL": 2
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "8",
+"name": "Cebu Flowerpecker",
+"variant": "Full Art",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "8",
+"name": "Cebu Flowerpecker",
+"variant": "Holo",
+"grades": {
+"9": 1,
+"10": 2,
+"TOTAL": 3
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "9",
+"name": "Blue-Eyed Ground-Dove",
+"variant": null,
+"grades": {
+"8": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "9",
+"name": "Blue-Eyed Ground-Dove",
+"variant": "Full Art",
+"grades": {
+"9": 2,
+"TOTAL": 2
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "9",
+"name": "Blue-Eyed Ground-Dove",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"9": 1,
+"TOTAL": 2
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "10",
+"name": "Blue-Throated Hillstar",
+"variant": null,
+"grades": {
+"10": 2,
+"TOTAL": 2
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "10",
+"name": "Blue-Throated Hillstar",
+"variant": "Full Art",
+"grades": {
+"10": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "10",
+"name": "Blue-Throated Hillstar",
+"variant": "Holo",
+"grades": {
+"9": 2,
+"TOTAL": 2
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "11",
+"name": "Great Indian Bustard",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"9": 1,
+"10": 1,
+"TOTAL": 3
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "12",
+"name": "Kakapo",
+"variant": "Full Art",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "12",
+"name": "Kakapo",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"9": 4,
+"10": 9,
+"TOTAL": 14
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "13",
+"name": "Northern Bald Ibis",
+"variant": "Full Art",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "13",
+"name": "Northern Bald Ibis",
+"variant": "Holo",
+"grades": {
+"9": 1,
+"10": 2,
+"TOTAL": 3
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "14",
+"name": "Antioquia Brushfinch",
+"variant": "Full Art",
+"grades": {
+"9": 1,
+"10": 1,
+"TOTAL": 2
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "14",
+"name": "Antioquia Brushfinch",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"9": 1,
+"TOTAL": 2
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "15",
+"name": "Moheli Scops-Owl",
+"variant": "Full Art",
+"grades": {
+"9": 2,
+"TOTAL": 2
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "15",
+"name": "Moheli Scops-Owl",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"9": 1,
+"TOTAL": 2
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "16",
+"name": "California Condor",
+"variant": "Full Art",
+"grades": {
+"8": 1,
+"9": 1,
+"10": 1,
+"TOTAL": 3
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "16",
+"name": "California Condor",
+"variant": "Holo",
+"grades": {
+"9": 2,
+"10": 1,
+"TOTAL": 3
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "17",
+"name": "Philippine Eagle",
+"variant": null,
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "17",
+"name": "Philippine Eagle",
+"variant": "Full Art",
+"grades": {
+"9": 1,
+"10": 2,
+"TOTAL": 3
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "17",
+"name": "Philippine Eagle",
+"variant": "Holo",
+"grades": {
+"10": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "18",
+"name": "Short-Crested Coquette",
+"variant": "Full Art",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "18",
+"name": "Short-Crested Coquette",
+"variant": "Holo",
+"grades": {
+"9": 2,
+"10": 1,
+"TOTAL": 3
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "19",
+"name": "Forest Owlet",
+"variant": "Full Art",
+"grades": {
+"9": 2,
+"TOTAL": 2
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "19",
+"name": "Forest Owlet",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"9": 1,
+"10": 2,
+"TOTAL": 4
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "20",
+"name": "Long-Whiskered Owlet",
+"variant": "Full Art",
+"grades": {
+"8": 1,
+"9": 1,
+"TOTAL": 2
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "21",
+"name": "Sun Parakeet",
+"variant": "Full Art",
+"grades": {
+"5": 1,
+"9": 3,
+"TOTAL": 4
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "21",
+"name": "Sun Parakeet",
+"variant": "Holo",
+"grades": {
+"10": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "22",
+"name": "Galapagos Penguin",
+"variant": null,
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "22",
+"name": "Galapagos Penguin",
+"variant": "Full Art",
+"grades": {
+"9": 2,
+"10": 1,
+"TOTAL": 3
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "22",
+"name": "Galapagos Penguin",
+"variant": "Holo",
+"grades": {
+"9": 1,
+"10": 2,
+"TOTAL": 3
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "23",
+"name": "Rufous-Headed Hornbill",
+"variant": "Full Art",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "23",
+"name": "Rufous-Headed Hornbill",
+"variant": "Holo",
+"grades": {
+"10": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "24",
+"name": "Yellow-Crested Helmetshrike",
+"variant": "Holo",
+"grades": {
+"10": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "25",
+"name": "Juan Fernandez Firecrown",
+"variant": "Full Art",
+"grades": {
+"10": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "25",
+"name": "Juan Fernandez Firecrown",
+"variant": "Holo",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "27",
+"name": "Hyacinth Macaw",
+"variant": null,
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "27",
+"name": "Hyacinth Macaw",
+"variant": "Full Art",
+"grades": {
+"10": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "27",
+"name": "Hyacinth Macaw",
+"variant": "Holo",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "28",
+"name": "Christmas Island Frigatebird",
+"variant": "Holo",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "29",
+"name": "Shoebill",
+"variant": "Full Art",
+"grades": {
+"10": 5,
+"TOTAL": 5
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "29",
+"name": "Shoebill",
+"variant": "Holo",
+"grades": {
+"9": 1,
+"10": 2,
+"TOTAL": 3
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "30",
+"name": "Blue Lorikeet",
+"variant": "Full Art",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "30",
+"name": "Blue Lorikeet",
+"variant": "Holo",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "31",
+"name": "Neergaard's Sunbird",
+"variant": "Full Art",
+"grades": {
+"10": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "31",
+"name": "Neergaard's Sunbird",
+"variant": "Holo",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "32",
+"name": "New Zealand Rock Wren",
+"variant": "Full Art",
+"grades": {
+"10": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "33",
+"name": "New Zealand Kaka",
+"variant": "Full Art",
+"grades": {
+"8": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "33",
+"name": "New Zealand Kaka",
+"variant": "Holo",
+"grades": {
+"10": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "34",
+"name": "Southern Philippines Dwarf Kingfisher",
+"variant": "Holo",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "35",
+"name": "Andean Condor",
+"variant": "Full Art",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "35",
+"name": "Andean Condor",
+"variant": "Holo",
+"grades": {
+"9": 1,
+"10": 1,
+"TOTAL": 2
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "36",
+"name": "Blue Bird-of-Paradise",
+"variant": "Holo",
+"grades": {
+"10": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "38",
+"name": "Great Eared Nightjar",
+"variant": "Holo",
+"grades": {
+"10": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "39",
+"name": "Toco Toucan",
+"variant": "Holo",
+"grades": {
+"9": 1,
+"10": 1,
+"TOTAL": 2
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "40",
+"name": "Tawny Frogmouth",
+"variant": "Holo",
+"grades": {
+"10": 2,
+"TOTAL": 2
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "41",
+"name": "White-Crested Turaco",
+"variant": "Full Art",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "42",
+"name": "Dalmatian Pelican",
+"variant": "Full Art",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "42",
+"name": "Dalmatian Pelican",
+"variant": "Holo",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "43",
+"name": "Northern Spotted Owl",
+"variant": "Full Art",
+"grades": {
+"10": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "43",
+"name": "Northern Spotted Owl",
+"variant": "Holo",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "44",
+"name": "Honduran Emerald",
+"variant": "Holo",
+"grades": {
+"10": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "45",
+"name": "Plate-Billed Mountain Toucan",
+"variant": "Full Art",
+"grades": {
+"10": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "45",
+"name": "Plate-Billed Mountain Toucan",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"10": 2,
+"TOTAL": 3
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "47",
+"name": "Saker Falcon",
+"variant": "Full Art",
+"grades": {
+"10": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "47",
+"name": "Saker Falcon",
+"variant": "Holo",
+"grades": {
+"8": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "48",
+"name": "Wandering Albatross",
+"variant": "Holo",
+"grades": {
+"10": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "49",
+"name": "Snowy Owl",
+"variant": null,
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "49",
+"name": "Snowy Owl",
+"variant": "Full Art",
+"grades": {
+"10": 2,
+"TOTAL": 2
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "49",
+"name": "Snowy Owl",
+"variant": "Holo",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "50",
+"name": "Martial Eagle",
+"variant": "Holo",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "51",
+"name": "Great Hornbill",
+"variant": "Full Art",
+"grades": {
+"8": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "52",
+"name": "Blue Crane",
+"variant": "Full Art",
+"grades": {
+"10": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "53",
+"name": "Gyrfalcon",
+"variant": "Full Art",
+"grades": {
+"10": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "55",
+"name": "Bee Hummingbird",
+"variant": "Full Art",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "56",
+"name": "Resplendent Quetzal",
+"variant": "Full Art",
+"grades": {
+"9": 3,
+"TOTAL": 3
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "57",
+"name": "Scarlet Macaw",
+"variant": "Full Art",
+"grades": {
+"9": 1,
+"10": 1,
+"TOTAL": 2
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "59",
+"name": "Red Kite",
+"variant": "Full Art",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "60",
+"name": "Blue-Footed Booby",
+"variant": "Full Art",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "61",
+"name": "White Cockatoo",
+"variant": "Full Art",
+"grades": {
+"8": 1,
+"9": 1,
+"TOTAL": 2
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "63",
+"name": "Blue and Yellow Macaw",
+"variant": null,
+"grades": {
+"10": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "64",
+"name": "Indian Peafowl",
+"variant": "Full Art",
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "65",
+"name": "Golden Eagle",
+"variant": null,
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "65",
+"name": "Golden Eagle",
+"variant": "Full Art",
+"grades": {
+"9": 2,
+"TOTAL": 2
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "67",
+"name": "Peregrine Falcon",
+"variant": null,
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "69",
+"name": "Bald Eagle",
+"variant": null,
+"grades": {
+"8": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "106",
+"name": "Blue Jay",
+"variant": null,
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+},
+{
+"year": "2025",
+"set": "Birds",
+"num": "108",
+"name": "Mallard",
+"variant": null,
+"grades": {
+"9": 1,
+"TOTAL": 1
+}
+}
+]
