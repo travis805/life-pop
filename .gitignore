@@ -8,3 +8,4 @@ data/d1_load.sql
 data/my_certs.csv
 .DS_Store
 __pycache__
+data/private/

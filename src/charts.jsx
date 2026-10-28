@@ -1,36 +1,26 @@
 import React from 'react'
-import { graderColor, n0, dateLabel } from './format.js'
+import { graderColor, n0, pct, dateLabel } from './format.js'
 
-/** Horizontal stacked bars: one row per set, segments per grader. */
-export function SetBars({ sets, graders }) {
-  const max = Math.max(1, ...sets.map(s => s.total))
+/** One horizontal bar per grader: gem rate, sorted high to low, with the sample size. */
+export function GemRateBars({ graders }) {
+  const rows = [...graders].sort((a, b) => (b.gem_rate ?? -1) - (a.gem_rate ?? -1))
   return (
-    <div className="setbars" role="list">
-      {sets.map(s => (
-        <div className="setbar-row" role="listitem" key={s.id}>
-          <div className="setbar-label">
-            <span className="setbar-name">{s.name}</span>
-            <span className="setbar-total">{n0(s.total)}</span>
-          </div>
-          <div className="setbar-track" aria-label={`${s.name}: ${s.total} graded`}>
-            {s.total === 0 ? null : (
-              <div className="setbar-fill" style={{ width: `${(s.total / max) * 100}%` }}>
-                {graders.map(g => {
-                  const t = s.graders[g]?.total || 0
-                  return t ? (
-                    <div key={g} className="seg" style={{ flexGrow: t, background: graderColor(g) }} title={`${g}: ${t}`} />
-                  ) : null
-                })}
-              </div>
-            )}
-          </div>
+    <div className="gemrate" role="list">
+      {rows.map(g => (
+        <div className="gr-row" role="listitem" key={g.grader} title={`${g.grader}: ${n0(g.gems)} gems of ${n0(g.numeric_graded)} numerically graded`}>
+          <span className="gr-name"><i style={{ background: graderColor(g.grader) }} />{g.grader}</span>
+          <span className="gr-track" aria-hidden="true">
+            <span className="gr-fill" style={{ width: `${(g.gem_rate || 0) * 100}%`, background: graderColor(g.grader) }} />
+          </span>
+          <span className="gr-val">{pct(g.gem_rate)}</span>
+          <span className="gr-n">n = {n0(g.numeric_graded)}</span>
         </div>
       ))}
     </div>
   )
 }
 
-/** Count per grade for one grader. Gem tier (10 and above) is drawn solid, the rest lighter. */
+/** Count per grade for one grader. Gem tier (10 and above) rows are highlighted and drawn solid, the rest lighter. */
 export function GradeBars({ grader, rows, compact }) {
   const max = Math.max(1, ...rows.map(r => r.count))
   const total = rows.reduce((a, r) => a + r.count, 0)
@@ -39,10 +29,10 @@ export function GradeBars({ grader, rows, compact }) {
       {rows.map(r => {
         const top = r.top != null ? r.top === 1 : r.num >= 10
         return (
-          <div className="gb-row" key={r.label} title={`${grader} ${r.label}: ${r.count} of ${total}${r.authentic ? ' (authentic, excluded from gem rate)' : ''}`}>
-            <span className={'gb-label' + (top ? ' top' : '')}>{r.label}</span>
+          <div className={'gb-row' + (top ? ' gem' : '')} key={r.label} title={`${grader} ${r.label}: ${r.count} of ${total}${top ? ' (gem tier)' : ''}${r.authentic ? ' (authentic, excluded from gem rate)' : ''}`}>
+            <span className={'gb-label' + (top ? ' gemtier' : '')}>{r.label}</span>
             <span className="gb-track">
-              <span className="gb-fill" style={{ width: `${(r.count / max) * 100}%`, background: graderColor(grader), opacity: top ? 1 : 0.55 }} />
+              <span className="gb-fill" style={{ width: `${(r.count / max) * 100}%`, background: graderColor(grader), opacity: top ? 1 : 0.5 }} />
             </span>
             <span className="gb-count">{n0(r.count)}</span>
           </div>
@@ -52,7 +42,7 @@ export function GradeBars({ grader, rows, compact }) {
   )
 }
 
-/** Line chart of total graded per grader per snapshot date (plain SVG). One date renders as dots. */
+/** Line chart of total graded per grader per snapshot date (plain SVG). */
 export function HistoryChart({ history, graders }) {
   const dates = [...new Set(history.map(h => h.snapshot_date))].sort()
   const W = 640, H = 240, L = 44, R = 16, T = 14, B = 34
@@ -62,37 +52,34 @@ export function HistoryChart({ history, graders }) {
   const y = v => T + (1 - v / niceMax) * (H - T - B)
   const ticks = [0, 0.25, 0.5, 0.75, 1].map(f => Math.round(niceMax * f))
   return (
-    <div>
-      <svg viewBox={`0 0 ${W} ${H}`} className="linechart" role="img" aria-label="Total graded per grader by snapshot date">
-        {ticks.map(t => (
-          <g key={t}>
-            <line x1={L} x2={W - R} y1={y(t)} y2={y(t)} className="grid" />
-            <text x={L - 8} y={y(t) + 4} textAnchor="end" className="axis">{t}</text>
+    <svg viewBox={`0 0 ${W} ${H}`} className="linechart" role="img" aria-label="Total graded per grader by snapshot date">
+      {ticks.map(t => (
+        <g key={t}>
+          <line x1={L} x2={W - R} y1={y(t)} y2={y(t)} className="grid" />
+          <text x={L - 8} y={y(t) + 4} textAnchor="end" className="axis">{t}</text>
+        </g>
+      ))}
+      {dates.map((d, i) => (
+        <text key={d} x={x(i)} y={H - 10} textAnchor="middle" className="axis">{dateLabel(d)}</text>
+      ))}
+      {graders.map(g => {
+        const pts = dates.map((d, i) => {
+          const h = history.find(r => r.grader === g && r.snapshot_date === d)
+          return h ? { i, v: h.total_graded, d } : null
+        }).filter(Boolean)
+        if (!pts.length) return null
+        return (
+          <g key={g} color={graderColor(g)}>
+            {pts.length > 1 && <polyline fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinejoin="round" points={pts.map(p => `${x(p.i)},${y(p.v)}`).join(' ')} />}
+            {pts.map(p => (
+              <circle key={p.d} cx={x(p.i)} cy={y(p.v)} r="5" fill="currentColor" stroke="var(--surface)" strokeWidth="2">
+                <title>{`${g}, ${dateLabel(p.d)}: ${p.v} graded`}</title>
+              </circle>
+            ))}
           </g>
-        ))}
-        {dates.map((d, i) => (
-          <text key={d} x={x(i)} y={H - 10} textAnchor="middle" className="axis">{dateLabel(d)}</text>
-        ))}
-        {graders.map(g => {
-          const pts = dates.map((d, i) => {
-            const h = history.find(r => r.grader === g && r.snapshot_date === d)
-            return h ? { i, v: h.total_graded, d } : null
-          }).filter(Boolean)
-          if (!pts.length) return null
-          return (
-            <g key={g} color={graderColor(g)}>
-              {pts.length > 1 && <polyline fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinejoin="round" points={pts.map(p => `${x(p.i)},${y(p.v)}`).join(' ')} />}
-              {pts.map(p => (
-                <circle key={p.d} cx={x(p.i)} cy={y(p.v)} r="5" fill="currentColor" stroke="var(--surface)" strokeWidth="2">
-                  <title>{`${g}, ${dateLabel(p.d)}: ${p.v} graded`}</title>
-                </circle>
-              ))}
-            </g>
-          )
-        })}
-      </svg>
-      {dates.length < 2 && <p className="note">One snapshot so far. The lines fill in after each monthly refresh.</p>}
-    </div>
+        )
+      })}
+    </svg>
   )
 }
 

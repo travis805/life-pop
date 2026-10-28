@@ -1,30 +1,55 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { api } from './api.js'
 import { n0, pct, dateLabel, graderColor } from './format.js'
-import { SetBars, GradeBars, HistoryChart, Legend } from './charts.jsx'
+import { GemRateBars, GradeBars, HistoryChart, Legend } from './charts.jsx'
 
-function useDebounced(value, ms) {
-  const [v, setV] = useState(value)
+// ---------- small hooks ----------
+function useStreamMode() {
+  const [stream, setStream] = useState(() => new URLSearchParams(location.search).get('stream') === '1')
+  const toggle = useCallback(() => {
+    setStream(on => {
+      const p = new URLSearchParams(location.search)
+      if (on) p.delete('stream')
+      else p.set('stream', '1')
+      const qs = p.toString()
+      history.replaceState(null, '', location.pathname + (qs ? '?' + qs : '') + location.hash)
+      return !on
+    })
+  }, [])
+  return [stream, toggle]
+}
+
+const cardFromHash = () => {
+  const m = /^#card\/(\d+)$/.exec(location.hash)
+  return m ? Number(m[1]) : null
+}
+
+function useOpenCard() {
+  const [open, setOpen] = useState(cardFromHash)
   useEffect(() => {
-    const t = setTimeout(() => setV(value), ms)
-    return () => clearTimeout(t)
-  }, [value, ms])
-  return v
+    const sync = () => setOpen(cardFromHash())
+    window.addEventListener('hashchange', sync)
+    window.addEventListener('popstate', sync)
+    return () => {
+      window.removeEventListener('hashchange', sync)
+      window.removeEventListener('popstate', sync)
+    }
+  }, [])
+  const openCard = useCallback(id => {
+    history.pushState(null, '', '#card/' + id)
+    setOpen(id)
+  }, [])
+  const closeCard = useCallback(() => {
+    if (location.hash) history.pushState(null, '', location.pathname + location.search)
+    setOpen(null)
+  }, [])
+  return [open, openCard, closeCard]
 }
 
-function Tile({ label, value, sub, color }) {
+// ---------- building blocks ----------
+function Section({ title, hint, children, right, className }) {
   return (
-    <div className="tile">
-      <div className="tile-label">{color && <i style={{ background: color }} />}{label}</div>
-      <div className="tile-value">{value}</div>
-      {sub && <div className="tile-sub">{sub}</div>}
-    </div>
-  )
-}
-
-function Section({ title, hint, children, right }) {
-  return (
-    <section className="card">
+    <section className={'card' + (className ? ' ' + className : '')}>
       <div className="card-head">
         <h2>{title}</h2>
         {right}
@@ -35,11 +60,173 @@ function Section({ title, hint, children, right }) {
   )
 }
 
+function Hero({ label, value, sub, extra }) {
+  return (
+    <div className="hero-stat">
+      <div className="hero-label">{label}</div>
+      <div className="hero-value">{value}</div>
+      <div className="hero-sub">{sub}</div>
+      {extra && <div className="hero-extra">{extra}</div>}
+    </div>
+  )
+}
+
+function Tile({ g }) {
+  return (
+    <div className="tile">
+      <div className="tile-label"><i style={{ background: graderColor(g.grader) }} />{g.grader}</div>
+      <div className="tile-value">{n0(g.total_graded)}</div>
+      <div className="tile-sub">
+        {pct(g.gem_rate)} gem rate
+        {g.authentic ? <span className="tile-au"> · {n0(g.authentic)} authentic-only {g.authentic === 1 ? 'slab' : 'slabs'} excluded</span> : null}
+      </div>
+    </div>
+  )
+}
+
+/** Column count that fills every row evenly (6 tiles: 6 wide, 3 medium, 2 narrow). */
+function tileCols(n) {
+  for (let c = Math.min(n, 6); c >= 3; c--) if (n % c === 0) return c
+  return Math.min(Math.ceil(n / 2), 6)
+}
+
+function SourceLinks({ summary }) {
+  const all = [...summary.graders.map(g => ({ code: g.grader, url: g.url, as_of: g.as_of, text: `${g.grader}` })),
+    ...summary.no_data.map(g => ({ code: g.grader, url: g.url, as_of: g.as_of, text: `${g.grader}: 0 graded` }))]
+  return (
+    <p className="sources">
+      <span>Pop reports:</span>
+      {all.map(s => (
+        <a key={s.code} href={s.url} target="_blank" rel="noopener noreferrer" title={`${s.code} public pop report (pulled ${dateLabel(s.as_of)})`}>{s.text}</a>
+      ))}
+    </p>
+  )
+}
+
+// ---------- sets table ----------
+function SetsTable({ sets, graders, summary }) {
+  const rows = sets.filter(s => s.total > 0)
+  const sum = (f) => rows.reduce((a, s) => a + f(s), 0)
+  const totalAll = sum(s => s.total)
+  const gemAll = sum(s => s.gems)
+  const authAll = sum(s => s.authentic)
+  const gcell = (c) => (c && c.total
+    ? <><span className="cell-main">{n0(c.total)}</span><span className="cell-sub">{pct(c.gem_rate, 0)}</span></>
+    : <span className="dash">·</span>)
+  return (
+    <div className="table-wrap">
+      <table className="data sets">
+        <thead>
+          <tr>
+            <th className="stickycol">Set</th>
+            <th className="num">Total</th>
+            <th className="num">Gem rate</th>
+            {graders.map(g => <th key={g} className="num"><i className="dot-i" style={{ background: graderColor(g) }} />{g}</th>)}
+            <th className="num">Taclaco</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map(s => (
+            <tr key={s.id}>
+              <td className="stickycol strong">{s.name}</td>
+              <td className="num strong">{n0(s.total)}</td>
+              <td className="num">{pct(s.gem_rate)}</td>
+              {graders.map(g => {
+                const c = s.graders[g]
+                return <td key={g} className="num stack" title={c && c.total ? `${g}: ${c.total} graded, ${pct(c.gem_rate)} gem rate` : `${g}: none`}>{gcell(c)}</td>
+              })}
+              <td className="num" title={Object.entries(s.mine_by_grader).map(([g, n]) => `${g} ${n}`).join(', ') || 'None'}>
+                {s.mine ? <span className="badge">{s.mine}</span> : <span className="dash">·</span>}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td className="stickycol strong">All sets</td>
+            <td className="num strong">{n0(totalAll)}</td>
+            <td className="num">{pct(totalAll - authAll > 0 ? gemAll / (totalAll - authAll) : null)}</td>
+            {graders.map(g => {
+              const gs = summary.graders.find(x => x.grader === g)
+              return <td key={g} className="num stack"><span className="cell-main">{n0(gs?.total_graded)}</span><span className="cell-sub">{pct(gs?.gem_rate, 0)}</span></td>
+            })}
+            <td className="num"><span className="badge">{summary.taclaco.certs}</span></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  )
+}
+
+// ---------- Taclaco section ----------
+function TaclacoSection({ summary }) {
+  const rows = summary.graders.filter(g => g.mine > 0).sort((a, b) => b.mine - a.mine)
+  const t = summary.taclaco
+  return (
+    <Section title="Taclaco's own slabs" hint="Cards Taclaco submitted itself, as a share of every graded copy on each grader's pop report.">
+      <div className="mine-rows">
+        {rows.map(g => (
+          <div className="mine-row" key={g.grader}>
+            <span className="gr-name"><i style={{ background: graderColor(g.grader) }} />{g.grader}</span>
+            <span className="gr-track" aria-hidden="true"><span className="gr-fill" style={{ width: `${Math.min(100, (g.mine_share || 0) * 100)}%`, background: graderColor(g.grader) }} /></span>
+            <span className="mine-val"><strong>{g.mine}</strong> of {n0(g.total_graded)} <span className="muted">({pct(g.mine_share)})</span></span>
+          </div>
+        ))}
+        <div className="mine-row total">
+          <span className="gr-name">All graders</span>
+          <span />
+          <span className="mine-val"><strong>{t.certs}</strong> of {n0(summary.total_graded)} <span className="muted">({pct(t.share)}) · {t.cards} card variants</span></span>
+        </div>
+      </div>
+    </Section>
+  )
+}
+
+// ---------- rarest ----------
+function Rarest({ cards, onOpen }) {
+  const [showAll, setShowAll] = useState(false)
+  const pop1 = useMemo(() => cards.filter(c => c.total === 1), [cards])
+  const topGems = useMemo(() => [...cards].filter(c => c.gems > 0).sort((a, b) => b.gems - a.gems || b.total - a.total || a.name.localeCompare(b.name)).slice(0, 10), [cards])
+  const shown = showAll ? pop1 : pop1.slice(0, 10)
+  const holder = c => Object.entries(c.counts).find(([, v]) => v.total === 1)?.[0]
+  const item = (c, right) => (
+    <li key={c.id}>
+      <button className="linkish" onClick={() => onOpen(c.id)}>
+        <span className="strong">{c.name}</span>
+        <span className="muted"> #{c.number} {c.variant} · {c.set_name}</span>
+      </button>
+      <span className="rare-right">{right}</span>
+    </li>
+  )
+  return (
+    <Section title="Rarest" hint="Scarcity across all graders combined.">
+      <div className="rare-grid">
+        <div>
+          <h3>Population of one<span> {n0(pop1.length)} cards have a single graded copy</span></h3>
+          <ul className="rare-list">
+            {shown.map(c => item(c, <span className="chip" style={{ '--chip': graderColor(holder(c)) }}>{holder(c)}</span>))}
+          </ul>
+          {pop1.length > 10 && <button className="more" onClick={() => setShowAll(v => !v)}>{showAll ? 'Show fewer' : `Show all ${pop1.length}`}</button>}
+        </div>
+        <div>
+          <h3>Most gems<span> highest gem population</span></h3>
+          <ul className="rare-list">
+            {topGems.map(c => item(c, <span className="tabnum">{n0(c.gems)} gems</span>))}
+          </ul>
+        </div>
+      </div>
+    </Section>
+  )
+}
+
+// ---------- card detail ----------
 function CardDetail({ id, onClose }) {
   const [data, setData] = useState(null)
   const [err, setErr] = useState(null)
+  const [copied, setCopied] = useState(false)
   useEffect(() => {
     setData(null)
+    setErr(null)
     api.card(id).then(setData).catch(e => setErr(e.message))
   }, [id])
   useEffect(() => {
@@ -53,6 +240,11 @@ function CardDetail({ id, onClose }) {
     for (const r of data?.distribution || []) (m[r.grader] ||= []).push(r)
     return m
   }, [data])
+  const copy = () => {
+    try {
+      navigator.clipboard.writeText(location.href).then(() => { setCopied(true); setTimeout(() => setCopied(false), 1500) })
+    } catch { /* clipboard unavailable */ }
+  }
 
   return (
     <div className="overlay" onClick={onClose}>
@@ -65,28 +257,41 @@ function CardDetail({ id, onClose }) {
             <p className="eyebrow">{data.card.set_name}</p>
             <h2 className="panel-title">{data.card.name}</h2>
             <p className="hint">#{data.card.number || 'n/a'} · {data.card.variant}</p>
-            {data.mine.length > 0 && (
+            <div className="panel-stats">
+              <div><span className="ps-v">{n0(data.total)}</span><span className="ps-l">graded</span></div>
+              <div><span className="ps-v">{pct(data.gem_rate)}</span><span className="ps-l">gem rate</span></div>
+              <div><span className="ps-v">{data.rank ? `#${data.rank.position}` : 'n/a'}</span><span className="ps-l">{data.rank ? `of ${data.rank.of} in set by pop` : 'pop rank in set'}</span></div>
+            </div>
+            {data.mine_total > 0 && (
               <div className="mine-box">
-                <strong>Taclaco submitted {data.mine.reduce((a, m) => a + m.count, 0)} of these to TAG</strong>
-                <span> ({data.mine.map(m => `${m.count} at ${m.label}`).join(', ')})</span>
+                <strong>Taclaco holds {data.mine_total} of these</strong>
+                <span> ({data.graders.filter(g => g.mine).map(g => `${g.grader} ${g.mine}`).join(', ')}; {data.mine.map(m => `${m.count} ${m.grader} ${m.label}`).join(', ')})</span>
               </div>
             )}
             {Object.keys(byGrader).length === 0 && <p className="note">No graded copies on record.</p>}
-            {Object.entries(byGrader).map(([g, rows]) => (
-              <div key={g} className="panel-grader">
-                <h3><i style={{ background: graderColor(g) }} />{g}<span> {n0(rows.reduce((a, r) => a + r.count, 0))} graded</span></h3>
-                <GradeBars grader={g} rows={rows} compact />
+            {data.graders.map(g => (
+              <div key={g.grader} className="panel-grader">
+                <h3>
+                  <i style={{ background: graderColor(g.grader) }} />{g.grader}
+                  <span> {n0(g.total)} graded · {pct(g.gem_rate)} gems{g.mine ? ` · Taclaco ${g.mine}` : ''}</span>
+                </h3>
+                <GradeBars grader={g.grader} rows={byGrader[g.grader] || []} compact />
               </div>
             ))}
-            <h3 className="panel-sub">History</h3>
-            <table className="mini">
-              <thead><tr><th>Date</th><th>Grader</th><th className="num">Graded</th><th className="num">Gems</th><th className="num">Gem rate</th></tr></thead>
-              <tbody>
-                {data.history.map(h => (
-                  <tr key={h.snapshot_date + h.grader}><td>{dateLabel(h.snapshot_date)}</td><td>{h.grader}</td><td className="num">{h.total}</td><td className="num">{h.gems}</td><td className="num">{pct(h.gem_rate)}</td></tr>
-                ))}
-              </tbody>
-            </table>
+            {new Set(data.history.map(h => h.snapshot_date)).size > 1 && (
+              <>
+                <h3 className="panel-sub">History</h3>
+                <table className="mini">
+                  <thead><tr><th>Date</th><th>Grader</th><th className="num">Graded</th><th className="num">Gems</th><th className="num">Gem rate</th></tr></thead>
+                  <tbody>
+                    {data.history.map(h => (
+                      <tr key={h.snapshot_date + h.grader}><td>{dateLabel(h.snapshot_date)}</td><td>{h.grader}</td><td className="num">{h.total}</td><td className="num">{h.gems}</td><td className="num">{pct(h.gem_rate)}</td></tr>
+                    ))}
+                  </tbody>
+                </table>
+              </>
+            )}
+            <button className="more" onClick={copy}>{copied ? 'Link copied' : 'Copy link to this card'}</button>
           </>
         )}
       </aside>
@@ -94,53 +299,107 @@ function CardDetail({ id, onClose }) {
   )
 }
 
-const COLS = (graders) => [
-  { key: 'set_name', label: 'Set', type: 'text' },
-  { key: 'number', label: '#', type: 'num' },
-  { key: 'name', label: 'Card', type: 'text' },
-  { key: 'variant', label: 'Variant', type: 'text' },
-  ...graders.map(g => ({ key: 'g:' + g, label: g, type: 'count', grader: g })),
-  { key: 'total', label: 'Total', type: 'count' },
-  { key: 'gems', label: 'Gems', type: 'count' },
-  { key: 'mine', label: 'Taclaco', type: 'count' },
-]
+// ---------- cards table ----------
+const csvCell = v => {
+  const s = v == null ? '' : String(v)
+  return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s
+}
 
-function CardTable({ sets, graders, onOpen }) {
+function CardTable({ sets, graders, allCards, asOf, onOpen }) {
   const [setId, setSetId] = useState('')
   const [grader, setGrader] = useState('')
+  const [minPop, setMinPop] = useState(1)
   const [q, setQ] = useState('')
-  const dq = useDebounced(q, 250)
-  const [rows, setRows] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [err, setErr] = useState(null)
   const [sort, setSort] = useState({ key: 'total', dir: 'desc' })
 
-  useEffect(() => {
-    let live = true
-    setLoading(true)
-    api.cards({ set: setId, grader, q: dq.trim() })
-      .then(r => { if (live) { setRows(r.cards); setErr(null) } })
-      .catch(e => live && setErr(e.message))
-      .finally(() => live && setLoading(false))
-    return () => { live = false }
-  }, [setId, grader, dq])
+  // Derive each row for the active grader filter (or all graders combined).
+  const rows = useMemo(() => {
+    const needle = q.trim().toLowerCase()
+    const out = []
+    for (const c of allCards) {
+      if (setId && String(c.set_id) !== setId) continue
+      if (needle && !(`${c.name} ${c.number} ${c.variant}`.toLowerCase().includes(needle))) continue
+      const use = grader ? [c.counts[grader]].filter(Boolean) : Object.values(c.counts)
+      if (grader && !use.length) continue
+      const total = use.reduce((a, x) => a + x.total, 0)
+      const gems = use.reduce((a, x) => a + x.gems, 0)
+      const auth = use.reduce((a, x) => a + x.authentic, 0)
+      if (total < minPop) continue
+      out.push({ ...c, total, gems, gem_rate: total - auth > 0 ? gems / (total - auth) : null, mine_shown: c.mine })
+    }
+    return out
+  }, [allCards, setId, grader, q, minPop])
 
-  const cols = COLS(graders)
+  const showSet = !setId
+  const cols = useMemo(() => {
+    const gl = grader ? grader + ' ' : ''
+    const list = [
+      { key: 'name', label: 'Card', type: 'text', cls: 'stickycol' },
+      { key: 'total', label: gl + 'total', type: 'count' },
+      { key: 'gems', label: gl + 'gems', type: 'count' },
+      { key: 'gem_rate', label: gl + 'gem %', type: 'count' },
+      { key: 'number', label: '#', type: 'num' },
+      { key: 'variant', label: 'Variant', type: 'text' },
+    ]
+    if (showSet) list.push({ key: 'set_name', label: 'Set', type: 'text' })
+    if (!grader) for (const g of graders) list.push({ key: 'g:' + g, label: g, type: 'count', grader: g })
+    list.push({ key: 'mine', label: 'Taclaco', type: 'count' })
+    return list
+  }, [graders, grader, showSet])
+
   const sorted = useMemo(() => {
-    const val = (r, k) => (k.startsWith('g:') ? r.counts[k.slice(2)]?.total || 0 : k === 'number' ? Number(r.number || -1) : r[k])
+    const val = (r, k) => (k.startsWith('g:') ? r.counts[k.slice(2)]?.total || 0 : k === 'number' ? Number(r.number || -1) : k === 'gem_rate' ? (r.gem_rate ?? -1) : r[k])
     const out = [...rows]
     out.sort((a, b) => {
       const x = val(a, sort.key), y = val(b, sort.key)
       const c = typeof x === 'string' ? x.localeCompare(y) : x - y
-      return (sort.dir === 'asc' ? c : -c) || a.name.localeCompare(b.name)
+      return (sort.dir === 'asc' ? c : -c) || a.name.localeCompare(b.name) || a.id - b.id
     })
     return out
   }, [rows, sort])
 
   const clickSort = c => setSort(s => (s.key === c.key ? { key: c.key, dir: s.dir === 'asc' ? 'desc' : 'asc' } : { key: c.key, dir: c.type === 'count' ? 'desc' : 'asc' }))
 
+  const download = () => {
+    const head = ['Set', 'Number', 'Card', 'Variant', ...graders.map(g => g + ' graded'), `${grader || 'All graders'} total`, `${grader || 'All graders'} gems`, `${grader || 'All graders'} gem rate`, 'Taclaco total', ...graders.map(g => 'Taclaco ' + g)]
+    const lines = [head.map(csvCell).join(',')]
+    for (const r of sorted) {
+      lines.push([r.set_name, r.number, r.name, r.variant, ...graders.map(g => r.counts[g]?.total || 0), r.total, r.gems, r.gem_rate == null ? '' : (r.gem_rate * 100).toFixed(1) + '%', r.mine, ...graders.map(g => r.mine_by_grader[g] || 0)].map(csvCell).join(','))
+    }
+    const blob = new Blob([lines.join('\r\n') + '\r\n'], { type: 'text/csv;charset=utf-8' })
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = `life-tcg-graded-pop-${asOf || 'latest'}.csv`
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000)
+  }
+
+  const cell = (r, c) => {
+    switch (c.key) {
+      case 'name': return <td key={c.key} className="stickycol card-cell"><span className="strong">{r.name}</span></td>
+      case 'total': return <td key={c.key} className="num strong">{r.total}</td>
+      case 'gems': return <td key={c.key} className="num">{r.gems || <span className="dash">·</span>}</td>
+      case 'gem_rate': return <td key={c.key} className="num" title={r.gem_rate == null ? 'No numeric grades' : 'Authentic-only slabs excluded'}>{r.gem_rate == null ? <span className="dash">·</span> : pct(r.gem_rate, 0)}</td>
+      case 'number': return <td key={c.key} className="num">{r.number}</td>
+      case 'variant': return <td key={c.key}>{r.variant}</td>
+      case 'set_name': return <td key={c.key} className="muted">{r.set_name}</td>
+      case 'mine': return (
+        <td key={c.key} className="num" title={Object.entries(r.mine_by_grader).map(([g, n]) => `${g} ${n}`).join(', ') || 'None'}>
+          {r.mine ? <span className="badge">{r.mine}</span> : <span className="dash">·</span>}
+        </td>
+      )
+      default: { // per-grader count
+        const g = c.key.slice(2)
+        const n = r.counts[g]?.total
+        return <td key={c.key} className="num">{n ? n : <span className="dash">·</span>}</td>
+      }
+    }
+  }
+
   return (
-    <Section title="Cards" hint="Click a row for the grade breakdown. Counts are the latest snapshot from each grader.">
+    <Section title="Cards" hint="Click a row for the grade breakdown. Counts are the latest snapshot from each grader. Raise Min pop so Gem % sorts meaningfully (a card with 1 copy is 0% or 100%).">
       <div className="filters">
         <input type="search" placeholder="Search card, number or variant" value={q} onChange={e => setQ(e.target.value)} aria-label="Search cards" />
         <select value={setId} onChange={e => setSetId(e.target.value)} aria-label="Filter by set">
@@ -151,16 +410,21 @@ function CardTable({ sets, graders, onOpen }) {
           <option value="">All graders</option>
           {graders.map(g => <option key={g} value={g}>{g}</option>)}
         </select>
-        <span className="count">{loading ? 'Loading...' : `${n0(rows.length)} cards`}</span>
+        <select value={minPop} onChange={e => setMinPop(Number(e.target.value))} aria-label="Minimum population">
+          <option value={1}>Min pop: any</option>
+          <option value={5}>Min pop: 5+</option>
+          <option value={10}>Min pop: 10+</option>
+        </select>
+        <span className="count">{n0(sorted.length)} cards</span>
+        <button className="more inline" onClick={download} disabled={!sorted.length}>Download CSV</button>
       </div>
-      {err && <p className="error">{err}</p>}
       <div className="table-wrap">
-        <table className="cards">
+        <table className="data cards">
           <thead>
             <tr>
               {cols.map(c => (
-                <th key={c.key} className={c.type === 'count' || c.key === 'number' ? 'num' : ''} aria-sort={sort.key === c.key ? (sort.dir === 'asc' ? 'ascending' : 'descending') : 'none'}>
-                  <button onClick={() => clickSort(c)} style={c.grader ? { '--dot': graderColor(c.grader) } : undefined}>
+                <th key={c.key} className={(c.type === 'count' || c.key === 'number' ? 'num ' : '') + (c.cls || '')} aria-sort={sort.key === c.key ? (sort.dir === 'asc' ? 'ascending' : 'descending') : 'none'}>
+                  <button onClick={() => clickSort(c)}>
                     {c.grader && <i style={{ background: graderColor(c.grader) }} />}
                     {c.label}
                     <span className="arrow">{sort.key === c.key ? (sort.dir === 'asc' ? '▲' : '▼') : ''}</span>
@@ -172,17 +436,10 @@ function CardTable({ sets, graders, onOpen }) {
           <tbody>
             {sorted.map(r => (
               <tr key={r.id} tabIndex={0} onClick={() => onOpen(r.id)} onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), onOpen(r.id))}>
-                <td className="muted">{r.set_name}</td>
-                <td className="num">{r.number}</td>
-                <td className="strong">{r.name}</td>
-                <td>{r.variant}</td>
-                {graders.map(g => <td key={g} className="num">{r.counts[g]?.total ? r.counts[g].total : <span className="dash">·</span>}</td>)}
-                <td className="num strong">{r.total}</td>
-                <td className="num" title={r.gem_rate == null ? 'No numeric grades' : `${pct(r.gem_rate)} gem rate (authentic slabs excluded)`}>{r.gems || <span className="dash">·</span>}</td>
-                <td className="num">{r.mine ? <span className="badge">{r.mine}</span> : <span className="dash">·</span>}</td>
+                {cols.map(c => cell(r, c))}
               </tr>
             ))}
-            {!loading && sorted.length === 0 && <tr><td colSpan={cols.length} className="empty">No cards match.</td></tr>}
+            {sorted.length === 0 && <tr><td colSpan={cols.length} className="empty">No cards match.</td></tr>}
           </tbody>
         </table>
       </div>
@@ -190,18 +447,61 @@ function CardTable({ sets, graders, onOpen }) {
   )
 }
 
+// ---------- history ----------
+function History({ history, graders }) {
+  const dates = [...new Set(history.map(h => h.snapshot_date))].sort()
+  if (dates.length < 2) return null
+  const last = dates[dates.length - 1]
+  const prev = dates[dates.length - 2]
+  const at = (g, d) => history.find(h => h.grader === g && h.snapshot_date === d)
+  const rows = graders.map(g => {
+    const a = at(g, last), b = at(g, prev)
+    return { g, now: a?.total_graded || 0, delta: b ? (a?.total_graded || 0) - b.total_graded : null, gemDelta: b && a ? (a.gem_rate ?? 0) - (b.gem_rate ?? 0) : null }
+  })
+  const sumNow = rows.reduce((a, r) => a + r.now, 0)
+  const sumDelta = rows.reduce((a, r) => a + (r.delta || 0), 0)
+  return (
+    <Section title="History" hint={`Change from ${dateLabel(prev)} to ${dateLabel(last)}.`} right={<Legend graders={graders} />}>
+      <p className="mom">+{n0(sumDelta)} graded <span className="muted">since {dateLabel(prev)} ({n0(sumNow)} total)</span></p>
+      <div className="table-wrap">
+        <table className="data">
+          <thead><tr><th>Grader</th><th className="num">Graded</th><th className="num">Change</th><th className="num">Gem rate change</th></tr></thead>
+          <tbody>
+            {rows.map(r => (
+              <tr key={r.g}>
+                <td><i className="dot-i" style={{ background: graderColor(r.g) }} />{r.g}</td>
+                <td className="num">{n0(r.now)}</td>
+                <td className="num">{r.delta == null ? 'new' : (r.delta >= 0 ? '+' : '') + n0(r.delta)}</td>
+                <td className="num">{r.gemDelta == null ? 'n/a' : (r.gemDelta >= 0 ? '+' : '') + (r.gemDelta * 100).toFixed(1) + ' pts'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <HistoryChart history={history} graders={graders} />
+    </Section>
+  )
+}
+
+// ---------- app ----------
 export default function App() {
   const [summary, setSummary] = useState(null)
   const [sets, setSets] = useState(null)
   const [history, setHistory] = useState(null)
+  const [allCards, setAllCards] = useState(null)
   const [err, setErr] = useState(null)
-  const [open, setOpen] = useState(null)
+  const [open, openCard, closeCard] = useOpenCard()
+  const [stream, toggleStream] = useStreamMode()
 
   useEffect(() => {
-    Promise.all([api.summary(), api.sets(), api.history()])
-      .then(([s, st, h]) => { setSummary(s); setSets(st.sets); setHistory(h.history) })
+    Promise.all([api.summary(), api.sets(), api.history(), api.cards({})])
+      .then(([s, st, h, c]) => { setSummary(s); setSets(st.sets); setHistory(h.history); setAllCards(c.cards) })
       .catch(e => setErr(e.message))
   }, [])
+
+  useEffect(() => {
+    document.body.classList.toggle('stream', stream)
+  }, [stream])
 
   const graderCodes = summary ? summary.graders.map(g => g.grader) : []
   const distBy = useMemo(() => {
@@ -209,72 +509,101 @@ export default function App() {
     for (const r of summary?.distribution || []) (m[r.grader] ||= []).push(r)
     return m
   }, [summary])
+  const ready = summary && sets && history && allCards
+  const asOf = summary ? dateLabel(summary.as_of) : ''
+  const cols = summary ? tileCols(summary.graders.length) : 6
+  const taclaco = summary?.taclaco
+  const perGraderMine = summary ? summary.graders.filter(g => g.mine).map(g => `${g.grader} ${g.mine} of ${n0(g.total_graded)} (${pct(g.mine_share)})`).join(' · ') : ''
 
   return (
     <>
       <header className="top">
-        <div className="wrap">
-          <h1>LIFE TCG Graded Population</h1>
-          <p className="sub">
-            {summary ? <>As of {dateLabel(summary.as_of)}</> : 'Loading...'}
-            <span className="dot"> · </span>
-            Data: {summary ? summary.graders.map(g => g.grader).join(', ') : ''} public pop reports{summary?.no_data?.length ? ` (${summary.no_data.map(g => g.grader + ': 0 graded').join(', ')})` : ''}
-            <span className="dot"> · </span>
-            Built by Taclaco
-          </p>
+        <div className="wrap top-row">
+          <div>
+            <h1>LIFE TCG Graded Population</h1>
+            <p className="sub">
+              <strong className="asof">{summary ? `Data as of ${asOf}` : 'Loading...'}</strong>
+              <span className="dot"> · </span>
+              {stream ? 'tacla.co' : 'Built by Taclaco (tacla.co)'}
+            </p>
+          </div>
+          <button className="more inline" onClick={toggleStream} aria-pressed={stream}>{stream ? 'Exit stream view' : 'Stream view'}</button>
         </div>
       </header>
 
       <main className="wrap">
         {err && <p className="error">Could not load data: {err}</p>}
-        {summary && sets && history && (
+        {!ready && !err && <p className="note">Loading...</p>}
+        {ready && (
           <>
-            <div className="tiles">
-              <Tile label="Total graded" value={n0(summary.total_graded)} sub={`${n0(summary.cards_graded)} distinct cards`} />
-              {summary.graders.map(g => (
-                <Tile key={g.grader} label={g.grader} color={graderColor(g.grader)} value={n0(g.total_graded)} sub={`${pct(g.gem_rate)} gem rate${g.authentic ? ` · ${n0(g.authentic)} AU excluded` : ''}`} />
-              ))}
-              <Tile label="Overall gem rate" value={pct(summary.gem_rate)} sub={`${n0(summary.gems)} gems of ${n0(summary.numeric_graded)} numerically graded${summary.authentic ? ` · ${n0(summary.authentic)} AU excluded` : ''}`} />
-              <Tile
-                label="Taclaco share of TAG"
-                value={pct(summary.taclaco.share)}
-                sub={`${summary.taclaco.certs} of ${n0(summary.taclaco.tag_total)} TAG-graded copies`}
+            <div className="hero">
+              <Hero label="Total graded" value={n0(summary.total_graded)} sub={`across ${n0(summary.cards_graded)} card variants`} />
+              <Hero
+                label="Overall gem rate"
+                value={pct(summary.gem_rate)}
+                sub={`${n0(summary.gems)} gems of ${n0(summary.numeric_graded)} numerically graded`}
+                extra={summary.authentic ? `${n0(summary.authentic)} authentic-only slabs excluded` : null}
               />
+              <Hero label="Taclaco share" value={pct(taclaco.share)} sub={`${n0(taclaco.certs)} of ${n0(summary.total_graded)} graded copies`} extra={perGraderMine} />
             </div>
 
-            <Section title="Graded by set" hint="Each bar is scaled to the largest set and split by grader." right={<Legend graders={graderCodes} />}>
-              <SetBars sets={sets} graders={graderCodes} />
-              <p className="note">TAG files all Mammals 1st Edition copies together, so its Kickstarter copies are counted under Mammals 1st Edition. AGS publishes no variant, so its copies are matched to the closest card.</p>
-            </Section>
+            {!stream && (
+              <>
+                <div className="tiles" style={{ '--cols': cols }}>
+                  {summary.graders.map(g => <Tile key={g.grader} g={g} />)}
+                </div>
+                <p className="note gem-note">
+                  The gem bar differs by grader, so gem rates are not strictly like for like: BGS counts 9.5 and up, CGC includes Pristine and Perfect 10, PSA counts 10 only,
+                  and AGS "+" half grades never count as gem.
+                </p>
+                <SourceLinks summary={summary} />
+              </>
+            )}
 
-            <Section title="Grade distribution" hint="Solid bars are 10 and above (gem tier). Lighter bars are below 10.">
-              <div className="dist-grid">
-                {summary.graders.map(g => (
-                  <div key={g.grader} className="dist-col">
-                    <h3><i style={{ background: graderColor(g.grader) }} />{g.grader}<span> {n0(g.total_graded)} graded · {pct(g.gem_rate)} gems</span></h3>
-                    <GradeBars grader={g.grader} rows={distBy[g.grader] || []} />
+            <Section title="Gem rate by grader" hint="Gems divided by numerically graded copies. n is the number of copies behind each rate.">
+              <GemRateBars graders={summary.graders} />
+              {!stream && (
+                <details className="dist">
+                  <summary>Grade distribution by grader</summary>
+                  <p className="hint">Highlighted rows are the gem tier (10 and above; BGS 9.5 and up). Lighter bars are below the gem bar.</p>
+                  <div className="dist-grid">
+                    {summary.graders.map(g => (
+                      <div key={g.grader} className="dist-col">
+                        <h3><i style={{ background: graderColor(g.grader) }} />{g.grader}<span> {n0(g.total_graded)} graded · {pct(g.gem_rate)} gems</span></h3>
+                        <GradeBars grader={g.grader} rows={distBy[g.grader] || []} />
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </details>
+              )}
             </Section>
 
-            <CardTable sets={sets} graders={graderCodes} onOpen={setOpen} />
-
-            <Section title="History" hint="Total graded at each monthly snapshot." right={<Legend graders={graderCodes} />}>
-              <HistoryChart history={history} graders={graderCodes} />
+            <Section title="Sets" hint={stream ? null : 'Graded copies per set, with each grader\'s count and its gem rate beneath.'}>
+              <SetsTable sets={sets} graders={graderCodes} summary={summary} />
+              {!stream && <p className="note">TAG files all Mammals 1st Edition copies together, so its Kickstarter copies are counted under Mammals 1st Edition. AGS publishes no variant, so its copies are matched to the closest card.</p>}
             </Section>
 
-            <footer className="foot">
-              <p>
-                Counts come from the public population reports of each grader, refreshed monthly. Gem means a grade of 10 or above on that grader's scale
-                (CGC Gem Mint, Pristine and Perfect 10; TAG 10 and 10P; AGS Gem-MT and Legend 10; Beckett 9.5 and up; PSA and ACE 10; qualified PSA grades never count). Gem rate is gems divided by numerically graded copies:
-                authentic-only slabs (AU, AA, CC, VA) count as graded but are excluded from the rate. {summary.no_data.map(g => `${g.grader}: ${g.notes || '0 graded'}.`).join(' ')}
-              </p>
-            </footer>
+            <TaclacoSection summary={summary} />
+
+            {!stream && (
+              <>
+                <Rarest cards={allCards} onOpen={openCard} />
+                <CardTable sets={sets} graders={graderCodes} allCards={allCards} asOf={summary.as_of} onOpen={openCard} />
+                <History history={history} graders={graderCodes} />
+                <footer className="foot">
+                  <p>
+                    Counts come from the public population reports of each grader, refreshed monthly. Gem means a grade of 10 or above on that grader's scale
+                    (CGC Gem Mint, Pristine and Perfect 10; TAG 10 and 10P; AGS Gem-MT and Legend 10; Beckett 9.5 and up; PSA and ACE 10; qualified PSA grades never count). Gem rate is gems divided by numerically graded copies:
+                    authentic-only slabs (AU, AA, CC, VA) count as graded but are excluded from the rate. {summary.no_data.map(g => `${g.grader}: ${g.notes || '0 graded'}.`).join(' ')}
+                    {new Set(history.map(h => h.snapshot_date)).size < 2 ? ' Month-over-month history appears after the next monthly refresh.' : ''}
+                  </p>
+                </footer>
+              </>
+            )}
           </>
         )}
       </main>
-      {open != null && <CardDetail id={open} onClose={() => setOpen(null)} />}
+      {open != null && !stream && <CardDetail id={open} onClose={closeCard} />}
     </>
   )
 }

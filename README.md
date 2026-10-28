@@ -1,7 +1,7 @@
 # LIFE TCG Graded Population
 
 How many LIFE TCG cards each grading company has graded, by set, card and grade, refreshed monthly,
-plus how much of the TAG population Taclaco submitted itself. A Python pipeline builds a SQLite/D1
+plus how much of each grader's population Taclaco submitted itself. A Python pipeline builds a SQLite/D1
 database from public pop reports. A Cloudflare Worker serves a read-only API and a single-page app
 (Vite and React) from that database. Live and PUBLIC at https://lifepop.tacla.co (Worker `life-pop`,
 D1 `life-pop` 7e94b13e-0754-406c-8773-887f2fbac06b, no Cloudflare Access by Travis's choice).
@@ -20,7 +20,7 @@ First full snapshot is live: 1,287 graded, 41.4% gem rate (authentic-only exclud
 | BGS | 32 | 46.9% | Chrome |
 | SGC | 0 | n/a | Chrome (reCAPTCHA) |
 
-Taclaco share of TAG: 27 of 74 (36.5%); about 2% of all graded LIFE.
+Taclaco's own slabs: 67 of 1,287 graded (5.2%): TAG 42 of 74 (56.8%), CGC 25 of 209 (12.0%), across 39 card variants. All 67 certs match a card in that grader's pop data and none exceed the pop.
 
 Monthly refresh: local scheduled task `life-pop-monthly-refresh` (Claude desktop app, 9am on the 1st;
 prompt at `~/.claude/scheduled-tasks/life-pop-monthly-refresh/SKILL.md`). It pulls every grader, loads D1 and
@@ -67,6 +67,14 @@ normalized name, then variant. Mammals numbers above 100 belong to Promos (that 
 Grade scale: `grade_numeric` is 10.75 for CGC Perfect 10, 10.5 for Pristine and Legend, 10 for Gem Mint,
 0 for AU/AA/CC/VA. A "gem" is 10 or above (BGS: 9.5 or above). Authentic-only slabs (AU, AA, CC, VA, PSA Auth, ...) have `is_authentic = 1`: they stay in the graded totals but are excluded from gem rate (gem rate = gems / numerically graded copies).
 
+## Taclaco sources (private)
+
+Travis's own slabs come from files in `data/private/` (gitignored, hold cert numbers):
+- `tag-orders-<date>.txt`: TAG order history, pipe-delimited `cert|name|grade|year|set|num|variant|order` with `#` comment lines. Refresh: in Chrome, open the order history on my.taggrading.com, set 200 rows per page and tick Show All Grades, then copy each order's cards into the file.
+- `cgc-<invoice>.csv`: CGC invoice export (My Submissions, open the invoice, export). One file per invoice; new invoices are new files.
+
+`python3 scripts/export_my_certs.py` reads every `tag-*.txt` and `cgc-*.csv` there (other graders: add a parser), asserts no duplicate certs and writes `data/my_certs.csv` (`cert,grader,set,num,name,variant,grade`, in each grader's own labels). `build_db.py` matches each cert through that grader's own card labels, prints any unmatched cert and any sanity violation (Taclaco count above that grader's pop for the card or grade), and loads `my_certs` for the counts.
+
 ## Monthly refresh runbook
 
 1. `pip install -r requirements.txt` (first time only), then `python3 scripts/scrape_cgc.py` and `python3 scripts/scrape_ags.py`.
@@ -75,7 +83,7 @@ Grade scale: `grade_numeric` is 10.75 for CGC Perfect 10, 10.5 for Pristine and 
    Long JS output truncates near 1,000 characters, so render rows into the page as `<article><pre>` and read it
    with get_page_text. Never solve a captcha or enter a password: Travis does those.
    Optional: if a grader ever has to be entered by hand, add `data/manual/<grader>.csv` (grader code in the file name) with columns `snapshot_date,set,num,name,variant,grade,count` (one row per grade).
-   When Travis sends new cards to TAG: `python3 scripts/export_my_certs.py` re-reads the Grading Batches workbook into `data/my_certs.csv`.
+   When Travis grades more cards, refresh the Taclaco sources (see Taclaco sources below), then `python3 scripts/export_my_certs.py`.
 4. `python3 scripts/build_db.py` and read the reconciliation it prints plus `data/alias_report.txt`.
 5. `npx wrangler d1 execute life-pop --remote --file data/d1_load.sql`
 6. No redeploy needed. The Worker reads D1 live (API responses are cached for 5 minutes).
@@ -93,8 +101,17 @@ Check it: `npm run build`, then `curl localhost:8787/api/summary`.
 
 ## API (read-only, GET)
 
-`/api/summary` (latest per grader: totals, gems, gem rate, cards graded, as-of date, grade distribution, Taclaco TAG share),
-`/api/sets`, `/api/cards?set=<id>&grader=<code>&q=<text>`, `/api/card/:id`, `/api/history`.
+`/api/summary` (latest per grader: totals, gems, gem rate, cards graded, as-of date, source url, grade distribution, Taclaco count and share per grader and overall),
+`/api/sets` (includes Taclaco count per set and grader), `/api/cards?set=<id>&grader=<code>&q=<text>` (Taclaco count per card and grader),
+`/api/card/:id` (per-grader totals, gem rate, pop rank within the set, Taclaco counts), `/api/history`. Counts only, never cert numbers.
+
+## UI
+
+Single page, light and dark. Hero numbers (total graded, overall gem rate, Taclaco share), grader tiles with a note that the gem bar differs by grader,
+"Data as of" date and links to each grader's pop page, Gem rate by grader bars (grade distributions collapsed below), Sets table, Taclaco section, Rarest
+(population of one, most gems), Cards table, History. Cards table: sticky Card column, Gem % and a Min pop filter, grader filter relabels the columns,
+Download CSV of the current view. Click a row for the card detail (shareable `#card/<id>` link). History shows once there are 2+ snapshots (month-over-month change).
+Stream view: the toggle in the header or `?stream=1` gives bigger type and only the headline views (hero numbers, gem rate by grader, sets, Taclaco share).
 
 ## Deploy (done 2026-10-28)
 
@@ -106,5 +123,5 @@ Check it: `npm run build`, then `curl localhost:8787/api/summary`.
 
 ## Privacy
 
-`data/my_certs.csv` and `data/d1_load.sql` contain Travis's TAG cert numbers and are gitignored. The API exposes only
+`data/private/`, `data/my_certs.csv` and `data/d1_load.sql` contain Travis's cert numbers and are gitignored. The API exposes only
 counts of Taclaco copies per card, never cert numbers (cert numbers are loaded into D1 for the counts, so keep the D1 database private).

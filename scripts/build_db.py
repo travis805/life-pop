@@ -4,7 +4,7 @@
 Inputs (all of them, every run, so history is kept):
   data/raw/<grader>-<YYYY-MM-DD>.json   scraper / browser output, rows {year,set,num,name,variant,grades}
   data/manual/<grader>.csv              snapshot_date,set,num,name,variant,grade,count
-  data/my_certs.csv                     Travis's own TAG certs (scripts/export_my_certs.py)
+  data/my_certs.csv                     Travis's own certs, all graders (scripts/export_my_certs.py)
 Outputs:
   data/life_pop.sqlite   local copy (gitignored)
   data/d1_load.sql       idempotent full reload: DELETE everything, then INSERT. Safe to re-run:
@@ -159,7 +159,7 @@ class Registry:
         self.by_name[(s, key[2])].append(c)
         return c
 
-    def resolve(self, grader, raw_set, raw_num, raw_name, desc, qualifier):
+    def resolve(self, grader, raw_set, raw_num, raw_name, desc, qualifier, register=True):
         n = norm_num(raw_num)
         if "foil" in raw_set.lower() and not (desc or "").strip():
             desc = "Holo"  # BGS "Mammals 1st Edition Foil" holds the holos; plain "Mammals 1st Edition" is the base card
@@ -188,7 +188,7 @@ class Registry:
             if card is None:
                 card, kind = self._new(s, n, raw_name, v), "created"
         akey = (grader, raw_set, str(raw_num or ""), raw_name, ((desc or "") + (" | " + qualifier if qualifier else "")))
-        if akey not in self.aliases:
+        if register and akey not in self.aliases:
             self.aliases[akey] = (card, kind)
             label = f"{grader} {raw_set} #{raw_num} {raw_name} [{akey[4] or '-'}] -> {card['set']} #{card['number']} {card['name']} [{card['variant']}]"
             if kind in ("fuzzy", "ambiguous"):
@@ -255,23 +255,38 @@ def main():
     for i, c in enumerate(cards, 1):
         c["id"] = i
 
-    # my certs (TAG), matched like any TAG row
-    certs, cert_problems = [], []
+    # my certs (all graders), matched through THAT grader's own labels (the same path as its pop rows)
+    certs, cert_problems, violations = [], [], []
     cert_file = DATA / "my_certs.csv"
     if cert_file.exists():
+        latest_date = {}
+        for (g, d, _) in src_totals:
+            latest_date[g] = max(latest_date.get(g, ""), d)
         for r in csv.DictReader(open(cert_file, newline="")):
-            card = reg.resolve("TAG", r["set"], r["num"], r["name"], r["variant"] or None, None)
-            certs.append((r["cert"], r["grader"] or "TAG", card, r["grade"]))
-        need = collections.Counter((id(c), g) for _, _, c, g in certs)
-        tag_dates = [d for (g, d, _) in src_totals if g == "TAG"]
-        latest_tag = max(tag_dates) if tag_dates else None
-        for (cid, g), n in need.items():
-            have = pop.get((latest_tag, "TAG", cid, g), 0)
+            grader = r["grader"]
+            variant, _, qualifier = (r["variant"] or "").partition(" | ")
+            before = len(reg.cards)
+            card = reg.resolve(grader, r["set"], r["num"], r["name"], variant or None, qualifier or None, register=False)
+            if len(reg.cards) > before:
+                cert_problems.append(f"UNMATCHED {grader} cert (no canonical card in any pop source, new card created): {r['set']} #{r['num']} {r['name']} [{r['variant'] or '-'}] grade {r['grade']}")
+            certs.append((r["cert"], grader, card, r["grade"]))
+        # Sanity: Taclaco count for a grader can never exceed that grader's pop for the card (or for the cert's grade).
+        need = collections.Counter((id(c), g, gr) for _, g, c, gr in certs)
+        need_card = collections.Counter((id(c), g) for _, g, c, _ in certs)
+        for (cid, g, gr), n in need.items():
+            have = pop.get((latest_date.get(g), g, cid, gr), 0)
             if have < n:
                 card = next(c for c in reg.cards.values() if id(c) == cid)
-                cert_problems.append(f"{card['set']} #{card['number']} {card['name']} [{card['variant']}] grade {g}: {n} certs, TAG pop {have}")
+                violations.append(f"{g} {card['set']} #{card['number']} {card['name']} [{card['variant']}] grade {gr}: {n} Taclaco certs, {g} pop {have}")
+        for (cid, g), n in need_card.items():
+            have = sum(v for (d, gg, c, _), v in pop.items() if gg == g and c == cid and d == latest_date.get(g))
+            if have < n:
+                card = next(c for c in reg.cards.values() if id(c) == cid)
+                violations.append(f"{g} {card['set']} #{card['number']} {card['name']} [{card['variant']}] all grades: {n} Taclaco certs, {g} pop {have}")
         if cert_problems:
-            reg.report["My certs exceeding TAG pop (cert grade missing or card mismatch)"] += cert_problems
+            reg.report["UNMATCHED my certs"] += cert_problems
+        if violations:
+            reg.report["My certs exceeding that grader's pop (cert grade missing or card mismatch)"] += violations
         # cards created for certs need ids too
         for c in reg.cards.values():
             if "id" not in c:
@@ -365,6 +380,13 @@ def main():
             else:
                 print(f"      source set {rs:40} loaded {ld:4}  (no published figure)")
         print("      canonical sets: " + ", ".join(f"{s} {src_totals[(g, d, s)]}" for s in sorted({k[2] for k in src_totals if k[0] == g and k[1] == d}, key=lambda n: SETS[n][1])))
+    print("\nTaclaco certs by grader: " + ", ".join(f"{g} {n}" for g, n in sorted(collections.Counter(g for _, g, _, _ in certs).items())) + f" (total {len(certs)})")
+    for line in cert_problems:
+        print("  !!! " + line)
+    for line in violations:
+        print("  !!! SANITY VIOLATION: " + line)
+    if not cert_problems and not violations and certs:
+        print("  all certs matched and within pop")
     print("\nReport written to data/alias_report.txt:")
     for title, items in reg.report.items():
         print(f"  {title}: {len(items)}")

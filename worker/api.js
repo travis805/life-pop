@@ -19,7 +19,7 @@ export async function summary(db) {
   const allSnaps = await latestSnapshots(db)
   // Graders whose latest snapshot is 0 (checked, nothing graded) are listed separately, not charted.
   const snaps = allSnaps.filter(s => s.total_graded > 0)
-  const noData = allSnaps.filter(s => s.total_graded === 0).map(s => ({ grader: s.grader, name: s.name, as_of: s.as_of, notes: s.notes }))
+  const noData = allSnaps.filter(s => s.total_graded === 0).map(s => ({ grader: s.grader, name: s.name, url: s.url, as_of: s.as_of, notes: s.notes }))
   const perGrader = await all(db, `
     SELECT grader, SUM(count) AS total,
            SUM(CASE WHEN is_top_grade = 1 THEN count ELSE 0 END) AS gems,
@@ -41,8 +41,16 @@ export async function summary(db) {
     SELECT grader, grade_label AS label, grade_numeric AS num, is_authentic AS authentic, MAX(is_top_grade) AS top, SUM(count) AS count
     FROM latest_pop GROUP BY grader, grade_label, grade_numeric, is_authentic ORDER BY grader, grade_numeric DESC`)
 
-  const mine = await first(db, "SELECT COUNT(*) AS n, COUNT(DISTINCT card_id) AS cards FROM my_certs WHERE grader = 'TAG'")
-  const tag = graders.find(g => g.grader === 'TAG')
+  // Taclaco's own slabs: counts only (cert numbers never leave the database).
+  const mineRows = await all(db, 'SELECT grader, COUNT(*) AS n, COUNT(DISTINCT card_id) AS cards FROM my_certs GROUP BY grader')
+  const mineCards = await first(db, 'SELECT COUNT(DISTINCT card_id) AS n FROM my_certs')
+  const mineBy = Object.fromEntries(mineRows.map(r => [r.grader, r]))
+  for (const g of graders) {
+    g.mine = mineBy[g.grader]?.n || 0
+    g.mine_cards = mineBy[g.grader]?.cards || 0
+    g.mine_share = rate(g.mine, g.total_graded)
+  }
+  const mineTotal = mineRows.reduce((a, r) => a + r.n, 0)
   return {
     as_of: graders.reduce((m, g) => (g.as_of > m ? g.as_of : m), ''),
     total_graded: total,
@@ -55,11 +63,10 @@ export async function summary(db) {
     no_data: noData,
     distribution: dist,
     taclaco: {
-      grader: 'TAG',
-      certs: mine.n,
-      cards: mine.cards,
-      tag_total: tag ? tag.total_graded : 0,
-      share: tag ? rate(mine.n, tag.total_graded) : null,
+      certs: mineTotal,
+      cards: mineCards.n,
+      share: rate(mineTotal, total),
+      by_grader: Object.fromEntries(graders.filter(g => g.mine).map(g => [g.grader, { certs: g.mine, graded: g.total_graded, share: g.mine_share }])),
     },
   }
 }
@@ -74,8 +81,7 @@ export async function sets(db) {
     FROM latest_pop p JOIN cards c ON c.id = p.card_id
     GROUP BY c.set_id, p.grader`)
   const mine = await all(db, `
-    SELECT c.set_id, COUNT(*) AS n FROM my_certs m JOIN cards c ON c.id = m.card_id GROUP BY c.set_id`)
-  const mineBy = Object.fromEntries(mine.map(r => [r.set_id, r.n]))
+    SELECT c.set_id, m.grader, COUNT(*) AS n FROM my_certs m JOIN cards c ON c.id = m.card_id GROUP BY c.set_id, m.grader`)
   return {
     sets: setRows.map(s => {
       const byGrader = {}
@@ -85,7 +91,10 @@ export async function sets(db) {
         byGrader[c.grader] = { ...c, gem_rate: rate(c.gems, c.total - c.authentic) }
         total += c.total; gems += c.gems; authentic += c.authentic
       }
-      return { ...s, total, gems, authentic, gem_rate: rate(gems, total - authentic), mine: mineBy[s.id] || 0, graders: byGrader }
+      const mineByGrader = {}
+      for (const m of mine) if (m.set_id === s.id) mineByGrader[m.grader] = m.n
+      const mineTotal = Object.values(mineByGrader).reduce((a, n) => a + n, 0)
+      return { ...s, total, gems, authentic, gem_rate: rate(gems, total - authentic), mine: mineTotal, mine_by_grader: mineByGrader, graders: byGrader }
     }),
   }
 }
@@ -109,13 +118,17 @@ export async function cards(db, { set, grader, q }) {
            SUM(CASE WHEN is_top_grade = 1 THEN count ELSE 0 END) AS gems,
            SUM(CASE WHEN is_authentic = 1 THEN count ELSE 0 END) AS authentic
     FROM latest_pop GROUP BY card_id, grader`)
-  const mine = await all(db, 'SELECT card_id, COUNT(*) AS n FROM my_certs GROUP BY card_id')
+  const mine = await all(db, 'SELECT card_id, grader, COUNT(*) AS n FROM my_certs GROUP BY card_id, grader')
   const popBy = new Map()
   for (const p of pops) {
     if (!popBy.has(p.card_id)) popBy.set(p.card_id, {})
     popBy.get(p.card_id)[p.grader] = { total: p.total, gems: p.gems, authentic: p.authentic, gem_rate: rate(p.gems, p.total - p.authentic) }
   }
-  const mineBy = new Map(mine.map(m => [m.card_id, m.n]))
+  const mineBy = new Map()
+  for (const m of mine) {
+    if (!mineBy.has(m.card_id)) mineBy.set(m.card_id, {})
+    mineBy.get(m.card_id)[m.grader] = m.n
+  }
   const out = []
   for (const c of cardRows) {
     const counts = popBy.get(c.id) || {}
@@ -128,7 +141,8 @@ export async function cards(db, { set, grader, q }) {
       gems: use.reduce((a, x) => a + x.gems, 0),
       authentic: use.reduce((a, x) => a + x.authentic, 0),
       gem_rate: rate(use.reduce((a, x) => a + x.gems, 0), use.reduce((a, x) => a + x.total - x.authentic, 0)),
-      mine: mineBy.get(c.id) || 0,
+      mine_by_grader: mineBy.get(c.id) || {},
+      mine: Object.values(mineBy.get(c.id) || {}).reduce((a, n) => a + n, 0),
     })
   }
   const graders = (await all(db, 'SELECT DISTINCT grader FROM snapshots WHERE total_graded > 0 ORDER BY grader')).map(r => r.grader)
@@ -150,7 +164,38 @@ export async function card(db, id) {
     FROM pop WHERE card_id = ? GROUP BY snapshot_date, grader ORDER BY snapshot_date, grader`, id)
   const mine = await all(db, `
     SELECT grader, grade_label AS label, COUNT(*) AS count FROM my_certs WHERE card_id = ? GROUP BY grader, grade_label`, id)
-  return { card: c, distribution, history: hist.map(h => ({ ...h, gem_rate: rate(h.gems, h.total - h.authentic) })), mine }
+  const mineBy = {}
+  for (const m of mine) mineBy[m.grader] = (mineBy[m.grader] || 0) + m.count
+  // Per-grader summary for the latest snapshots, plus the card's pop rank within its set (by total graded, all graders).
+  const perGrader = {}
+  for (const d of distribution) {
+    const p = (perGrader[d.grader] ||= { grader: d.grader, total: 0, gems: 0, authentic: 0 })
+    p.total += d.count
+    if (d.top) p.gems += d.count
+    if (d.authentic) p.authentic += d.count
+  }
+  const graders = Object.values(perGrader).map(p => ({ ...p, gem_rate: rate(p.gems, p.total - p.authentic), mine: mineBy[p.grader] || 0 }))
+  const total = graders.reduce((a, g) => a + g.total, 0)
+  const gems = graders.reduce((a, g) => a + g.gems, 0)
+  const authentic = graders.reduce((a, g) => a + g.authentic, 0)
+  const setTotals = await all(db, `
+    SELECT p.card_id, SUM(p.count) AS total FROM latest_pop p JOIN cards x ON x.id = p.card_id
+    WHERE x.set_id = ? GROUP BY p.card_id`, c.set_id)
+  const setCards = await first(db, 'SELECT COUNT(*) AS n FROM cards WHERE set_id = ?', c.set_id)
+  const rank = total > 0 ? 1 + setTotals.filter(r => r.total > total).length : null
+  return {
+    card: c,
+    distribution,
+    history: hist.map(h => ({ ...h, gem_rate: rate(h.gems, h.total - h.authentic) })),
+    mine,
+    mine_by_grader: mineBy,
+    mine_total: Object.values(mineBy).reduce((a, n) => a + n, 0),
+    graders,
+    total,
+    gems,
+    gem_rate: rate(gems, total - authentic),
+    rank: rank && { position: rank, of: setTotals.length, set_cards: setCards.n },
+  }
 }
 
 export async function history(db) {
