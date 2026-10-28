@@ -31,7 +31,7 @@ GRADERS = [  # code, name, url, method
     ("AGS", "AGS (Robograding)", "https://app.agscard.com/pop/categories/102", "scrape"),
     ("TAG", "TAG Grading", "https://my.taggrading.com/pop-report/Nature", "browser"),
     ("PSA", "PSA", "https://www.psacard.com/pop", "manual"),
-    ("BECKETT", "Beckett (BGS)", "https://www.beckett.com/grading/population-report", "manual"),
+    ("BGS", "Beckett (BGS)", "https://www.beckett.com/grading/population-report", "manual"),
     ("SGC", "SGC", "https://gosgc.com/population-report", "manual"),
     ("ACE", "ACE Grading", "https://www.acegrading.com/pop-report", "manual"),
 ]
@@ -46,11 +46,27 @@ SETS = {
     "Promos": (None, 5),
     "Mammals Photography": (2026, 6),
 }
+# Manual CSV file stems that differ from the grader code.
+STEM_TO_CODE = {"BECKETT": "BGS"}
+AUTH_EXACT = {"au", "aa", "cc", "va", "a", "auth", "authentic", "altered", "ae"}
+
+
+def is_authentic(label):
+    """Authentic-only slabs: graded (they count in totals) but no numeric grade, so no gem rate."""
+    l = label.strip().lower()
+    return l in AUTH_EXACT or "authentic" in l or "altered" in l or l.startswith("auth")
+
+
+def is_gem(grader, numeric):
+    """Gem tier: 10 and above everywhere, except BGS where 9.5 Gem Mint and up counts."""
+    return numeric >= (9.5 if grader == "BGS" else 10)
+
+
 # AGS never states a variant; TAG's pop page leaves it blank for many holo cards. For these graders
 # a blank variant means "unspecified": attach to the existing card instead of inventing a Base one.
 UNSPECIFIED_OK = {"AGS", "TAG"}
 # Process graders that state a variant first, so AGS (variant usually unstated) attaches to existing cards.
-GRADER_ORDER = ["CGC", "TAG", "PSA", "BECKETT", "SGC", "ACE", "AGS"]
+GRADER_ORDER = ["CGC", "TAG", "PSA", "BGS", "SGC", "ACE", "AGS"]
 
 
 # ---------- normalization ----------
@@ -186,7 +202,7 @@ def load_raw():
 def load_manual():
     out = []
     for f in sorted(glob.glob(str(DATA / "manual" / "*.csv"))):
-        grader = Path(f).stem.upper()
+        grader = STEM_TO_CODE.get(Path(f).stem.upper(), Path(f).stem.upper())
         by_date = collections.defaultdict(lambda: collections.defaultdict(lambda: {"grades": {}}))
         for r in csv.DictReader(open(f, newline="")):
             if not (r.get("snapshot_date") or "").strip():
@@ -268,8 +284,9 @@ def main():
     pop_rows = []
     for (date, grader, cid, label), cnt in sorted(pop.items(), key=lambda kv: (kv[0][0], kv[0][1], by_id[kv[0][2]]["id"], kv[0][3])):
         num = grade_numeric(label)
-        pop_rows.append((date, grader, by_id[cid]["id"], label, num, 1 if num >= 10 else 0, cnt))
-    db.executemany("INSERT INTO pop VALUES (?,?,?,?,?,?,?)", pop_rows)
+        auth = is_authentic(label)
+        pop_rows.append((date, grader, by_id[cid]["id"], label, num, 1 if (not auth and is_gem(grader, num)) else 0, 1 if auth else 0, cnt))
+    db.executemany("INSERT INTO pop VALUES (?,?,?,?,?,?,?,?)", pop_rows)
     db.executemany("INSERT INTO my_certs VALUES (?,?,?,?)", [(cert, g, c["id"], gr) for cert, g, c, gr in certs])
     notes = {}
     for f in glob.glob(str(DATA / "raw" / "*.meta.json")):

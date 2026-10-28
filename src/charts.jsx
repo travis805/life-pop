@@ -37,9 +37,9 @@ export function GradeBars({ grader, rows, compact }) {
   return (
     <div className={'gradebars' + (compact ? ' compact' : '')}>
       {rows.map(r => {
-        const top = r.num >= 10
+        const top = r.top != null ? r.top === 1 : r.num >= 10
         return (
-          <div className="gb-row" key={r.label} title={`${grader} ${r.label}: ${r.count} of ${total}`}>
+          <div className="gb-row" key={r.label} title={`${grader} ${r.label}: ${r.count} of ${total}${r.authentic ? ' (authentic, excluded from gem rate)' : ''}`}>
             <span className={'gb-label' + (top ? ' top' : '')}>{r.label}</span>
             <span className="gb-track">
               <span className="gb-fill" style={{ width: `${(r.count / max) * 100}%`, background: graderColor(grader), opacity: top ? 1 : 0.55 }} />

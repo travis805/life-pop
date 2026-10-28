@@ -12,7 +12,7 @@ database from public pop reports. A Cloudflare Worker serves a read-only API and
 | CGC | scrape | `scripts/scrape_cgc.py` reads CGC's own public JSON API (`production.api.aws.ccg-ops.com`, the one the pop page calls). Eras, sets and cards are discovered, and each set total is asserted against the published count. |
 | AGS | scrape | `scripts/scrape_ags.py` parses the server-rendered pages at `app.agscard.com/pop/categories/102` (series, sets, cards). Set totals are asserted against the page totals. |
 | TAG | browser | TAG's API returns 403 to direct fetches, so `scripts/tag_extract.js` is pasted into a browser tab on `my.taggrading.com/pop-report/Nature` (TAG files LIFE under Nature). Claude does this in the in-app browser. |
-| PSA, Beckett, SGC, ACE | manual | Blocked for automation (login or human checks). Fill `data/manual/<grader>.csv` by hand. |
+| PSA, Beckett, SGC, ACE | manual | Blocked for automation (login or human checks). Fill `data/manual/<grader>.csv` (psa, bgs, sgc, ace) by hand. |
 
 Everything lands in `data/raw/<grader>-<date>.json` as `{year,set,num,name,variant,grades:{label:count,TOTAL}}`
 (CGC and AGS also write a `.meta.json` with the published totals used for reconciliation).
@@ -37,13 +37,13 @@ and a `latest_pop` view (latest snapshot per grader).
 Card matching: canonical set map, then normalized number (leading zeros and `/100` suffix removed), then
 normalized name, then variant. Mammals numbers above 100 belong to Promos (that is how TAG files them).
 Grade scale: `grade_numeric` is 10.75 for CGC Perfect 10, 10.5 for Pristine and Legend, 10 for Gem Mint,
-0 for AU/AA/CC/VA. A "gem" is `grade_numeric >= 10`.
+0 for AU/AA/CC/VA. A "gem" is 10 or above (BGS: 9.5 or above). Authentic-only slabs (AU, AA, CC, VA, PSA Auth, ...) have `is_authentic = 1`: they stay in the graded totals but are excluded from gem rate (gem rate = gems / numerically graded copies).
 
 ## Monthly refresh runbook
 
 1. `pip install -r requirements.txt` (first time only), then `python3 scripts/scrape_cgc.py` and `python3 scripts/scrape_ags.py`.
 2. Ask Claude to run `scripts/tag_extract.js` in the in-app browser on the TAG Nature pop page and save the result to `data/raw/tag-<YYYY-MM-DD>.json`.
-3. Optional: add rows to `data/manual/psa.csv`, `beckett.csv`, `sgc.csv`, `ace.csv` with columns `snapshot_date,set,num,name,variant,grade,count` (one row per grade).
+3. Optional: add rows to `data/manual/psa.csv`, `bgs.csv`, `sgc.csv`, `ace.csv` with columns `snapshot_date,set,num,name,variant,grade,count` (one row per grade).
    When Travis sends new cards to TAG: `python3 scripts/export_my_certs.py` re-reads the Grading Batches workbook into `data/my_certs.csv`.
 4. `python3 scripts/build_db.py` and read the reconciliation it prints plus `data/alias_report.txt`.
 5. `npx wrangler d1 execute life-pop --remote --file data/d1_load.sql`
@@ -53,7 +53,7 @@ Grade scale: `grade_numeric` is 10.75 for CGC Perfect 10, 10.5 for Pristine and 
 
 ```sh
 npm install
-npm run db:local        # applies schema.sql and data/d1_load.sql to the local D1 (.wrangler/)
+npm run db:local        # (after a schema change, first delete .wrangler/state) applies schema.sql and data/d1_load.sql to the local D1 (.wrangler/)
 npm run cf:dev          # builds the SPA and runs the Worker at http://localhost:8787 (API and site)
 ```
 For hot reload of the UI, run `npm run cf:dev` in one terminal and `npm run dev` in another. Vite serves the app

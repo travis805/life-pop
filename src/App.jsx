@@ -80,10 +80,10 @@ function CardDetail({ id, onClose }) {
             ))}
             <h3 className="panel-sub">History</h3>
             <table className="mini">
-              <thead><tr><th>Date</th><th>Grader</th><th className="num">Graded</th><th className="num">Gems</th></tr></thead>
+              <thead><tr><th>Date</th><th>Grader</th><th className="num">Graded</th><th className="num">Gems</th><th className="num">Gem rate</th></tr></thead>
               <tbody>
                 {data.history.map(h => (
-                  <tr key={h.snapshot_date + h.grader}><td>{dateLabel(h.snapshot_date)}</td><td>{h.grader}</td><td className="num">{h.total}</td><td className="num">{h.gems}</td></tr>
+                  <tr key={h.snapshot_date + h.grader}><td>{dateLabel(h.snapshot_date)}</td><td>{h.grader}</td><td className="num">{h.total}</td><td className="num">{h.gems}</td><td className="num">{pct(h.gem_rate)}</td></tr>
                 ))}
               </tbody>
             </table>
@@ -178,7 +178,7 @@ function CardTable({ sets, graders, onOpen }) {
                 <td>{r.variant}</td>
                 {graders.map(g => <td key={g} className="num">{r.counts[g]?.total ? r.counts[g].total : <span className="dash">·</span>}</td>)}
                 <td className="num strong">{r.total}</td>
-                <td className="num">{r.gems || <span className="dash">·</span>}</td>
+                <td className="num" title={r.gem_rate == null ? 'No numeric grades' : `${pct(r.gem_rate)} gem rate (authentic slabs excluded)`}>{r.gems || <span className="dash">·</span>}</td>
                 <td className="num">{r.mine ? <span className="badge">{r.mine}</span> : <span className="dash">·</span>}</td>
               </tr>
             ))}
@@ -232,9 +232,9 @@ export default function App() {
             <div className="tiles">
               <Tile label="Total graded" value={n0(summary.total_graded)} sub={`${n0(summary.cards_graded)} distinct cards`} />
               {summary.graders.map(g => (
-                <Tile key={g.grader} label={g.grader} color={graderColor(g.grader)} value={n0(g.total_graded)} sub={`${pct(g.gem_rate)} gem rate · ${dateLabel(g.as_of)}`} />
+                <Tile key={g.grader} label={g.grader} color={graderColor(g.grader)} value={n0(g.total_graded)} sub={`${pct(g.gem_rate)} gem rate${g.authentic ? ` · ${n0(g.authentic)} AU excluded` : ''}`} />
               ))}
-              <Tile label="Overall gem rate" value={pct(summary.gem_rate)} sub={`${n0(summary.gems)} cards at 10 or better`} />
+              <Tile label="Overall gem rate" value={pct(summary.gem_rate)} sub={`${n0(summary.gems)} gems of ${n0(summary.numeric_graded)} numerically graded${summary.authentic ? ` · ${n0(summary.authentic)} AU excluded` : ''}`} />
               <Tile
                 label="Taclaco share of TAG"
                 value={pct(summary.taclaco.share)}
@@ -251,7 +251,7 @@ export default function App() {
               <div className="dist-grid">
                 {summary.graders.map(g => (
                   <div key={g.grader} className="dist-col">
-                    <h3><i style={{ background: graderColor(g.grader) }} />{g.grader}<span> {n0(g.total_graded)} graded</span></h3>
+                    <h3><i style={{ background: graderColor(g.grader) }} />{g.grader}<span> {n0(g.total_graded)} graded · {pct(g.gem_rate)} gems</span></h3>
                     <GradeBars grader={g.grader} rows={distBy[g.grader] || []} />
                   </div>
                 ))}
@@ -267,7 +267,8 @@ export default function App() {
             <footer className="foot">
               <p>
                 Counts come from the public population reports of each grader, refreshed monthly. Gem means a grade of 10 or above on that grader's scale
-                (CGC Gem Mint, Pristine and Perfect 10; TAG 10 and 10P; AGS Gem-MT and Legend 10). PSA, Beckett, SGC and ACE block automated access and are not included yet.
+                (CGC Gem Mint, Pristine and Perfect 10; TAG 10 and 10P; AGS Gem-MT and Legend 10; Beckett 9.5 and up). Gem rate is gems divided by numerically graded copies:
+                authentic-only slabs (AU, AA, CC, VA) count as graded but are excluded from the rate. PSA, Beckett, SGC and ACE block automated access and appear only once manual data is loaded.
               </p>
             </footer>
           </>

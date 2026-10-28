@@ -20,19 +20,23 @@ export async function summary(db) {
   const perGrader = await all(db, `
     SELECT grader, SUM(count) AS total,
            SUM(CASE WHEN is_top_grade = 1 THEN count ELSE 0 END) AS gems,
+           SUM(CASE WHEN is_authentic = 1 THEN count ELSE 0 END) AS authentic,
            COUNT(DISTINCT card_id) AS cards
     FROM latest_pop GROUP BY grader`)
   const by = Object.fromEntries(perGrader.map(r => [r.grader, r]))
   const graders = snaps.map(s => {
-    const p = by[s.grader] || { total: 0, gems: 0, cards: 0 }
-    return { ...s, gems: p.gems, gem_rate: rate(p.gems, p.total), cards_graded: p.cards }
+    const p = by[s.grader] || { total: 0, gems: 0, authentic: 0, cards: 0 }
+    // Gem rate = gems / numerically graded copies. Authentic-only slabs (AU etc.) count as graded but not here.
+    return { ...s, gems: p.gems, authentic: p.authentic, numeric_graded: p.total - p.authentic, gem_rate: rate(p.gems, p.total - p.authentic), cards_graded: p.cards }
   })
   const total = graders.reduce((a, g) => a + g.total_graded, 0)
   const gems = graders.reduce((a, g) => a + g.gems, 0)
+  const authentic = graders.reduce((a, g) => a + g.authentic, 0)
+  const numericGraded = total - authentic
   const distinct = await first(db, 'SELECT COUNT(DISTINCT card_id) AS n FROM latest_pop')
   const dist = await all(db, `
-    SELECT grader, grade_label AS label, grade_numeric AS num, SUM(count) AS count
-    FROM latest_pop GROUP BY grader, grade_label, grade_numeric ORDER BY grader, grade_numeric DESC`)
+    SELECT grader, grade_label AS label, grade_numeric AS num, is_authentic AS authentic, MAX(is_top_grade) AS top, SUM(count) AS count
+    FROM latest_pop GROUP BY grader, grade_label, grade_numeric, is_authentic ORDER BY grader, grade_numeric DESC`)
 
   const mine = await first(db, "SELECT COUNT(*) AS n, COUNT(DISTINCT card_id) AS cards FROM my_certs WHERE grader = 'TAG'")
   const tag = graders.find(g => g.grader === 'TAG')
@@ -40,7 +44,9 @@ export async function summary(db) {
     as_of: graders.reduce((m, g) => (g.as_of > m ? g.as_of : m), ''),
     total_graded: total,
     gems,
-    gem_rate: rate(gems, total),
+    authentic,
+    numeric_graded: numericGraded,
+    gem_rate: rate(gems, numericGraded),
     cards_graded: distinct.n,
     graders,
     distribution: dist,
@@ -59,6 +65,7 @@ export async function sets(db) {
   const cells = await all(db, `
     SELECT c.set_id, p.grader, SUM(p.count) AS total,
            SUM(CASE WHEN p.is_top_grade = 1 THEN p.count ELSE 0 END) AS gems,
+           SUM(CASE WHEN p.is_authentic = 1 THEN p.count ELSE 0 END) AS authentic,
            COUNT(DISTINCT p.card_id) AS cards
     FROM latest_pop p JOIN cards c ON c.id = p.card_id
     GROUP BY c.set_id, p.grader`)
@@ -69,8 +76,12 @@ export async function sets(db) {
     sets: setRows.map(s => {
       const byGrader = {}
       let total = 0
-      for (const c of cells) if (c.set_id === s.id) { byGrader[c.grader] = c; total += c.total }
-      return { ...s, total, mine: mineBy[s.id] || 0, graders: byGrader }
+      let gems = 0, authentic = 0
+      for (const c of cells) if (c.set_id === s.id) {
+        byGrader[c.grader] = { ...c, gem_rate: rate(c.gems, c.total - c.authentic) }
+        total += c.total; gems += c.gems; authentic += c.authentic
+      }
+      return { ...s, total, gems, authentic, gem_rate: rate(gems, total - authentic), mine: mineBy[s.id] || 0, graders: byGrader }
     }),
   }
 }
@@ -91,13 +102,14 @@ export async function cards(db, { set, grader, q }) {
     ORDER BY s.sort_order, CAST(c.number AS INTEGER), c.name, c.variant`, ...binds)
   const pops = await all(db, `
     SELECT card_id, grader, SUM(count) AS total,
-           SUM(CASE WHEN is_top_grade = 1 THEN count ELSE 0 END) AS gems
+           SUM(CASE WHEN is_top_grade = 1 THEN count ELSE 0 END) AS gems,
+           SUM(CASE WHEN is_authentic = 1 THEN count ELSE 0 END) AS authentic
     FROM latest_pop GROUP BY card_id, grader`)
   const mine = await all(db, 'SELECT card_id, COUNT(*) AS n FROM my_certs GROUP BY card_id')
   const popBy = new Map()
   for (const p of pops) {
     if (!popBy.has(p.card_id)) popBy.set(p.card_id, {})
-    popBy.get(p.card_id)[p.grader] = { total: p.total, gems: p.gems }
+    popBy.get(p.card_id)[p.grader] = { total: p.total, gems: p.gems, authentic: p.authentic, gem_rate: rate(p.gems, p.total - p.authentic) }
   }
   const mineBy = new Map(mine.map(m => [m.card_id, m.n]))
   const out = []
@@ -110,6 +122,8 @@ export async function cards(db, { set, grader, q }) {
       counts,
       total: use.reduce((a, x) => a + x.total, 0),
       gems: use.reduce((a, x) => a + x.gems, 0),
+      authentic: use.reduce((a, x) => a + x.authentic, 0),
+      gem_rate: rate(use.reduce((a, x) => a + x.gems, 0), use.reduce((a, x) => a + x.total - x.authentic, 0)),
       mine: mineBy.get(c.id) || 0,
     })
   }
@@ -123,22 +137,25 @@ export async function card(db, id) {
     FROM cards c JOIN sets s ON s.id = c.set_id WHERE c.id = ?`, id)
   if (!c) return null
   const distribution = await all(db, `
-    SELECT grader, grade_label AS label, grade_numeric AS num, is_top_grade AS top, count
+    SELECT grader, grade_label AS label, grade_numeric AS num, is_top_grade AS top, is_authentic AS authentic, count
     FROM latest_pop WHERE card_id = ? ORDER BY grader, grade_numeric DESC`, id)
   const hist = await all(db, `
     SELECT snapshot_date, grader, SUM(count) AS total,
-           SUM(CASE WHEN is_top_grade = 1 THEN count ELSE 0 END) AS gems
+           SUM(CASE WHEN is_top_grade = 1 THEN count ELSE 0 END) AS gems,
+           SUM(CASE WHEN is_authentic = 1 THEN count ELSE 0 END) AS authentic
     FROM pop WHERE card_id = ? GROUP BY snapshot_date, grader ORDER BY snapshot_date, grader`, id)
   const mine = await all(db, `
     SELECT grader, grade_label AS label, COUNT(*) AS count FROM my_certs WHERE card_id = ? GROUP BY grader, grade_label`, id)
-  return { card: c, distribution, history: hist, mine }
+  return { card: c, distribution, history: hist.map(h => ({ ...h, gem_rate: rate(h.gems, h.total - h.authentic) })), mine }
 }
 
 export async function history(db) {
   const rows = await all(db, `
     SELECT s.snapshot_date, s.grader, s.total_graded,
            (SELECT COALESCE(SUM(p.count), 0) FROM pop p
-             WHERE p.snapshot_date = s.snapshot_date AND p.grader = s.grader AND p.is_top_grade = 1) AS gems
+             WHERE p.snapshot_date = s.snapshot_date AND p.grader = s.grader AND p.is_top_grade = 1) AS gems,
+           (SELECT COALESCE(SUM(p.count), 0) FROM pop p
+             WHERE p.snapshot_date = s.snapshot_date AND p.grader = s.grader AND p.is_authentic = 1) AS authentic
     FROM snapshots s ORDER BY s.snapshot_date, s.grader`)
-  return { history: rows }
+  return { history: rows.map(r => ({ ...r, gem_rate: rate(r.gems, r.total_graded - r.authentic) })) }
 }

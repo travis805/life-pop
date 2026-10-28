@@ -2,7 +2,7 @@
 -- Re-runnable: everything is IF NOT EXISTS (the data itself is reloaded by data/d1_load.sql).
 
 CREATE TABLE IF NOT EXISTS graders (
-  code   TEXT PRIMARY KEY,                 -- CGC, TAG, AGS, PSA, BECKETT, SGC, ACE
+  code   TEXT PRIMARY KEY,                 -- CGC, TAG, AGS, PSA, BGS, SGC, ACE
   name   TEXT NOT NULL,
   url    TEXT,
   method TEXT NOT NULL CHECK (method IN ('scrape', 'browser', 'manual'))
@@ -42,7 +42,8 @@ CREATE TABLE IF NOT EXISTS pop (
   card_id       INTEGER NOT NULL REFERENCES cards(id),
   grade_label   TEXT NOT NULL,             -- grader's own label: "Gem Mint 10", "10P", "9.5", "AU"
   grade_numeric REAL NOT NULL,             -- for sorting / gem math. 10.5 = Pristine/Legend, 10.75 = CGC Perfect 10, 0 = Authentic etc.
-  is_top_grade  INTEGER NOT NULL,          -- 1 when grade_numeric >= 10 (the grader's gem tier and above)
+  is_top_grade  INTEGER NOT NULL,          -- 1 for the grader's gem tier and above (10+; BGS 9.5+)
+  is_authentic  INTEGER NOT NULL DEFAULT 0, -- 1 for authentic-only slabs (AU, AA, CC, VA, PSA Auth...): graded, but no numeric grade, excluded from gem rate
   count         INTEGER NOT NULL,
   PRIMARY KEY (snapshot_date, grader, card_id, grade_label)
 );
