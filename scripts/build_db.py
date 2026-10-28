@@ -67,7 +67,7 @@ def set_for(raw_set, num_norm):
         return "Mammals Special Edition"
     if "kickstarter" in s or re.search(r"\bks\b", s):
         return "Mammals 1st Edition (Kickstarter)"
-    if "mammal" in s:
+    if "mammal" in s or re.match(r"2023 life\b", s):  # AGS files signed Mammals 1st Edition cards under "2023 LIFE"
         # Numbers above 100 in the main Mammals set are promo-numbered cards (TAG files them as Promo).
         return "Promos" if num_norm.isdigit() and int(num_norm) > 100 else "Mammals 1st Edition"
     return None
@@ -112,7 +112,10 @@ def grade_numeric(label):
     if any(k in l for k in ("pristine", "legend", "10p", "black label")):
         return 10.5
     m = re.search(r"(\d+(?:\.\d+)?)", l)
-    return float(m.group(1)) if m else 0.0  # AU, AA, CC, VA: authentic / no numeric grade
+    if not m:
+        return 0.0
+    # AGS "plus" half-grades ("9+") sit half a point above their base grade; 10+ would count as gem tier.
+    return float(m.group(1)) + (0.5 if l.endswith("+") else 0.0)  # AU, AA, CC, VA: authentic / no numeric grade
 
 
 # ---------- card registry ----------
@@ -272,7 +275,7 @@ def main():
     for f in glob.glob(str(DATA / "raw" / "*.meta.json")):
         meta = json.load(open(f))
         if meta.get("published_total") is not None:
-            notes[(meta["date"], meta["grader"])] = f"Source reported {meta['published_total']} graded"
+            notes[(meta["date"], meta["grader"])] = f"Source reported {meta['published_total']} graded" + (" (grade plus half-grade '+' rows)" if meta["grader"] == "AGS" else "")
     db.executemany("INSERT INTO snapshots VALUES (?,?,?,?,?)",
                    [(d, g, GRADER_URL.get(g), t, notes.get((d, g))) for (d, g), t in sorted(snapshot_rows.items())])
     db.commit()

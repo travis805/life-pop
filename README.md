@@ -19,7 +19,7 @@ Everything lands in `data/raw/<grader>-<date>.json` as `{year,set,num,name,varia
 Raw snapshots are public data and are committed. Every month's snapshot is kept, so growth over time works.
 
 Known source quirks:
-- AGS's page headline says 66 graded but its tables add up to 45. The tables are used, and the headline is stored in the snapshot note.
+- AGS reports each grade cell as two numbers: the grade and its "+" half-grade (7+, 8+, 9+). Both are loaded (labels like "9+", grade_numeric n + 0.5, not gem), and the scraper asserts the total equals the page headline (66).
 - AGS does not publish a variant, so its cards are matched to the closest card by set, number and name.
 - TAG files Kickstarter copies under Mammals 1st Edition, so TAG counts for the two Mammals sets cannot be separated.
 

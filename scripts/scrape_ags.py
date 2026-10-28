@@ -3,8 +3,8 @@
 
 Server-rendered HTML at https://app.agscard.com/pop/categories/102 :
   category -> series (year / release) links -> set rows -> card rows (paginated, per_page=100).
-Each grade cell shows "<count at this grade> <br> <count at higher grades>"; only the first
-number is used. Series and set ids are discovered from the pages, not hardcoded.
+Each grade cell shows "<count at grade> <br> <count at grade+>"; both are captured
+(plus counts become labels like "9+"). Series and set ids are discovered from the pages, not hardcoded.
 """
 import datetime
 import html
@@ -28,19 +28,31 @@ def clean(s):
 
 
 def parse_cells(row_html):
-    """Return ({grade: count}, total) from a table row."""
-    cells = re.findall(r'<td class="pop-list__table-cell pop-list__table-cell--(value|total)">(.*?)</td>', row_html, flags=re.S)
-    nums = []
-    for _kind, c in cells:
-        txt = clean(c)
-        m = re.match(r"(\d+)", txt)
-        nums.append(int(m.group(1)) if m else 0)
-    if len(nums) != len(GRADES) + 1:
-        raise SystemExit(f"AGS: expected {len(GRADES) + 1} value cells, got {len(nums)}")
-    grades = {g: n for g, n in zip(GRADES, nums[:-1]) if n}
-    if sum(grades.values()) != nums[-1]:
-        raise SystemExit(f"AGS: grade sum {sum(grades.values())} != row total {nums[-1]}")
-    return grades, nums[-1]
+    """Return ({label: count}, total) from a table row.
+
+    Each grade cell holds two numbers: "<count at grade> <br> <count at grade+>". The second is AGS's
+    "plus" half-grade (7+, 8+, 9+), reported as its own label with grade_numeric n + 0.5 in build_db.
+    The row total cell is "<sum of grades> <br> <sum of plus grades>"; the returned total is both added.
+    """
+    cells = re.findall(r'<td class="pop-list__table-cell pop-list__table-cell--(?:value|total)">(.*?)</td>', row_html, flags=re.S)
+    pairs = []
+    for c in cells:
+        parts = [clean(x) for x in re.split(r"<br\s*/?>", c)]
+        nums = [int(m.group(1)) if (m := re.match(r"(\d+)", x)) else 0 for x in parts]
+        pairs.append((nums[0] if nums else 0, nums[1] if len(nums) > 1 else 0))
+    if len(pairs) != len(GRADES) + 1:
+        raise SystemExit(f"AGS: expected {len(GRADES) + 1} value cells, got {len(pairs)}")
+    grades = {}
+    for g, (n, plus) in zip(GRADES, pairs[:-1]):
+        if n:
+            grades[g] = n
+        if plus:
+            grades[g + "+"] = plus
+    tot_grade, tot_plus = pairs[-1]
+    if sum(v for k, v in grades.items() if not k.endswith("+")) != tot_grade or \
+       sum(v for k, v in grades.items() if k.endswith("+")) != tot_plus:
+        raise SystemExit(f"AGS: grade/plus sums do not match row total {tot_grade}+{tot_plus}")
+    return grades, tot_grade + tot_plus
 
 
 def data_rows(page_html):
@@ -111,6 +123,8 @@ def main():
     grand = sum(r["grades"]["TOTAL"] for r in rows)
     hero_graded = int(hero[2]) if len(hero) >= 3 else None
     print(f"AGS total scraped {grand}; page hero says {hero_graded}")
+    if hero_graded is not None and grand != hero_graded:
+        raise SystemExit(f"AGS total {grand} != page headline {hero_graded}")
     out = ROOT / "data" / "raw" / f"ags-{date}.json"
     out.write_text(json.dumps(rows, ensure_ascii=False, separators=(",", ":")))
     (ROOT / "data" / "raw" / f"ags-{date}.meta.json").write_text(json.dumps({
