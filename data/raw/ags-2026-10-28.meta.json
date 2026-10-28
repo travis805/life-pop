@@ -1,0 +1,51 @@
+{
+ "grader": "AGS",
+ "date": "2026-10-28",
+ "source_url": "https://app.agscard.com/pop/categories/102",
+ "published_total": 66,
+ "table_total": 45,
+ "sets": [
+  {
+   "series": "2024 PROMOS",
+   "set": "2024 PROMOS 06/11/2024",
+   "set_id": "5561",
+   "published_total": 2,
+   "scraped_total": 2
+  },
+  {
+   "series": "2025 LIFE",
+   "set": "2025 LIFE BIRDS 08/01/2025",
+   "set_id": "6148",
+   "published_total": 23,
+   "scraped_total": 23
+  },
+  {
+   "series": "2023 LIFE",
+   "set": "2023 MAMMALS 01/05/2023",
+   "set_id": "6639",
+   "published_total": 13,
+   "scraped_total": 13
+  },
+  {
+   "series": "2023 LIFE",
+   "set": "2023 LIFE 01/14/2026",
+   "set_id": "6638",
+   "published_total": 0,
+   "scraped_total": 0
+  },
+  {
+   "series": "Kickstarter 2022",
+   "set": "Kickstarter Set 11/17/2022",
+   "set_id": "6962",
+   "published_total": 1,
+   "scraped_total": 1
+  },
+  {
+   "series": "2026 LIFE",
+   "set": "Special Edition Mammals 04/10/2026",
+   "set_id": "7638",
+   "published_total": 6,
+   "scraped_total": 6
+  }
+ ]
+}

@@ -1,0 +1,24 @@
+{
+  "name": "life-pop",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-09-01",
+  "workers_dev": false,
+  "routes": [{ "pattern": "lifepop.tacla.co", "custom_domain": true }],
+  "observability": { "enabled": true },
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
+  },
+  // D1 database holding the population data (read-only from the Worker).
+  // TODO: before the first deploy, run `wrangler d1 create life-pop` and paste the real id below.
+  // Local dev ignores this id and uses the local D1 under .wrangler/.
+  "d1_databases": [
+    { "binding": "DB", "database_name": "life-pop", "database_id": "00000000-0000-0000-0000-000000000000" }
+  ]
+  // Cloudflare Access is OPTIONAL. Leave ACCESS_AUD unset and /api/* is public (the data is public
+  // pop reports). To gate the site: create an Access application for lifepop.tacla.co, then add
+  //   "vars": { "ACCESS_TEAM_DOMAIN": "https://tight-wave-d7c1.cloudflareaccess.com", "ACCESS_AUD": "<application AUD tag>" }
+  // With ACCESS_AUD set, the Worker verifies the Access JWT on every /api/* request and fails closed (401).
+}

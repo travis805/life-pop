@@ -1,0 +1,50 @@
+{
+ "grader": "CGC",
+ "date": "2026-10-28",
+ "source_url": "https://www.cgccards.com/population-report/tcg/life-tcg/55/",
+ "published_total": 209,
+ "sets": [
+  {
+   "era": "Promotional",
+   "set": "Promotional - English",
+   "group_id": 33758,
+   "published_total": 16,
+   "scraped_total": 16
+  },
+  {
+   "era": "Main Expansion",
+   "set": "Birds - 1st Edition - English",
+   "group_id": 35376,
+   "published_total": 33,
+   "scraped_total": 33
+  },
+  {
+   "era": "Main Expansion",
+   "set": "Mammals - 1st Edition - English",
+   "group_id": 33431,
+   "published_total": 85,
+   "scraped_total": 85
+  },
+  {
+   "era": "Main Expansion",
+   "set": "Mammals - 1st Edition - KS - English",
+   "group_id": 17913,
+   "published_total": 73,
+   "scraped_total": 73
+  },
+  {
+   "era": "Main Expansion",
+   "set": "Mammals - Special Edition - English",
+   "group_id": 36893,
+   "published_total": 1,
+   "scraped_total": 1
+  },
+  {
+   "era": "Main Expansion",
+   "set": "Mini Photography Set - English",
+   "group_id": 36894,
+   "published_total": 1,
+   "scraped_total": 1
+  }
+ ]
+}

@@ -1,0 +1,24 @@
+{
+  "name": "life-pop",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "db:schema": "wrangler d1 execute life-pop --local --file schema.sql",
+    "db:load": "wrangler d1 execute life-pop --local --file data/d1_load.sql",
+    "db:local": "npm run db:schema && npm run db:load",
+    "cf:dev": "vite build && wrangler dev",
+    "cf:deploy": "vite build && wrangler deploy"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.4.0",
+    "wrangler": "^4"
+  }
+}

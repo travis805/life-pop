@@ -1,0 +1,10 @@
+node_modules
+dist
+.wrangler
+.dev.vars
+# local SQLite build, generated D1 load file (contains Travis's own cert numbers) and cert export
+data/life_pop.sqlite
+data/d1_load.sql
+data/my_certs.csv
+.DS_Store
+__pycache__
