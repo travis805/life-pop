@@ -12,10 +12,10 @@
     "run_worker_first": ["/api/*"]
   },
   // D1 database holding the population data (read-only from the Worker).
-  // TODO: before the first deploy, run `wrangler d1 create life-pop` and paste the real id below.
+  // Created 2026-10-28 with `wrangler d1 create life-pop` (WNAM).
   // Local dev ignores this id and uses the local D1 under .wrangler/.
   "d1_databases": [
-    { "binding": "DB", "database_name": "life-pop", "database_id": "00000000-0000-0000-0000-000000000000" }
+    { "binding": "DB", "database_name": "life-pop", "database_id": "7e94b13e-0754-406c-8773-887f2fbac06b" }
   ]
   // Cloudflare Access is OPTIONAL. Leave ACCESS_AUD unset and /api/* is public (the data is public
   // pop reports). To gate the site: create an Access application for lifepop.tacla.co, then add
