@@ -31,9 +31,9 @@ GRADERS = [  # code, name, url, method
     ("AGS", "AGS (Robograding)", "https://app.agscard.com/pop/categories/102", "scrape"),
     ("TAG", "TAG Grading", "https://my.taggrading.com/pop-report/Nature", "browser"),
     ("PSA", "PSA", "https://www.psacard.com/pop", "manual"),
-    ("BGS", "Beckett (BGS)", "https://www.beckett.com/grading/population-report", "manual"),
+    ("BGS", "Beckett (BGS)", "https://www.beckett.com/grading/pop-report", "browser"),
     ("SGC", "SGC", "https://gosgc.com/population-report", "manual"),
-    ("ACE", "ACE Grading", "https://www.acegrading.com/pop-report", "manual"),
+    ("ACE", "ACE Grading", "https://acegrading.com/pop", "browser"),
 ]
 GRADER_URL = {g[0]: g[2] for g in GRADERS}
 
@@ -64,19 +64,20 @@ def is_gem(grader, numeric):
 
 # AGS never states a variant; TAG's pop page leaves it blank for many holo cards. For these graders
 # a blank variant means "unspecified": attach to the existing card instead of inventing a Base one.
-UNSPECIFIED_OK = {"AGS", "TAG"}
+UNSPECIFIED_OK = {"AGS", "TAG", "BGS", "ACE", "PSA", "SGC"}
 # Process graders that state a variant first, so AGS (variant usually unstated) attaches to existing cards.
 GRADER_ORDER = ["CGC", "TAG", "PSA", "BGS", "SGC", "ACE", "AGS"]
 
 
 # ---------- normalization ----------
-def set_for(raw_set, num_norm):
+def set_for(raw_set, num_norm, variant=""):
     """Map a grader's set label to a canonical set name (None when unrecognized)."""
     s = raw_set.lower()
     if "photograph" in s:
         return "Mammals Photography"
     if "promo" in s:
-        return "Promos"
+        # BGS files the 2026 Photography cards under "Promos" with variant "Photography".
+        return "Mammals Photography" if (variant or "").strip().lower() == "photography" else "Promos"
     if "bird" in s:
         return "Birds 1st Edition"
     if "special edition" in s:
@@ -153,7 +154,9 @@ class Registry:
 
     def resolve(self, grader, raw_set, raw_num, raw_name, desc, qualifier):
         n = norm_num(raw_num)
-        s = set_for(raw_set, n)
+        if "foil" in raw_set.lower() and not (desc or "").strip():
+            desc = "Holo"  # BGS "Mammals 1st Edition Foil" holds the holos; plain "Mammals 1st Edition" is the base card
+        s = set_for(raw_set, n, desc)
         if s is None:
             s = f"Unmapped: {raw_set}"
             if s not in SETS:
@@ -314,6 +317,11 @@ def main():
         for row in db.execute(f"SELECT * FROM {t} ORDER BY {order}"):
             lines.append(f"INSERT OR REPLACE INTO {t} ({', '.join(cols)}) VALUES ({', '.join(lit(v) for v in row)});")
     (DATA / "d1_load.sql").write_text("\n".join(lines) + "\n")
+    (DATA / "d1_migrate.sql").write_text(
+        "-- One-time migration for a D1 database created from the first schema.sql (no authentic flag).\n"
+        "-- Run once BEFORE d1_load.sql: wrangler d1 execute life-pop --remote --file data/d1_migrate.sql\n"
+        "-- (fails with 'duplicate column name' if already applied, which is harmless.)\n"
+        "ALTER TABLE pop ADD COLUMN is_authentic INTEGER NOT NULL DEFAULT 0;\n")
 
     # ---------- report ----------
     rep = []

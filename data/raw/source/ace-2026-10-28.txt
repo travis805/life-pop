@@ -1,0 +1,92 @@
+2023~Mountain Gorilla~Mammals~18/100~Holo~1st Edition | 0 0 0 0 0 0 0 1 1 2 | 4
+2023~Darwin's Fox~Mammals~17/100~Holo~1st Edition | 0 0 0 0 0 0 0 1 0 1 | 2
+2022~Cheetah~Mammals~33/100~Holo~1st Edition~Kickstarter | 0 0 0 0 0 0 0 1 0 0 | 1
+2022~Snow Leopard~Mammals~32/100~Holo~1st Edition~Kickstarter | 0 0 0 0 0 0 0 1 0 0 | 1
+2022~Ring-Tailed Lemur~Mammals~24/100~Holo~1st Edition~Kickstarter | 0 0 0 0 0 0 0 0 1 0 | 1
+2023~Koala~Mammals~52/100~Holo~1st Edition | 0 0 0 0 0 0 0 1 1 0 | 2
+2023~Polar Bear~Mammals~45/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 2 3 | 5
+2023~Tasmanian Devil~Mammals~40/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 0 2 | 2
+2023~African Lion~Mammals~39/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 2 2 | 4
+2023~Jaguar~Mammals~38/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 1 2 | 3
+2023~Cheetah~Mammals~33/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 2 3 | 5
+2023~Snow Leopard~Mammals~32/100~Holo~1st Edition | 0 0 0 0 0 0 0 2 1 2 | 5
+2023~Okapi~Mammals~30/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 0 1 | 1
+2023~Baird's Tapir~Mammals~28/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 1 1 | 2
+2023~Ring-Tailed Lemur~Mammals~24/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 0 3 | 3
+2023~Gervais Beaked Whale~Mammals~7/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 1 1 | 2
+2023~Earth~Mammals~0/100~1st Edition | 0 0 0 0 0 0 0 1 0 1 | 2
+2023~South China Tiger~Mammals~1/100~1st Edition | 0 0 0 0 0 0 1 1 2 0 | 4
+2023~Vaquita~Mammals~2/100~1st Edition | 0 0 0 0 0 1 0 0 1 1 | 3
+2023~Hainan Gibbon~Mammals~3/100~1st Edition | 0 0 0 0 0 0 0 0 0 1 | 1
+2023~Wondiwoi Tree Kangaroo~Mammals~4/100~1st Edition | 0 0 0 0 0 0 0 0 0 1 | 1
+2023~Northern Hairy-Nosed Wombat~Mammals~12/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 0 4 | 4
+2023~Black Footed Ferret~Mammals~14/100~Holo~1st Edition | 0 0 0 0 0 0 0 1 1 0 | 2
+2023~Hirola~Mammals~15/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 1 1 | 2
+2023~Wild Bactrian Camel~Mammals~20/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 1 1 | 2
+2023~Bengal Tiger~Mammals~25/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 1 4 | 5
+2023~South China Tiger~Mammals~1/100~Holo~1st Edition | 0 0 0 0 0 0 0 1 0 0 | 1
+2023~Vaquita~Mammals~2/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 1 0 | 1
+2023~Hainan Gibbon~Mammals~3/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 0 1 | 1
+2023~Wondiwoi Tree Kangaroo~Mammals~4/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 0 1 | 1
+2023~Pygmy Sloth~Mammals~6/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 0 2 | 2
+2023~Seychelles Sheath-Tailed Bat~Mammals~8/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 1 0 | 1
+2023~Saola~Mammals~9/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 1 1 | 2
+2023~Brown Headed Spider Monkey~Mammals~10/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 0 1 | 1
+2023~Vancouver Island Marmot~Mammals~11/100~Holo~1st Edition | 0 0 0 0 0 0 0 1 1 0 | 2
+2023~Cozumel Racoon~Mammals~13/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 2 0 | 2
+2023~African Wild Ass~Mammals~16/100~Holo~1st Edition | 0 0 0 0 0 0 1 0 0 0 | 1
+2023~Ili Pika~Mammals~19/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 1 1 | 2
+2023~Black Panther~Mammals~21/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 0 3 | 3
+2023~Borneo Pygmy Elephant~Mammals~22/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 1 1 | 2
+2023~Giant Panda~Mammals~23/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 1 1 | 2
+2023~Giant Otter~Mammals~29/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 1 1 | 2
+2023~African Wild Dog~Mammals~31/100~Holo~1st Edition | 0 0 0 0 0 0 0 1 0 1 | 2
+2023~Red Panda~Mammals~34/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 1 0 | 1
+2023~Blue Whale~Mammals~42/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 0 2 | 2
+2023~Amur Leopard~Mammals~5/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 0 2 | 2
+2023~Southern White Rhino~Mammals~35/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 0 1 | 1
+2023~Manatee~Mammals~36/100~Holo~1st Edition | 0 0 0 0 0 0 0 1 0 1 | 2
+2023~Orca~Mammals~51/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 0 1 | 1
+2023~Giant Anteater~Mammals~27/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 1 0 | 1
+2023~Humpback Whale~Mammals~53/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 1 0 | 1
+2023~Wolverine~Mammals~46/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 1 0 | 1
+2023~Maned Wolf~Mammals~43/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 1 1 | 2
+2023~Canadian Lynx~Mammals~49/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 0 1 | 1
+2023~Gray-Faced Sengi~Mammals~41/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 0 1 | 1
+2023~Gaur~Mammals~44/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 1 0 | 1
+2024~Giant panda~Mammals~118/100~Holo~1st Edition~Promo | 0 0 0 0 0 0 0 0 0 2 | 2
+2024~Qinling Panda~Mammals~119/100~1st Edition~Promo | 0 0 0 0 0 0 0 1 0 0 | 1
+2024~Albino Giant panda~Mammals~120/100~1st Edition~Promo | 0 0 0 0 0 0 0 0 1 0 | 1
+2023~Dugong~Mammals~47/100~Holo~1st Edition | 0 0 0 0 0 0 0 0 1 0 | 1
+2026~Africa~Mammals~121/100~Full Art~Special Edition | 0 0 0 0 0 0 0 0 1 0 | 1
+2026~Antartica~Mammals~122/100~Full Art~Special Edition | 0 0 0 0 0 0 0 0 0 1 | 1
+2026~Asia~Mammals~123/100~Full Art~Special Edition | 0 0 0 0 0 0 0 0 1 0 | 1
+2026~Europe~Mammals~124/100~Full Art~Special Edition | 0 0 0 0 0 0 0 0 1 0 | 1
+2026~North America~Mammals~125/100~Full Art~Special Edition | 0 0 0 0 0 0 0 0 0 1 | 1
+2026~Oceania~Mammals~126/100~Full Art~Special Edition | 0 0 0 0 0 0 0 0 1 0 | 1
+2026~South America~Mammals~127/100~Full Art~Special Edition | 0 0 0 0 0 0 0 0 0 1 | 1
+2026~Hainan Gibbon~Mammals~3/100~Special Edition | 0 0 0 0 0 0 0 0 0 1 | 1
+2026~Wolverine~Mammals~46/100~Extended Art~Special Edition | 0 0 0 0 0 0 0 0 1 0 | 1
+2026~Cozumel Raccoon~Mammals~13/100~Extended Art~Special Edition | 0 0 0 0 0 0 0 0 1 0 | 1
+2026~Black Panther~Mammals~21/100~Extended Art~Special Edition | 0 0 0 0 0 0 0 0 0 1 | 1
+2026~Fossa~Mammals~110/100~Holo~Special Edition | 0 0 0 0 0 0 0 0 0 1 | 1
+2026~Red Panda~Mammals~34/100~Extended Art~Special Edition | 0 0 0 0 0 0 0 0 0 2 | 2
+2025~Honduran Emerald~Birds~44/130~Holo~1st Edition | 0 0 0 0 0 0 0 0 0 1 | 1
+2025~Snowy Owl~Birds~49/130~Holo~1st Edition | 0 0 0 0 0 0 0 0 1 0 | 1
+2025~Oriental Bay Owl~Birds~37/130~Holo~1st Edition | 0 0 0 0 0 0 0 0 0 1 | 1
+2025~Great Eared Nightjar~Birds~38/130~Holo~1st Edition | 0 0 0 0 0 0 0 0 1 0 | 1
+2025~Toco Toucan~Birds~39/130~Holo~1st Edition | 0 0 0 0 0 0 0 0 0 1 | 1
+2025~Northern Spotted Owl~Birds~43/130~Holo~1st Edition | 0 0 0 0 0 0 0 0 0 1 | 1
+2025~Yellow-Crested Helmetshrike~Birds~24/130~Holo~1st Edition | 0 0 0 0 0 0 0 0 1 0 | 1
+2025~Shoebill~Birds~29/130~Holo~1st Edition | 0 0 0 0 0 0 0 0 1 1 | 2
+2025~Blue Lorikeet~Birds~30/130~Holo~1st Edition | 0 0 0 0 0 0 0 0 0 1 | 1
+2025~New Zealand Kaka~Birds~33/130~Holo~1st Edition | 0 0 0 0 0 0 0 0 0 1 | 1
+2025~Great Hornbill~Birds~51/130~Full Art~1st Edition | 0 0 0 0 0 0 0 0 0 1 | 1
+2025~Snowy Owl~Birds~49/130~Full Art~1st Edition | 0 0 0 0 0 0 0 0 0 1 | 1
+2025~Imperial Amazon~Birds~04/130~Holo~1st Edition | 0 0 0 0 0 0 0 0 1 0 | 1
+2025~Stresemann's Bristlefront~Birds~01/130~1st Edition | 0 0 0 0 0 0 1 0 0 0 | 1
+2025~Kakapo~Birds~12/130~Holo~1st Edition | 0 0 0 0 0 0 0 0 0 1 | 1
+2025~Tawny Frogmouth~Birds~40/130~Full Art~1st Edition | 0 0 0 0 0 0 0 0 1 0 | 1
+2025~Blue-Footed Booby~Birds~60/130~Full Art~1st Edition | 0 0 0 0 0 0 1 0 0 0 | 1
+2025~Indian Peafowl~Birds~64/130~Full Art~1st Edition | 0 0 0 0 0 0 0 0 0 1 | 1
+2025~California Condor~Birds~16/130~1st Edition | 0 0 0 0 0 0 0 0 1 0 | 1

@@ -218,7 +218,7 @@ export default function App() {
           <p className="sub">
             {summary ? <>As of {dateLabel(summary.as_of)}</> : 'Loading...'}
             <span className="dot"> · </span>
-            Data: CGC, TAG, AGS public pop reports
+            Data: CGC, TAG, AGS, BGS, ACE public pop reports
             <span className="dot"> · </span>
             Built by Taclaco
           </p>
@@ -268,7 +268,7 @@ export default function App() {
               <p>
                 Counts come from the public population reports of each grader, refreshed monthly. Gem means a grade of 10 or above on that grader's scale
                 (CGC Gem Mint, Pristine and Perfect 10; TAG 10 and 10P; AGS Gem-MT and Legend 10; Beckett 9.5 and up). Gem rate is gems divided by numerically graded copies:
-                authentic-only slabs (AU, AA, CC, VA) count as graded but are excluded from the rate. PSA, Beckett, SGC and ACE block automated access and appear only once manual data is loaded.
+                authentic-only slabs (AU, AA, CC, VA) count as graded but are excluded from the rate. PSA and SGC block automated access and appear only once manual data is loaded.
               </p>
             </footer>
           </>

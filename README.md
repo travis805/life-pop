@@ -12,7 +12,9 @@ database from public pop reports. A Cloudflare Worker serves a read-only API and
 | CGC | scrape | `scripts/scrape_cgc.py` reads CGC's own public JSON API (`production.api.aws.ccg-ops.com`, the one the pop page calls). Eras, sets and cards are discovered, and each set total is asserted against the published count. |
 | AGS | scrape | `scripts/scrape_ags.py` parses the server-rendered pages at `app.agscard.com/pop/categories/102` (series, sets, cards). Set totals are asserted against the page totals. |
 | TAG | browser | TAG's API returns 403 to direct fetches, so `scripts/tag_extract.js` is pasted into a browser tab on `my.taggrading.com/pop-report/Nature` (TAG files LIFE under Nature). Claude does this in the in-app browser. |
-| PSA, Beckett, SGC, ACE | manual | Blocked for automation (login or human checks). Fill `data/manual/<grader>.csv` (psa, bgs, sgc, ace) by hand. |
+| BGS (Beckett) | browser | Claude pulls it in Travis's Chrome (Claude in Chrome extension). Search "LIFE TCG" on Beckett's pop report, then read each set page at `/grading/pop-report/list-of-cards?type=set&query=<set>&sports=Gaming`. Saved as `data/raw/bgs-<date>.json`. |
+| ACE | browser | Same Chrome route: `https://acegrading.com/pop?q=Mammals` and `?q=Birds`, paging with `&page=N` (25 rows per page) and keeping only LIFE rows (set "Mammals" or "Birds"). The pasted source text is kept in `data/raw/source/ace-<date>.txt` and converted to `data/raw/ace-<date>.json`. |
+| PSA, SGC | manual | Blocked for automation (login or human checks). Fill `data/manual/<grader>.csv` (psa, sgc) by hand. |
 
 Everything lands in `data/raw/<grader>-<date>.json` as `{year,set,num,name,variant,grades:{label:count,TOTAL}}`
 (CGC and AGS also write a `.meta.json` with the published totals used for reconciliation).
@@ -43,7 +45,7 @@ Grade scale: `grade_numeric` is 10.75 for CGC Perfect 10, 10.5 for Pristine and 
 
 1. `pip install -r requirements.txt` (first time only), then `python3 scripts/scrape_cgc.py` and `python3 scripts/scrape_ags.py`.
 2. Ask Claude to run `scripts/tag_extract.js` in the in-app browser on the TAG Nature pop page and save the result to `data/raw/tag-<YYYY-MM-DD>.json`.
-3. Optional: add rows to `data/manual/psa.csv`, `bgs.csv`, `sgc.csv`, `ace.csv` with columns `snapshot_date,set,num,name,variant,grade,count` (one row per grade).
+3. Optional: add rows to `data/manual/psa.csv` and `sgc.csv` with columns `snapshot_date,set,num,name,variant,grade,count` (one row per grade).
    When Travis sends new cards to TAG: `python3 scripts/export_my_certs.py` re-reads the Grading Batches workbook into `data/my_certs.csv`.
 4. `python3 scripts/build_db.py` and read the reconciliation it prints plus `data/alias_report.txt`.
 5. `npx wrangler d1 execute life-pop --remote --file data/d1_load.sql`
@@ -64,6 +66,11 @@ Check it: `npm run build`, then `curl localhost:8787/api/summary`.
 
 `/api/summary` (latest per grader: totals, gems, gem rate, cards graded, as-of date, grade distribution, Taclaco TAG share),
 `/api/sets`, `/api/cards?set=<id>&grader=<code>&q=<text>`, `/api/card/:id`, `/api/history`.
+
+## Existing remote D1 (schema change)
+
+If the remote `life-pop` database was created from the first `schema.sql`, run once before the next load:
+`npx wrangler d1 execute life-pop --remote --file data/d1_migrate.sql` (adds `pop.is_authentic`). Then run `data/d1_load.sql` as usual.
 
 ## Deploy (not done yet)
 
