@@ -3,7 +3,32 @@
 How many LIFE TCG cards each grading company has graded, by set, card and grade, refreshed monthly,
 plus how much of the TAG population Taclaco submitted itself. A Python pipeline builds a SQLite/D1
 database from public pop reports. A Cloudflare Worker serves a read-only API and a single-page app
-(Vite and React) from that database. Target: `lifepop.tacla.co` (not deployed yet).
+(Vite and React) from that database. Live and PUBLIC at https://lifepop.tacla.co (Worker `life-pop`,
+D1 `life-pop` 7e94b13e-0754-406c-8773-887f2fbac06b, no Cloudflare Access by Travis's choice).
+
+## Status (2026-10-28)
+
+First full snapshot is live: 1,287 graded, 41.4% gem rate (authentic-only excluded).
+
+| Grader | Graded | Gem rate | Method |
+|---|---|---|---|
+| PSA | 753 | 37.7% | Chrome (login) |
+| CGC | 209 | 47.2% (46 AU excluded) | scrape |
+| ACE | 153 | 53.6% | Chrome |
+| TAG | 74 | 52.7% | in-app browser |
+| AGS | 66 | 25.8% | scrape |
+| BGS | 32 | 46.9% | Chrome |
+| SGC | 0 | n/a | Chrome (reCAPTCHA) |
+
+Taclaco share of TAG: 27 of 74 (36.5%); about 2% of all graded LIFE.
+
+Monthly refresh: local scheduled task `life-pop-monthly-refresh` (Claude desktop app, 9am on the 1st;
+prompt at `~/.claude/scheduled-tasks/life-pop-monthly-refresh/SKILL.md`). It pulls every grader, loads D1 and
+writes a recap artifact with talking points. Chrome steps need Travis's Chrome (not Arc) with the Claude
+extension connected, PSA signed in, and Travis to tick SGC's reCAPTCHA if it appears.
+
+Open items: 37 ambiguous and 45 fuzzy card matches in `data/alias_report.txt` (mostly blank variants);
+ACE spells "Racoon", so Cozumel Raccoon is split into two canonical cards until an alias fix.
 
 ## Sources and method
 
@@ -46,7 +71,10 @@ Grade scale: `grade_numeric` is 10.75 for CGC Perfect 10, 10.5 for Pristine and 
 
 1. `pip install -r requirements.txt` (first time only), then `python3 scripts/scrape_cgc.py` and `python3 scripts/scrape_ags.py`.
 2. Ask Claude to run `scripts/tag_extract.js` in the in-app browser on the TAG Nature pop page and save the result to `data/raw/tag-<YYYY-MM-DD>.json`.
-3. Optional: if a grader ever has to be entered by hand, add `data/manual/<grader>.csv` (grader code in the file name) with columns `snapshot_date,set,num,name,variant,grade,count` (one row per grade).
+3. Ask Claude to pull PSA, BGS, ACE and SGC in Travis's Chrome (Claude in Chrome; routes in the Sources table).
+   Long JS output truncates near 1,000 characters, so render rows into the page as `<article><pre>` and read it
+   with get_page_text. Never solve a captcha or enter a password: Travis does those.
+   Optional: if a grader ever has to be entered by hand, add `data/manual/<grader>.csv` (grader code in the file name) with columns `snapshot_date,set,num,name,variant,grade,count` (one row per grade).
    When Travis sends new cards to TAG: `python3 scripts/export_my_certs.py` re-reads the Grading Batches workbook into `data/my_certs.csv`.
 4. `python3 scripts/build_db.py` and read the reconciliation it prints plus `data/alias_report.txt`.
 5. `npx wrangler d1 execute life-pop --remote --file data/d1_load.sql`
@@ -68,19 +96,13 @@ Check it: `npm run build`, then `curl localhost:8787/api/summary`.
 `/api/summary` (latest per grader: totals, gems, gem rate, cards graded, as-of date, grade distribution, Taclaco TAG share),
 `/api/sets`, `/api/cards?set=<id>&grader=<code>&q=<text>`, `/api/card/:id`, `/api/history`.
 
-## Existing remote D1 (schema change)
+## Deploy (done 2026-10-28)
 
-If the remote `life-pop` database was created from the first `schema.sql`, run once before the next load:
-`npx wrangler d1 execute life-pop --remote --file data/d1_migrate.sql` (adds `pop.is_authentic`). Then run `data/d1_load.sql` as usual.
-
-## Deploy (not done yet)
-
-1. `npx wrangler d1 create life-pop`, paste the id into `wrangler.jsonc` (replace the placeholder).
-2. `npx wrangler d1 execute life-pop --remote --file schema.sql`, then the load file from step 5 above.
-3. Optional gate: create a Cloudflare Access app for `lifepop.tacla.co` and set `ACCESS_TEAM_DOMAIN` and `ACCESS_AUD`
-   in `wrangler.jsonc` vars. With `ACCESS_AUD` set the Worker verifies the Access JWT on `/api/*` and fails closed (401).
-   With it unset the API is public.
-4. `npm run cf:deploy`.
+- D1 created and wired in `wrangler.jsonc`; remote migration `data/d1_migrate.sql` (adds `pop.is_authentic`) already applied.
+  Future schema changes need their own ALTER file, since `schema.sql` is `CREATE TABLE IF NOT EXISTS`.
+- Code changes: `npm run cf:deploy` (if Cloudflare returns "Internal authentication error 10500", just retry `npx wrangler deploy`).
+- Data-only changes: load `data/d1_load.sql` to remote; no redeploy.
+- Access gate is available but off: set `ACCESS_TEAM_DOMAIN` and `ACCESS_AUD` vars to require Cloudflare Access on `/api/*`.
 
 ## Privacy
 
