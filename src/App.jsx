@@ -219,7 +219,7 @@ function Rarest({ cards, onOpen }) {
   return (
     <Section title="Rarest" hint="Across all graders combined. A low gem rate on a widely graded card marks where a gem copy is scarcest relative to demand.">
       <div className="set-filter" role="group" aria-label="Filter sets">
-        <span className="muted">Sets:</span>
+        <span className="muted">Sets (click to exclude):</span>
         {sets.map(([id, name]) => {
           const off = excluded.includes(id)
           return <button key={id} className={`setchip${off ? ' off' : ''}`} aria-pressed={!off} onClick={() => toggle(id)}>{name}</button>
@@ -576,10 +576,6 @@ export default function App() {
                 <div className="tiles" style={{ '--cols': cols }}>
                   {summary.graders.map(g => <Tile key={g.grader} g={g} />)}
                 </div>
-                <p className="note gem-note">
-                  The gem bar differs by grader, so gem rates are not strictly like for like: BGS counts 9.5 and up, CGC includes Pristine and Perfect 10, PSA counts 10 only,
-                  and AGS "+" half grades never count as gem.
-                </p>
                 <SourceLinks summary={summary} />
               </>
             )}

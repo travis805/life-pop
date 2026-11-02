@@ -108,7 +108,7 @@ Check it: `npm run build`, then `curl localhost:8787/api/summary`.
 
 ## UI
 
-Single page, light and dark. Hero numbers (total graded, overall gem rate, Taclaco share), grader tiles with a note that the gem bar differs by grader,
+Single page, light and dark. Hero numbers (total graded, overall gem rate, Taclaco share), grader tiles,
 "Data as of" date and links to each grader's pop page, Gem rate by grader bars (grade distributions collapsed below), Sets table, Taclaco section, Rarest
 (Most gems and Lowest gem rate among cards with 10+ numerically graded copies, with per-set toggle chips remembered in localStorage), Cards table, History. Cards table: sticky Card column, Gem % and a Min pop filter, grader filter relabels the columns,
 Download CSV of the current view. Click a row for the card detail (shareable `#card/<id>` link). History shows once there are 2+ snapshots (month-over-month change).
