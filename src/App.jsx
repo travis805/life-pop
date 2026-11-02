@@ -708,7 +708,7 @@ export default function App() {
 
             <TaclacoSection summary={summary} />
 
-            {stream && <StoreCta />}
+            {stream && <><Rarest cards={allCards} onOpen={openCard} /><StoreCta /></>}
 
             {!stream && (
               <>
