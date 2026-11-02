@@ -3,7 +3,8 @@
 // Auth is optional Cloudflare Access: set ACCESS_AUD (and ACCESS_TEAM_DOMAIN) to require a valid
 // Access JWT on every /api/* request (fail closed); leave it unset and the API is public.
 import { accessAllowed } from './access.js'
-import { summary, sets, cards, card, history } from './api.js'
+import { summary, sets, cards, card, history, changes } from './api.js'
+import { storeListings } from './store.js'
 
 const json = (status, obj, cache) =>
   new Response(JSON.stringify(obj), {
@@ -13,6 +14,28 @@ const json = (status, obj, cache) =>
       ...(cache ? { 'cache-control': cache } : { 'cache-control': 'no-store' }),
     },
   })
+
+// Live store inventory is slow-moving and fetched from another origin: cache the computed result for 7 days.
+const STORE_CACHE_KEY = 'https://lifepop.tacla.co/__store_cache'
+const STORE_TTL = 604800
+
+async function storeBody(db) {
+  const cache = typeof caches !== 'undefined' ? caches.default : null
+  try {
+    const hit = cache && (await cache.match(STORE_CACHE_KEY))
+    if (hit) return await hit.json()
+  } catch { /* cache unavailable */ }
+  try {
+    const body = await storeListings(db)
+    try {
+      if (cache) await cache.put(STORE_CACHE_KEY, new Response(JSON.stringify(body), { headers: { 'content-type': 'application/json', 'cache-control': `public, max-age=${STORE_TTL}` } }))
+    } catch { /* cache unavailable */ }
+    return body
+  } catch (err) {
+    console.error('Store fetch failed: ' + (err instanceof Error ? err.message : String(err)))
+    return { listings: {} } // degrade silently: the UI just shows no Buy buttons (not cached)
+  }
+}
 
 export default {
   async fetch(request, env) {
@@ -31,6 +54,8 @@ export default {
       else if (path === 'sets') body = await sets(env.DB)
       else if (path === 'cards') body = await cards(env.DB, { set: q.get('set'), grader: q.get('grader'), q: q.get('q') })
       else if (path === 'history') body = await history(env.DB)
+      else if (path === 'changes') body = await changes(env.DB)
+      else if (path === 'store') return json(200, await storeBody(env.DB), env.ACCESS_AUD ? 'private, max-age=3600' : 'public, max-age=3600')
       else if (/^card\/\d+$/.test(path)) {
         body = await card(env.DB, Number(path.split('/')[1]))
         if (!body) return json(404, { error: 'Card not found' })

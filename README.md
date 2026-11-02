@@ -104,14 +104,15 @@ Check it: `npm run build`, then `curl localhost:8787/api/summary`.
 
 `/api/summary` (latest per grader: totals, gems, gem rate, cards graded, as-of date, source url, grade distribution, Taclaco count and share per grader and overall),
 `/api/sets` (includes Taclaco count per set and grader), `/api/cards?set=<id>&grader=<code>&q=<text>` (Taclaco count per card and grader),
-`/api/card/:id` (per-grader totals, gem rate, pop rank within the set, Taclaco counts), `/api/history`. Counts only, never cert numbers.
+`/api/store` (live graded listings by card id), `/api/changes` (month over month), `/api/card/:id` (per-grader totals, gem rate, pop rank within the set, Taclaco counts), `/api/history`. Counts only, never cert numbers.
 
 ## UI
 
 Single page, light and dark. Hero numbers (total graded, overall gem rate, Taclaco share), grader tiles,
 "Data as of" date and links to each grader's pop page, Gem rate by grader bars (grade distributions collapsed below), Sets table, Taclaco section, Rarest
 (Most gems and Lowest gem rate among cards with 10+ numerically graded copies, with per-set toggle chips remembered in localStorage), Cards table, History. Cards table: sticky Card column, Gem % and a Min pop filter, grader filter relabels the columns,
-Download CSV of the current view. Click a row for the card detail (shareable `#card/<id>` link). History shows once there are 2+ snapshots (month-over-month change).
+Download CSV of the current view. Click a row for the card detail (shareable `#card/<id>` link).
+New: a signup box (Shopify customer newsletter form posted to taclaco.com in a new tab, tags `newsletter,lifepop`; sets localStorage `lifepop.signedup`; also a one-line copy in the footer); a Buy button per Cards row (and in the detail panel) for graded slabs currently listed on taclaco.com, from `GET /api/store` (`worker/store.js` matches variant SKUs to cards, cached 7 days in the Cache API; check coverage with `node scripts/check_store_match.mjs`); and a What changed section at the bottom, locked until signup, fed by `GET /api/changes` (each grader's latest snapshot vs its previous: grader deltas, biggest movers, new gems, newly graded; empty until a second monthly snapshot exists). History shows once there are 2+ snapshots (month-over-month change).
 Sets table sub-lines show each grader's share of that set's graded copies (the All sets row uses the all-sets total); the tooltip adds the grader's gem rate and authentic-only count.
 Stream view: the toggle in the header or `?stream=1` gives bigger type and only the headline views (hero numbers, gem rate by grader, sets, Taclaco share).
 

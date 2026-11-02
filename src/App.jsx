@@ -243,8 +243,140 @@ function Rarest({ cards, onOpen }) {
   )
 }
 
+// ---------- email signup (Shopify customer newsletter) ----------
+const SIGNUP_KEY = 'lifepop.signedup'
+const hasSignedUp = () => { try { return localStorage.getItem(SIGNUP_KEY) === '1' } catch { return false } }
+
+/** `unlocked` persists across visits; `sent` is only this visit (drives the thank-you copy). */
+function useSignup() {
+  const [unlocked, setUnlocked] = useState(hasSignedUp)
+  const [sent, setSent] = useState(false)
+  const markSent = useCallback(() => {
+    try { localStorage.setItem(SIGNUP_KEY, '1') } catch { /* storage unavailable */ }
+    setUnlocked(true)
+    setSent(true)
+  }, [])
+  return { unlocked, sent, markSent }
+}
+
+function SignupBox({ signup, compact }) {
+  if (signup.sent) {
+    return <p className={compact ? 'signup-thanks compact' : 'signup-thanks'}>Thanks. Check the new tab to confirm, and the What changed section below is unlocked.</p>
+  }
+  // The store's own Shopify newsletter form, posted into a new tab (it may show a captcha there).
+  const form = (
+    <form className="signup-form" method="post" action="https://taclaco.com/contact#contact_form" target="_blank" acceptCharset="UTF-8" onSubmit={signup.markSent}>
+      <input type="hidden" name="form_type" value="customer" />
+      <input type="hidden" name="utf8" value="✓" />
+      <input type="hidden" name="contact[tags]" value="newsletter,lifepop" />
+      <input type="email" name="contact[email]" required placeholder="you@example.com" aria-label="Email address" autoComplete="email" />
+      <button type="submit" className="more inline">Sign up</button>
+    </form>
+  )
+  if (compact) return <div className="signup compact"><span className="signup-line">Get the monthly changes in your inbox.</span>{form}</div>
+  return (
+    <section className="card signup">
+      <h2>Get the monthly changes</h2>
+      <p className="hint">LIFE graded pop data refreshes monthly. Sign up for Taclaco's email list and get what changed (new gems, biggest movers, newly graded cards) in your inbox.</p>
+      {form}
+    </section>
+  )
+}
+
+// ---------- what changed (gated behind the signup) ----------
+const signed = n => (n >= 0 ? '+' : '') + n0(n)
+
+function ChangeList({ title, hint, rows, right, onOpen }) {
+  return (
+    <div>
+      <h3>{title}<span> {hint}</span></h3>
+      <ul className="rare-list">
+        {rows.length ? rows.map(c => (
+          <li key={c.card_id}>
+            <button className="linkish" onClick={() => onOpen(c.card_id)}>
+              <span className="strong">{c.name}</span>
+              <span className="muted"> #{c.number} {c.variant} · {c.set}</span>
+            </button>
+            <span className="rare-right tabnum">{right(c)}</span>
+          </li>
+        )) : <li className="muted">None this month.</li>}
+      </ul>
+    </div>
+  )
+}
+
+function ChangesBody({ data, onOpen }) {
+  if (!data.previous) return <p className="note">The first month over month comparison arrives with the next monthly refresh.</p>
+  return (
+    <>
+      <p className="hint">Change from {dateLabel(data.previous)} to {dateLabel(data.latest)}.</p>
+      <div className="table-wrap">
+        <table className="data">
+          <thead><tr><th>Grader</th><th className="num">Graded</th><th className="num">Change</th><th className="num">Gems</th><th className="num">Gem change</th></tr></thead>
+          <tbody>
+            {data.graders.map(g => (
+              <tr key={g.grader}>
+                <td><i className="dot-i" style={{ background: graderColor(g.grader) }} />{g.grader}</td>
+                <td className="num">{n0(g.total)}</td>
+                <td className="num">{signed(g.delta)}</td>
+                <td className="num">{n0(g.gems)}</td>
+                <td className="num">{signed(g.gem_delta)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="rare-grid changes-grid">
+        <ChangeList title="Biggest movers" hint="most new graded copies" rows={data.movers} onOpen={onOpen} right={c => `${signed(c.delta)} (${n0(c.prev)} to ${n0(c.now)})`} />
+        <ChangeList title="New gems" hint="most new gem copies" rows={data.new_gems} onOpen={onOpen} right={c => `${signed(c.gem_delta)} (${n0(c.prev_gems)} to ${n0(c.gems)})`} />
+      </div>
+      <div className="changes-new">
+        <ChangeList title="Newly graded" hint="no graded copies last month" rows={data.newly_graded} onOpen={onOpen} right={c => `${n0(c.now)} graded`} />
+      </div>
+    </>
+  )
+}
+
+function WhatChanged({ signup, onOpen }) {
+  const [data, setData] = useState(null)
+  const [err, setErr] = useState(null)
+  useEffect(() => {
+    if (!signup.unlocked) return
+    api.changes().then(setData).catch(e => setErr(e.message))
+  }, [signup.unlocked])
+  return (
+    <Section title="What changed" className="changes">
+      {!signup.unlocked && (
+        <div className="locked">
+          <p className="hint">Month over month changes: new gems, biggest movers and newly graded cards. Free with the Taclaco email list.</p>
+          <SignupBox signup={signup} compact />
+        </div>
+      )}
+      {signup.unlocked && err && <p className="error">Could not load changes: {err}</p>}
+      {signup.unlocked && !err && !data && <p className="note">Loading...</p>}
+      {signup.unlocked && data && <ChangesBody data={data} onOpen={onOpen} />}
+    </Section>
+  )
+}
+
+// ---------- store buy button ----------
+function BuyButton({ listing }) {
+  if (!listing) return null
+  return (
+    <a
+      className="buy"
+      href={listing.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      title={`${listing.title}, $${listing.price} at Taclaco`}
+      onClick={e => e.stopPropagation()}
+      onKeyDown={e => e.stopPropagation()}
+    >Buy</a>
+  )
+}
+
 // ---------- card detail ----------
-function CardDetail({ id, onClose }) {
+function CardDetail({ id, onClose, listing }) {
   const [data, setData] = useState(null)
   const [err, setErr] = useState(null)
   const [copied, setCopied] = useState(false)
@@ -281,6 +413,7 @@ function CardDetail({ id, onClose }) {
             <p className="eyebrow">{data.card.set_name}</p>
             <h2 className="panel-title">{data.card.name}</h2>
             <p className="hint">#{data.card.number || 'n/a'} · {data.card.variant}</p>
+            {listing && <p className="panel-buy"><BuyButton listing={listing} /> <span className="muted">graded slab, ${listing.price} at Taclaco</span></p>}
             <div className="panel-stats">
               <div><span className="ps-v">{n0(data.total)}</span><span className="ps-l">graded</span></div>
               <div><span className="ps-v">{pct(data.gem_rate)}</span><span className="ps-l">gem rate</span></div>
@@ -329,7 +462,7 @@ const csvCell = v => {
   return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s
 }
 
-function CardTable({ sets, graders, allCards, asOf, onOpen }) {
+function CardTable({ sets, graders, allCards, asOf, onOpen, listings }) {
   const [setId, setSetId] = useState('')
   const [grader, setGrader] = useState('')
   const [minPop, setMinPop] = useState(1)
@@ -355,6 +488,7 @@ function CardTable({ sets, graders, allCards, asOf, onOpen }) {
   }, [allCards, setId, grader, q, minPop])
 
   const showSet = !setId
+  const hasShop = Object.keys(listings).length > 0
   const cols = useMemo(() => {
     const gl = grader ? grader + ' ' : ''
     const list = [
@@ -368,8 +502,9 @@ function CardTable({ sets, graders, allCards, asOf, onOpen }) {
     if (showSet) list.push({ key: 'set_name', label: 'Set', type: 'text' })
     if (!grader) for (const g of graders) list.push({ key: 'g:' + g, label: g, type: 'count', grader: g })
     list.push({ key: 'mine', label: 'Taclaco', type: 'count' })
+    if (hasShop) list.push({ key: 'shop', label: 'Shop', type: 'none' })
     return list
-  }, [graders, grader, showSet])
+  }, [graders, grader, showSet, hasShop])
 
   const sorted = useMemo(() => {
     const val = (r, k) => (k.startsWith('g:') ? r.counts[k.slice(2)]?.total || 0 : k === 'number' ? Number(r.number || -1) : k === 'gem_rate' ? (r.gem_rate ?? -1) : r[k])
@@ -414,6 +549,7 @@ function CardTable({ sets, graders, allCards, asOf, onOpen }) {
           {r.mine ? <span className="badge">{r.mine}</span> : <span className="dash">·</span>}
         </td>
       )
+      case 'shop': return <td key={c.key}><BuyButton listing={listings[r.id]} /></td>
       default: { // per-grader count
         const g = c.key.slice(2)
         const n = r.counts[g]?.total
@@ -446,7 +582,7 @@ function CardTable({ sets, graders, allCards, asOf, onOpen }) {
         <table className="data cards">
           <thead>
             <tr>
-              {cols.map(c => (
+              {cols.map(c => c.type === 'none' ? <th key={c.key}>{c.label}</th> : (
                 <th key={c.key} className={(c.type === 'count' || c.key === 'number' ? 'num ' : '') + (c.cls || '')} aria-sort={sort.key === c.key ? (sort.dir === 'asc' ? 'ascending' : 'descending') : 'none'}>
                   <button onClick={() => clickSort(c)}>
                     {c.grader && <i style={{ background: graderColor(c.grader) }} />}
@@ -516,12 +652,21 @@ export default function App() {
   const [err, setErr] = useState(null)
   const [open, openCard, closeCard] = useOpenCard()
   const [stream, toggleStream] = useStreamMode()
+  const [listings, setListings] = useState({})
+  const ready = Boolean(summary && sets && history && allCards)
+  const signup = useSignup()
 
   useEffect(() => {
     Promise.all([api.summary(), api.sets(), api.history(), api.cards({})])
       .then(([s, st, h, c]) => { setSummary(s); setSets(st.sets); setHistory(h.history); setAllCards(c.cards) })
       .catch(e => setErr(e.message))
   }, [])
+
+  // Store inventory loads after the main data; any failure just means no Buy buttons.
+  useEffect(() => {
+    if (!ready) return
+    api.store().then(d => setListings(d.listings || {})).catch(() => {})
+  }, [ready])
 
   useEffect(() => {
     document.body.classList.toggle('stream', stream)
@@ -533,7 +678,6 @@ export default function App() {
     for (const r of summary?.distribution || []) (m[r.grader] ||= []).push(r)
     return m
   }, [summary])
-  const ready = summary && sets && history && allCards
   const asOf = summary ? dateLabel(summary.as_of) : ''
   const cols = summary ? tileCols(summary.graders.length) : 6
   const taclaco = summary?.taclaco
@@ -605,12 +749,17 @@ export default function App() {
 
             <TaclacoSection summary={summary} />
 
+            {stream && <SignupBox signup={signup} />}
+
             {!stream && (
               <>
                 <Rarest cards={allCards} onOpen={openCard} />
-                <CardTable sets={sets} graders={graderCodes} allCards={allCards} asOf={summary.as_of} onOpen={openCard} />
+                <SignupBox signup={signup} />
+                <CardTable sets={sets} graders={graderCodes} allCards={allCards} asOf={summary.as_of} onOpen={openCard} listings={listings} />
                 <History history={history} graders={graderCodes} />
+                <WhatChanged signup={signup} onOpen={openCard} />
                 <footer className="foot">
+                  <SignupBox signup={signup} compact />
                   <p>
                     Counts come from the public population reports of each grader, refreshed monthly. Gem means a grade of 10 or above on that grader's scale
                     (CGC Gem Mint, Pristine and Perfect 10; TAG 10 and 10P; AGS Gem-MT and Legend 10; Beckett 9.5 and up; PSA and ACE 10; qualified PSA grades never count). Gem rate is gems divided by numerically graded copies:
@@ -623,7 +772,7 @@ export default function App() {
           </>
         )}
       </main>
-      {open != null && !stream && <CardDetail id={open} onClose={closeCard} />}
+      {open != null && !stream && <CardDetail id={open} onClose={closeCard} listing={listings[open]} />}
     </>
   )
 }

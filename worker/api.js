@@ -208,3 +208,64 @@ export async function history(db) {
     FROM snapshots s WHERE s.total_graded > 0 ORDER BY s.snapshot_date, s.grader`)
   return { history: rows.map(r => ({ ...r, gem_rate: rate(r.gems, r.total_graded - r.authentic) })) }
 }
+
+// Month over month: each grader's latest snapshot against its own previous one.
+const TOP_N = 15
+
+async function snapshotPairs(db) {
+  return all(db, `
+    SELECT l.grader, l.d AS latest, p.d AS previous,
+           (SELECT total_graded FROM snapshots WHERE grader = l.grader AND snapshot_date = l.d) AS total,
+           (SELECT total_graded FROM snapshots WHERE grader = l.grader AND snapshot_date = p.d) AS prev_total
+    FROM (SELECT grader, MAX(snapshot_date) AS d FROM snapshots GROUP BY grader) l
+    JOIN (SELECT s.grader, MAX(s.snapshot_date) AS d FROM snapshots s
+            JOIN (SELECT grader, MAX(snapshot_date) AS d FROM snapshots GROUP BY grader) m
+              ON m.grader = s.grader AND s.snapshot_date < m.d
+          GROUP BY s.grader) p ON p.grader = l.grader
+    ORDER BY l.grader`)
+}
+
+// Per-card totals and gem counts at each grader's latest (or previous) snapshot date.
+const cardCounts = (db, side) => all(db, `
+  SELECT po.card_id, po.grader, SUM(po.count) AS total,
+         SUM(CASE WHEN po.is_top_grade = 1 THEN po.count ELSE 0 END) AS gems
+  FROM pop po
+  ${side === 'previous'
+    ? 'JOIN (SELECT s.grader, MAX(s.snapshot_date) AS d FROM snapshots s JOIN (SELECT grader, MAX(snapshot_date) AS d FROM snapshots GROUP BY grader) m ON m.grader = s.grader AND s.snapshot_date < m.d GROUP BY s.grader) t ON t.grader = po.grader AND t.d = po.snapshot_date'
+    : 'JOIN (SELECT grader, MAX(snapshot_date) AS d FROM snapshots GROUP BY grader) t ON t.grader = po.grader AND t.d = po.snapshot_date'}
+  GROUP BY po.card_id, po.grader`)
+
+export async function changes(db) {
+  const pairs = await snapshotPairs(db)
+  const max = (k) => pairs.reduce((m, p) => (p[k] > m ? p[k] : m), '')
+  const latestRow = await first(db, 'SELECT MAX(snapshot_date) AS d FROM snapshots')
+  if (!pairs.length) return { latest: latestRow?.d || null, previous: null }
+
+  const [now, prev] = await Promise.all([cardCounts(db, 'latest'), cardCounts(db, 'previous')])
+  const paired = new Set(pairs.map(p => p.grader))
+  const sum = new Map() // card_id -> { prev, now, prevGems, nowGems }, paired graders only
+  const slot = id => { if (!sum.has(id)) sum.set(id, { prev: 0, now: 0, prevGems: 0, nowGems: 0 }); return sum.get(id) }
+  for (const r of now) if (paired.has(r.grader)) { const s = slot(r.card_id); s.now += r.total; s.nowGems += r.gems }
+  for (const r of prev) if (paired.has(r.grader)) { const s = slot(r.card_id); s.prev += r.total; s.prevGems += r.gems }
+
+  const gemsBy = (rows, g) => rows.filter(r => r.grader === g).reduce((a, r) => a + r.gems, 0)
+  const graders = pairs.map(p => {
+    const gems = gemsBy(now, p.grader), prevGems = gemsBy(prev, p.grader)
+    return { grader: p.grader, prev_total: p.prev_total, total: p.total, delta: p.total - p.prev_total, prev_gems: prevGems, gems, gem_delta: gems - prevGems }
+  }).filter(g => g.total > 0 || g.prev_total > 0)
+
+  const meta = new Map((await all(db, `SELECT c.id, s.name AS set_name, c.number, c.name, c.variant FROM cards c JOIN sets s ON s.id = c.set_id`)).map(c => [c.id, c]))
+  const rows = [...sum].map(([id, s]) => ({ card_id: id, set: meta.get(id)?.set_name, number: meta.get(id)?.number, name: meta.get(id)?.name, variant: meta.get(id)?.variant, ...s }))
+  const byName = (a, b) => (a.name || '').localeCompare(b.name || '')
+  const top = (list, key) => list.sort((a, b) => key(b) - key(a) || b.now - a.now || byName(a, b)).slice(0, TOP_N)
+  const shape = r => ({ card_id: r.card_id, set: r.set, number: r.number, name: r.name, variant: r.variant, prev: r.prev, now: r.now, delta: r.now - r.prev })
+  return {
+    latest: max('latest'),
+    previous: max('previous'),
+    graders,
+    movers: top(rows.filter(r => r.now > r.prev), r => r.now - r.prev).map(shape),
+    new_gems: top(rows.filter(r => r.nowGems > r.prevGems), r => r.nowGems - r.prevGems)
+      .map(r => ({ ...shape(r), prev_gems: r.prevGems, gems: r.nowGems, gem_delta: r.nowGems - r.prevGems })),
+    newly_graded: rows.filter(r => r.prev === 0 && r.now > 0).sort((a, b) => b.now - a.now || byName(a, b)).slice(0, 30).map(shape),
+  }
+}

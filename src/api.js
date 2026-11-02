@@ -8,6 +8,8 @@ export const api = {
   summary: () => get('/api/summary'),
   sets: () => get('/api/sets'),
   history: () => get('/api/history'),
+  store: () => get('/api/store'),
+  changes: () => get('/api/changes'),
   cards: ({ set, grader, q }) => {
     const p = new URLSearchParams()
     if (set) p.set('set', set)
