@@ -227,13 +227,13 @@ function Rarest({ cards, onOpen }) {
       </div>
       <div className="rare-grid">
         <div>
-          <h3>Most gems<span> highest gem population</span></h3>
+          <h3 className="rare-head">Most gems<span> highest gem population</span></h3>
           <ul className="rare-list">
             {topGems.length ? topGems.map(c => item(c, <span className="tabnum">{n0(c.gems)} gems</span>)) : empty}
           </ul>
         </div>
         <div>
-          <h3>Lowest gem rate<span> 10+ numerically graded copies</span></h3>
+          <h3 className="rare-head">Lowest gem rate<span> 10+ numerically graded copies</span></h3>
           <ul className="rare-list">
             {lowRate.length ? lowRate.map(c => item(c, <span className="tabnum">{pct(c.gem_rate, 0)} · {c.gems} of {c.total - c.authentic}</span>)) : empty}
           </ul>
