@@ -261,7 +261,7 @@ function useSignup() {
 
 function SignupBox({ signup, compact }) {
   if (signup.sent) {
-    return <p className={compact ? 'signup-thanks compact' : 'signup-thanks'}>Thanks. Check the new tab to confirm, and the What changed section below is unlocked.</p>
+    return <p className={compact ? 'signup-thanks compact' : 'signup-thanks'}>Thanks for signing up. What changed is now unlocked.</p>
   }
   // The store's own Shopify newsletter form, posted into a new tab (it may show a captcha there).
   const form = (
@@ -348,8 +348,7 @@ function WhatChanged({ signup, onOpen }) {
     <Section title="What changed" className="changes">
       {!signup.unlocked && (
         <div className="locked">
-          <p className="hint">Month over month changes: new gems, biggest movers and newly graded cards. Free with the Taclaco email list.</p>
-          <SignupBox signup={signup} compact />
+          <p className="hint">Month over month changes: new gems, biggest movers and newly graded cards. Free with the Taclaco email list. Sign up below to unlock.</p>
         </div>
       )}
       {signup.unlocked && err && <p className="error">Could not load changes: {err}</p>}
@@ -501,7 +500,6 @@ function CardTable({ sets, graders, allCards, asOf, onOpen, listings }) {
     ]
     if (showSet) list.push({ key: 'set_name', label: 'Set', type: 'text' })
     if (!grader) for (const g of graders) list.push({ key: 'g:' + g, label: g, type: 'count', grader: g })
-    list.push({ key: 'mine', label: 'Taclaco', type: 'count' })
     if (hasShop) list.push({ key: 'shop', label: 'Shop', type: 'none' })
     return list
   }, [graders, grader, showSet, hasShop])
@@ -744,7 +742,6 @@ export default function App() {
 
             <Section title="Sets" hint={stream ? null : 'Graded copies per set, with each grader\'s count and its share of the set beneath.'}>
               <SetsTable sets={sets} graders={graderCodes} summary={summary} />
-              {!stream && <p className="note">TAG files Kickstarter copies under Mammals 1st Edition, so we check each TAG Mammals slab's scan for the Kickstarter K stamp and move any we find (none so far). AGS publishes no variant, so its copies are matched to the closest card. The figure under each count is that grader's share of the set's graded copies.</p>}
             </Section>
 
             <TaclacoSection summary={summary} />
