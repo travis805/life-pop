@@ -139,12 +139,12 @@ details.dist summary { cursor: pointer; font-weight: 600; font-size: 13.5px; col
 .count { color: var(--muted); font-size: 13px; margin-left: auto; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 
-button.more {
+button.more, a.more {
   font: inherit; font-size: 13px; font-weight: 600; padding: 7px 12px; border-radius: 8px; cursor: pointer;
   border: 1px solid var(--line); background: var(--bg); color: var(--text); margin-top: 10px;
 }
-button.more.inline { margin-top: 0; white-space: nowrap; }
-button.more:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+button.more.inline, a.more.inline { display: inline-block; text-decoration: none; margin-top: 0; white-space: nowrap; }
+button.more:hover:not(:disabled), a.more:hover { border-color: var(--accent); color: var(--accent); }
 button.more:disabled { opacity: 0.5; cursor: default; }
 
 /* Tables scroll sideways inside their own box (never the page); no vertical scroll trap. */
@@ -243,6 +243,12 @@ body.stream .mine-row { font-size: 20px; grid-template-columns: 130px 1fr 2fr; }
 body.stream table.data { font-size: 20px; }
 body.stream .badge { font-size: 17px; }
 body.stream .hint { font-size: 17px; }
+body.stream h3 { font-size: 20px; }
+body.stream .rare-list { font-size: 20px; }
+body.stream .rare-right { font-size: 16px; }
+body.stream .set-filter { font-size: 16px; }
+body.stream a.more { font-size: 17px; }
+body.stream .setchip { font-size: 15px; padding: 3px 12px; }
 @media (max-width: 720px) { body.stream .hero { grid-template-columns: 1fr; } body.stream .hero-value { font-size: 56px; } body.stream .gr-row { grid-template-columns: 60px 1fr 64px; } body.stream .gr-n { display: none; } }
 @media (max-width: 600px) { td.card-cell { min-width: 112px; max-width: 128px; font-size: 13px; } }
 @media (max-width: 719px) {
