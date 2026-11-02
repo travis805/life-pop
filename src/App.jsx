@@ -243,47 +243,18 @@ function Rarest({ cards, onOpen }) {
   )
 }
 
-// ---------- email signup (Shopify customer newsletter) ----------
-const SIGNUP_KEY = 'lifepop.signedup'
-const hasSignedUp = () => { try { return localStorage.getItem(SIGNUP_KEY) === '1' } catch { return false } }
-
-/** `unlocked` persists across visits; `sent` is only this visit (drives the thank-you copy). */
-function useSignup() {
-  const [unlocked, setUnlocked] = useState(hasSignedUp)
-  const [sent, setSent] = useState(false)
-  const markSent = useCallback(() => {
-    try { localStorage.setItem(SIGNUP_KEY, '1') } catch { /* storage unavailable */ }
-    setUnlocked(true)
-    setSent(true)
-  }, [])
-  return { unlocked, sent, markSent }
-}
-
-function SignupBox({ signup, compact }) {
-  if (signup.sent) {
-    return <p className={compact ? 'signup-thanks compact' : 'signup-thanks'}>Thanks for signing up. What changed is now unlocked.</p>
-  }
-  // The store's own Shopify newsletter form, posted into a new tab (it may show a captcha there).
-  const form = (
-    <form className="signup-form" method="post" action="https://taclaco.com/contact#contact_form" target="_blank" acceptCharset="UTF-8" onSubmit={signup.markSent}>
-      <input type="hidden" name="form_type" value="customer" />
-      <input type="hidden" name="utf8" value="✓" />
-      <input type="hidden" name="contact[tags]" value="newsletter,lifepop" />
-      <input type="email" name="contact[email]" required placeholder="you@example.com" aria-label="Email address" autoComplete="email" />
-      <button type="submit" className="more inline">Sign up</button>
-    </form>
-  )
-  if (compact) return <div className="signup compact"><span className="signup-line">Get the monthly changes in your inbox.</span>{form}</div>
+// ---------- store call to action ----------
+function StoreCta() {
   return (
     <section className="card signup">
-      <h2>Get the monthly changes</h2>
-      <p className="hint">LIFE graded pop data refreshes monthly. Sign up for Taclaco's email list and get what changed (new gems, biggest movers, newly graded cards) in your inbox.</p>
-      {form}
+      <h2>Shop graded LIFE at Taclaco</h2>
+      <p className="hint">This page is free and refreshes monthly. Graded slabs, singles and sealed LIFE TCG are at Taclaco.com, where you can also join the email list for new listings and LIFE news.</p>
+      <a className="more inline" href="https://taclaco.com" target="_blank" rel="noopener noreferrer">Visit Taclaco.com</a>
     </section>
   )
 }
 
-// ---------- what changed (gated behind the signup) ----------
+// ---------- what changed ----------
 const signed = n => (n >= 0 ? '+' : '') + n0(n)
 
 function ChangeList({ title, hint, rows, right, onOpen }) {
@@ -337,23 +308,15 @@ function ChangesBody({ data, onOpen }) {
   )
 }
 
-function WhatChanged({ signup, onOpen }) {
+function WhatChanged({ onOpen }) {
   const [data, setData] = useState(null)
   const [err, setErr] = useState(null)
-  useEffect(() => {
-    if (!signup.unlocked) return
-    api.changes().then(setData).catch(e => setErr(e.message))
-  }, [signup.unlocked])
+  useEffect(() => { api.changes().then(setData).catch(e => setErr(e.message)) }, [])
   return (
     <Section title="What changed" className="changes">
-      {!signup.unlocked && (
-        <div className="locked">
-          <p className="hint">Month over month changes: new gems, biggest movers and newly graded cards. Free with the Taclaco email list. Sign up below to unlock.</p>
-        </div>
-      )}
-      {signup.unlocked && err && <p className="error">Could not load changes: {err}</p>}
-      {signup.unlocked && !err && !data && <p className="note">Loading...</p>}
-      {signup.unlocked && data && <ChangesBody data={data} onOpen={onOpen} />}
+      {err && <p className="error">Could not load changes: {err}</p>}
+      {!err && !data && <p className="note">Loading...</p>}
+      {data && <ChangesBody data={data} onOpen={onOpen} />}
     </Section>
   )
 }
@@ -652,7 +615,6 @@ export default function App() {
   const [stream, toggleStream] = useStreamMode()
   const [listings, setListings] = useState({})
   const ready = Boolean(summary && sets && history && allCards)
-  const signup = useSignup()
 
   useEffect(() => {
     Promise.all([api.summary(), api.sets(), api.history(), api.cards({})])
@@ -746,17 +708,16 @@ export default function App() {
 
             <TaclacoSection summary={summary} />
 
-            {stream && <SignupBox signup={signup} />}
+            {stream && <StoreCta />}
 
             {!stream && (
               <>
                 <Rarest cards={allCards} onOpen={openCard} />
-                <SignupBox signup={signup} />
+                <StoreCta />
                 <CardTable sets={sets} graders={graderCodes} allCards={allCards} asOf={summary.as_of} onOpen={openCard} listings={listings} />
                 <History history={history} graders={graderCodes} />
-                <WhatChanged signup={signup} onOpen={openCard} />
+                <WhatChanged onOpen={openCard} />
                 <footer className="foot">
-                  <SignupBox signup={signup} compact />
                   <p>
                     Counts come from the public population reports of each grader, refreshed monthly. Gem means a grade of 10 or above on that grader's scale
                     (CGC Gem Mint, Pristine and Perfect 10; TAG 10 and 10P; AGS Gem-MT and Legend 10; Beckett 9.5 and up; PSA and ACE 10; qualified PSA grades never count). Gem rate is gems divided by numerically graded copies:
