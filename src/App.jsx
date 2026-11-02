@@ -110,8 +110,14 @@ function SetsTable({ sets, graders, summary }) {
   const totalAll = sum(s => s.total)
   const gemAll = sum(s => s.gems)
   const authAll = sum(s => s.authentic)
-  const gcell = (c) => (c && c.total
-    ? <><span className="cell-main">{n0(c.total)}</span><span className="cell-sub">{pct(c.gem_rate, 0)}</span></>
+  const share = (n, d) => (d > 0 ? pct(n / d, 0) : pct(null))
+  const cellTitle = (g, c, tot) => {
+    const au = c.authentic ? `, ${c.authentic} authentic-only` : ''
+    const rate = c.total - c.authentic > 0 ? pct(c.gem_rate) : 'n/a'
+    return `${g}: ${c.total} of ${tot} graded in this set (${share(c.total, tot)}), gem rate ${rate}${au}`
+  }
+  const gcell = (c, tot) => (c && c.total
+    ? <><span className="cell-main">{n0(c.total)}</span><span className="cell-sub">{share(c.total, tot)}</span></>
     : <span className="dash">·</span>)
   return (
     <div className="table-wrap">
@@ -133,7 +139,7 @@ function SetsTable({ sets, graders, summary }) {
               <td className="num">{pct(s.gem_rate)}</td>
               {graders.map(g => {
                 const c = s.graders[g]
-                return <td key={g} className="num stack" title={c && c.total ? `${g}: ${c.total} graded, ${pct(c.gem_rate)} gem rate` : `${g}: none`}>{gcell(c)}</td>
+                return <td key={g} className="num stack" title={c && c.total ? cellTitle(g, c, s.total) : `${g}: none`}>{gcell(c, s.total)}</td>
               })}
               <td className="num" title={Object.entries(s.mine_by_grader).map(([g, n]) => `${g} ${n}`).join(', ') || 'None'}>
                 {s.mine ? <span className="badge">{s.mine}</span> : <span className="dash">·</span>}
@@ -148,7 +154,8 @@ function SetsTable({ sets, graders, summary }) {
             <td className="num">{pct(totalAll - authAll > 0 ? gemAll / (totalAll - authAll) : null)}</td>
             {graders.map(g => {
               const gs = summary.graders.find(x => x.grader === g)
-              return <td key={g} className="num stack"><span className="cell-main">{n0(gs?.total_graded)}</span><span className="cell-sub">{pct(gs?.gem_rate, 0)}</span></td>
+              const gt = { total: rows.reduce((a, r) => a + (r.graders[g]?.total || 0), 0), authentic: rows.reduce((a, r) => a + (r.graders[g]?.authentic || 0), 0), gem_rate: gs?.gem_rate }
+              return <td key={g} className="num stack" title={gt.total ? cellTitle(g, gt, totalAll) : undefined}><span className="cell-main">{n0(gs?.total_graded)}</span><span className="cell-sub">{share(gt.total, totalAll)}</span></td>
             })}
             <td className="num"><span className="badge">{summary.taclaco.certs}</span></td>
           </tr>
@@ -183,12 +190,22 @@ function TaclacoSection({ summary }) {
 }
 
 // ---------- rarest ----------
+const EXCL_KEY = 'lifepop.rarest.excluded'
+function loadExcluded() {
+  try { const v = JSON.parse(localStorage.getItem(EXCL_KEY)); return Array.isArray(v) ? v : [] } catch { return [] }
+}
 function Rarest({ cards, onOpen }) {
-  const [showAll, setShowAll] = useState(false)
-  const pop1 = useMemo(() => cards.filter(c => c.total === 1), [cards])
-  const topGems = useMemo(() => [...cards].filter(c => c.gems > 0).sort((a, b) => b.gems - a.gems || b.total - a.total || a.name.localeCompare(b.name)).slice(0, 10), [cards])
-  const shown = showAll ? pop1 : pop1.slice(0, 10)
-  const holder = c => Object.entries(c.counts).find(([, v]) => v.total === 1)?.[0]
+  const [excluded, setExcluded] = useState(loadExcluded)
+  const sets = useMemo(() => { const m = new Map(); for (const c of cards) if (!m.has(c.set_id)) m.set(c.set_id, c.set_name); return [...m] }, [cards])
+  const toggle = (id) => setExcluded(prev => {
+    const next = prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+    try { localStorage.setItem(EXCL_KEY, JSON.stringify(next)) } catch { /* storage unavailable */ }
+    return next
+  })
+  const pool = useMemo(() => cards.filter(c => !excluded.includes(c.set_id)), [cards, excluded])
+  const topGems = useMemo(() => pool.filter(c => c.gems > 0).sort((a, b) => b.gems - a.gems || b.total - a.total || a.name.localeCompare(b.name)).slice(0, 10), [pool])
+  const lowRate = useMemo(() => pool.filter(c => c.total - c.authentic >= 10 && c.gem_rate != null)
+    .sort((a, b) => a.gem_rate - b.gem_rate || (b.total - b.authentic) - (a.total - a.authentic) || a.name.localeCompare(b.name)).slice(0, 10), [pool])
   const item = (c, right) => (
     <li key={c.id}>
       <button className="linkish" onClick={() => onOpen(c.id)}>
@@ -198,20 +215,27 @@ function Rarest({ cards, onOpen }) {
       <span className="rare-right">{right}</span>
     </li>
   )
+  const empty = <li className="muted">No cards match.</li>
   return (
-    <Section title="Rarest" hint="Scarcity across all graders combined.">
+    <Section title="Rarest" hint="Across all graders combined. A low gem rate on a widely graded card marks where a gem copy is scarcest relative to demand.">
+      <div className="set-filter" role="group" aria-label="Filter sets">
+        <span className="muted">Sets:</span>
+        {sets.map(([id, name]) => {
+          const off = excluded.includes(id)
+          return <button key={id} className={`setchip${off ? ' off' : ''}`} aria-pressed={!off} onClick={() => toggle(id)}>{name}</button>
+        })}
+      </div>
       <div className="rare-grid">
-        <div>
-          <h3>Population of one<span> {n0(pop1.length)} cards have a single graded copy</span></h3>
-          <ul className="rare-list">
-            {shown.map(c => item(c, <span className="chip" style={{ '--chip': graderColor(holder(c)) }}>{holder(c)}</span>))}
-          </ul>
-          {pop1.length > 10 && <button className="more" onClick={() => setShowAll(v => !v)}>{showAll ? 'Show fewer' : `Show all ${pop1.length}`}</button>}
-        </div>
         <div>
           <h3>Most gems<span> highest gem population</span></h3>
           <ul className="rare-list">
-            {topGems.map(c => item(c, <span className="tabnum">{n0(c.gems)} gems</span>))}
+            {topGems.length ? topGems.map(c => item(c, <span className="tabnum">{n0(c.gems)} gems</span>)) : empty}
+          </ul>
+        </div>
+        <div>
+          <h3>Lowest gem rate<span> 10+ numerically graded copies</span></h3>
+          <ul className="rare-list">
+            {lowRate.length ? lowRate.map(c => item(c, <span className="tabnum">{pct(c.gem_rate, 0)} · {c.gems} of {c.total - c.authentic}</span>)) : empty}
           </ul>
         </div>
       </div>
@@ -524,7 +548,7 @@ export default function App() {
             <p className="sub">
               <strong className="asof">{summary ? `Data as of ${asOf}` : 'Loading...'}</strong>
               <span className="dot"> · </span>
-              {stream ? 'tacla.co' : 'Built by Taclaco (tacla.co)'}
+              Built by <a className="plain" href="https://taclaco.com" target="_blank" rel="noopener noreferrer">Taclaco.com</a>
             </p>
           </div>
           <button className="more inline" onClick={toggleStream} aria-pressed={stream}>{stream ? 'Exit stream view' : 'Stream view'}</button>
@@ -578,9 +602,9 @@ export default function App() {
               )}
             </Section>
 
-            <Section title="Sets" hint={stream ? null : 'Graded copies per set, with each grader\'s count and its gem rate beneath.'}>
+            <Section title="Sets" hint={stream ? null : 'Graded copies per set, with each grader\'s count and its share of the set beneath.'}>
               <SetsTable sets={sets} graders={graderCodes} summary={summary} />
-              {!stream && <p className="note">TAG files all Mammals 1st Edition copies together, so its Kickstarter copies are counted under Mammals 1st Edition. AGS publishes no variant, so its copies are matched to the closest card.</p>}
+              {!stream && <p className="note">TAG files Kickstarter copies under Mammals 1st Edition, so we check each TAG Mammals slab's scan for the Kickstarter K stamp and move any we find (none so far). AGS publishes no variant, so its copies are matched to the closest card. The figure under each count is that grader's share of the set's graded copies.</p>}
             </Section>
 
             <TaclacoSection summary={summary} />

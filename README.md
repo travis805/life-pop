@@ -49,7 +49,7 @@ Raw snapshots are public data and are committed. Every month's snapshot is kept,
 Known source quirks:
 - AGS reports each grade cell as two numbers: the grade and its "+" half-grade (7+, 8+, 9+). Both are loaded (labels like "9+", grade_numeric n + 0.5, not gem), and the scraper asserts the total equals the page headline (66).
 - AGS does not publish a variant, so its cards are matched to the closest card by set, number and name.
-- TAG files Kickstarter copies under Mammals 1st Edition, so TAG counts for the two Mammals sets cannot be separated.
+- TAG files Kickstarter copies under Mammals 1st Edition, so the pop table cannot split them. Instead each TAG Mammals 1st Edition slab is reviewed by cert: the front scan of a Kickstarter copy reads "(c)LIFE TCG 2022" with a small K stamp at the bottom center, a 1st Edition copy reads 2023 with no K. Results live in `data/tag_mammals_review.csv` (`cert,card,grade,edition,evidence,reviewed`, edition `1st` or `KS`). Taclaco never submitted Kickstarter cards, so its own certs (`data/my_certs.csv`) count as 1st Edition with no review. `build_db.py` moves each `KS` slab (one count of that grade, latest TAG snapshot) to the Kickstarter set and prints "TAG Kickstarter reclass: N slabs moved". As of 2026-11-01 all 36 slabs are reviewed (26 Taclaco, 10 reviewed) and none is Kickstarter.
 
 ## Database
 
@@ -79,6 +79,7 @@ Travis's own slabs come from files in `data/private/` (gitignored, hold cert num
 
 1. `pip install -r requirements.txt` (first time only), then `python3 scripts/scrape_cgc.py` and `python3 scripts/scrape_ags.py`.
 2. Ask Claude to run `scripts/tag_extract.js` in the in-app browser on the TAG Nature pop page and save the result to `data/raw/tag-<YYYY-MM-DD>.json`.
+2b. TAG Kickstarter check: Claude runs `scripts/tag_certs.js` in the in-app browser on `https://my.taggrading.com/pop-report/Nature/2023/Life%20TCG?setName=Mammals+1st+Edition` (it works in the background; poll `window.__tagCerts`, then read the rendered `<article><pre>` with get_page_text) and saves the lines to `data/private/tag-mammals-certs-<date>.txt`. Run `python3 scripts/check_tag_kickstarter.py` (warns if the cert list is stale, exits 1 if any non-Taclaco cert is unreviewed). For each unreviewed cert, open its report, zoom on the bottom center of the front scan (helper mode in `tag_certs.js` lists scan URLs), and record `1st` or `KS` with evidence in `data/tag_mammals_review.csv`. Unsure ones go to Travis. Taclaco certs need no review.
 3. Ask Claude to pull PSA, BGS, ACE and SGC in Travis's Chrome (Claude in Chrome; routes in the Sources table).
    Long JS output truncates near 1,000 characters, so render rows into the page as `<article><pre>` and read it
    with get_page_text. Never solve a captcha or enter a password: Travis does those.
@@ -109,8 +110,9 @@ Check it: `npm run build`, then `curl localhost:8787/api/summary`.
 
 Single page, light and dark. Hero numbers (total graded, overall gem rate, Taclaco share), grader tiles with a note that the gem bar differs by grader,
 "Data as of" date and links to each grader's pop page, Gem rate by grader bars (grade distributions collapsed below), Sets table, Taclaco section, Rarest
-(population of one, most gems), Cards table, History. Cards table: sticky Card column, Gem % and a Min pop filter, grader filter relabels the columns,
+(Most gems and Lowest gem rate among cards with 10+ numerically graded copies, with per-set toggle chips remembered in localStorage), Cards table, History. Cards table: sticky Card column, Gem % and a Min pop filter, grader filter relabels the columns,
 Download CSV of the current view. Click a row for the card detail (shareable `#card/<id>` link). History shows once there are 2+ snapshots (month-over-month change).
+Sets table sub-lines show each grader's share of that set's graded copies (the All sets row uses the all-sets total); the tooltip adds the grader's gem rate and authentic-only count.
 Stream view: the toggle in the header or `?stream=1` gives bigger type and only the headline views (hero numbers, gem rate by grader, sets, Taclaco share).
 
 ## Deploy (done 2026-10-28)

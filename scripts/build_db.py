@@ -142,6 +142,17 @@ def grade_numeric(label):
     return float(m.group(1)) + (0.5 if l.endswith("+") else 0.0)  # AU, AA, CC, VA: authentic / no numeric grade
 
 
+def tag_grade_label(text):
+    """Review-file grade text ("10 GEM", "9 MINT", "10 PRISTINE") -> TAG pop label ("10", "9", "10P")."""
+    t = text.strip().upper()
+    if "PRISTINE" in t or re.match(r"10\s*P\b", t):
+        return "10P"
+    m = re.match(r"(\d+(?:\.\d)?)", t)
+    if not m:
+        sys.exit(f"tag_mammals_review: cannot map grade {text!r}")
+    return m.group(1)
+
+
 # ---------- card registry ----------
 class Registry:
     def __init__(self):
@@ -247,6 +258,34 @@ def main():
                 src_totals[(grader, date, card["set"])] += cnt
                 raw_totals[(grader, date, r["set"])] += cnt
         snapshot_rows[(date, grader)] = total
+
+    # TAG files Kickstarter copies under Mammals 1st Edition; slabs found by cert-level review (data/tag_mammals_review.csv,
+    # edition KS) move to the Kickstarter set. Latest TAG snapshot only; the source cell must hold a count. Totals unchanged.
+    ks_set, m1_set, ks_moved = "Mammals 1st Edition (Kickstarter)", "Mammals 1st Edition", 0
+    review_file = Path(os.environ.get("TAG_REVIEW_CSV") or DATA / "tag_mammals_review.csv")
+    tag_dates = [d for g, d, _ in snaps if g == "TAG"]
+    if review_file.exists() and tag_dates:
+        tag_latest = max(tag_dates)
+        for r in csv.DictReader(open(review_file, newline="")):
+            if r["edition"].strip().upper() != "KS":
+                continue
+            name, num = r["card"].rsplit("/", 2)[0], norm_num(r["card"].rsplit("/", 2)[1])
+            nn, label = norm_name(name), tag_grade_label(r["grade"])
+            srcs = [c for c in reg.by_num[(m1_set, num, nn)] if pop.get((tag_latest, "TAG", id(c), label), 0) > 0]
+            if len(srcs) != 1:
+                sys.exit(f"TAG KS reclass {r['cert']} {r['card']} grade {label}: expected one {m1_set} card with a count, found {len(srcs)}")
+            src = srcs[0]
+            dests = reg.by_num[(ks_set, num, nn)]
+            dest = next((c for c in dests if c["variant"] == src["variant"]), None) or (dests[0] if dests else None)
+            if dest is None:
+                dest = reg._new(ks_set, num, name, src["variant"])
+                reg.report["Canonical card created from TAG Kickstarter reclass"].append(f"TAG {r['card']} -> {ks_set} #{dest['number']} {dest['name']} [{dest['variant']}]")
+            pop[(tag_latest, "TAG", id(src), label)] -= 1
+            pop[(tag_latest, "TAG", id(dest), label)] += 1
+            src_totals[("TAG", tag_latest, m1_set)] -= 1
+            src_totals[("TAG", tag_latest, ks_set)] += 1
+            ks_moved += 1
+        pop = collections.defaultdict(int, {k: v for k, v in pop.items() if v})
 
     # deterministic ids
     set_names = sorted(SETS, key=lambda n: SETS[n][1])
@@ -380,6 +419,7 @@ def main():
             else:
                 print(f"      source set {rs:40} loaded {ld:4}  (no published figure)")
         print("      canonical sets: " + ", ".join(f"{s} {src_totals[(g, d, s)]}" for s in sorted({k[2] for k in src_totals if k[0] == g and k[1] == d}, key=lambda n: SETS[n][1])))
+    print(f"\nTAG Kickstarter reclass: {ks_moved} slabs moved")
     print("\nTaclaco certs by grader: " + ", ".join(f"{g} {n}" for g, n in sorted(collections.Counter(g for _, g, _, _ in certs).items())) + f" (total {len(certs)})")
     for line in cert_problems:
         print("  !!! " + line)

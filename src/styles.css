@@ -187,6 +187,13 @@ td.stack { line-height: 1.2; }
 button.linkish { all: unset; cursor: pointer; text-align: left; min-width: 0; line-height: 1.3; }
 button.linkish:hover .strong { color: var(--accent); }
 button.linkish:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.set-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 0 14px; font-size: 12.5px; }
+.setchip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; background: var(--surface); color: var(--text); border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; }
+.setchip:hover { border-color: var(--accent); }
+.setchip.off { color: var(--muted); text-decoration: line-through; font-weight: 400; opacity: 0.7; }
+.setchip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+a.plain { color: inherit; text-decoration: none; }
+a.plain:hover { text-decoration: underline; }
 .chip { border: 1px solid var(--chip, var(--line)); color: var(--text); border-radius: 999px; padding: 0 8px; font-size: 11.5px; font-weight: 600; }
 
 .mom { font-size: 20px; font-weight: 650; margin: 0 0 10px; }
