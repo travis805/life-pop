@@ -347,8 +347,8 @@ body.stream .ship { font-size: 15px; }
   .sales-hero { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
   .sales-hero .hero-stat { padding: 8px 8px; }
   .sales-hero .hero-label { font-size: 11px; }
-  .sales-hero .hero-value { font-size: 22px; }
+  .sales-hero .hero-value { font-size: clamp(16px, 5vw, 22px); }
   .sales-hero .hero-sub { font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   body.stream .sales-hero { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  body.stream .sales-hero .hero-value { font-size: 26px; }
+  body.stream .sales-hero .hero-value { font-size: clamp(18px, 6vw, 26px); }
 }
