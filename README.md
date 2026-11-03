@@ -61,6 +61,9 @@ and a `latest_pop` view (latest snapshot per grader).
 - `data/life_pop.sqlite` (local, gitignored)
 - `data/d1_load.sql` (full reload: deletes then inserts, safe to re-run, gitignored because it holds cert numbers)
 - `data/alias_report.txt` (fuzzy, ambiguous and newly created cards, so nothing is silently dropped)
+- `data/card_ids.csv` (committed): the id of every card ever built. Ids never change between rebuilds, so `#card/<id>` links and responses cached across a reload stay right; a new card gets the next free id.
+
+`data/variant_overrides.csv` fixes the variant of a pop row whose grader states none when the closest-card guess is wrong (for example PSA's Birds #63 Macaw is the Base print, not the Full Art).
 
 Card matching: canonical set map, then normalized number (leading zeros and `/100` suffix removed), then
 normalized name, then variant. Mammals numbers above 100 belong to Promos (that is how TAG files them).
@@ -109,7 +112,7 @@ A second tab (`?tab=sales`) lists what graded LIFE TCG cards actually sold for. 
 
 Unverified collector sales are shown and labeled but left out of every median, the Last sale column, Top sales and the stream view. Medians are over the last 12 months per card, grader and grade.
 
-Sales are NOT in `d1_load.sql` (card ids are renumbered on each rebuild). Each row stores a stable `card_key` = `<set>|<number>|<name>|<variant>` and the `sales_v` view joins it to `cards` at read time. A card renamed by a rebuild leaves its sales orphaned (`card_id` NULL, hidden): list them with `orphans` and fix by hand.
+Sales are NOT in `d1_load.sql`. Each row stores a stable `card_key` = `<set>|<number>|<name>|<variant>` and the `sales_v` view joins it to `cards` at read time. A card renamed by a rebuild leaves its sales orphaned (`card_id` NULL, hidden): list them with `orphans` and fix by hand.
 
 **SoldComps quota.** The free tier is 100 requests a month. A run makes at most 4 scrape calls: keyword `life tcg` with `conditionId=2750` (eBay Graded, `hydrateBoa=true`, page 1, page 2 only if more exist and page 1 still reaches back to `soldAfter`), then the same keyword with no condition filter (2 pages max, no hydration). `hydrateBoa` costs one more request per best-offer item it resolves. `soldAfter` is 3 days before the last clean run (90 days on the first run). Before each call the job checks the remaining quota (`/usage` is free, then the `X-Usage-Remaining` header) and stops under 15. Every run logs a row in `sales_runs`. Accepted best-offer prices only come from the graded query; elsewhere a best offer carries the listed price.
 

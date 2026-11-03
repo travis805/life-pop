@@ -219,6 +219,32 @@ class Registry:
         return card
 
 
+# ---------- stable card ids ----------
+# Card ids are kept in data/card_ids.csv (set,number,name,variant,id) so a rebuild never renumbers cards:
+# shared #card/<id> links and any page or API response cached across a reload keep pointing at the same card.
+# A new card gets the next free id; a card that disappears keeps its id reserved in the file.
+CARD_IDS = DATA / "card_ids.csv"
+
+
+def assign_card_ids(cards):
+    key = lambda c: (c["set"], c["number"], c["name"], c["variant"])
+    known = {}
+    if CARD_IDS.exists():
+        for r in csv.DictReader(open(CARD_IDS, newline="")):
+            known[(r["set"], r["number"], r["name"], r["variant"])] = int(r["id"])
+    next_id = max(known.values(), default=0) + 1
+    for c in cards:  # cards arrive in display order, so new ids follow that order
+        if key(c) not in known:
+            known[key(c)] = next_id
+            next_id += 1
+        c["id"] = known[key(c)]
+    with open(CARD_IDS, "w", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["set", "number", "name", "variant", "id"])
+        for k, i in sorted(known.items(), key=lambda kv: kv[1]):
+            w.writerow([*k, i])
+
+
 # ---------- loading ----------
 def load_raw():
     out = []  # (grader, date, rows)
@@ -301,8 +327,7 @@ def main():
     set_names = sorted(SETS, key=lambda n: SETS[n][1])
     set_id = {n: i + 1 for i, n in enumerate(set_names)}
     cards = sorted(reg.cards.values(), key=lambda c: (SETS[c["set"]][1], int(c["number"] or 9999), c["name"].lower(), c["variant"]))
-    for i, c in enumerate(cards, 1):
-        c["id"] = i
+    assign_card_ids(cards)
 
     # my certs (all graders), matched through THAT grader's own labels (the same path as its pop rows)
     certs, cert_problems, violations = [], [], []
@@ -340,8 +365,7 @@ def main():
         for c in reg.cards.values():
             if "id" not in c:
                 cards.append(c)
-        for i, c in enumerate(cards, 1):
-            c["id"] = i
+        assign_card_ids(cards)
 
     # ---------- write sqlite ----------
     db_path = DATA / "life_pop.sqlite"

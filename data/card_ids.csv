@@ -1,0 +1,279 @@
+set,number,name,variant,id
+Mammals 1st Edition,0,Earth,Base,1
+Mammals 1st Edition,0,Earth,Holo 1/1,2
+Mammals 1st Edition,1,South China Tiger,Base,3
+Mammals 1st Edition,1,South China Tiger,Holo,4
+Mammals 1st Edition,2,Vaquita,Base,5
+Mammals 1st Edition,2,Vaquita,Holo,6
+Mammals 1st Edition,3,Hainan Gibbon,Holo,7
+Mammals 1st Edition,4,Wondiwoi Tree Kangaroo,Holo,8
+Mammals 1st Edition,5,Amur Leopard,Holo,9
+Mammals 1st Edition,6,Pygmy Sloth,Holo,10
+Mammals 1st Edition,7,Gervais Beaked Whale,Holo,11
+Mammals 1st Edition,8,Seychelles Sheath-Tailed Bat,Holo,12
+Mammals 1st Edition,9,Saola,Holo,13
+Mammals 1st Edition,10,Brown Headed Spider Monkey,Holo,14
+Mammals 1st Edition,11,Vancouver Island Marmot,Holo,15
+Mammals 1st Edition,12,Northern Hairy-Nosed Wombat,Holo,16
+Mammals 1st Edition,13,Cozumel Raccoon,Holo,17
+Mammals 1st Edition,13,Cozumel Racoon,Holo,18
+Mammals 1st Edition,14,Black Footed Ferret,Holo,19
+Mammals 1st Edition,15,Hirola,Holo,20
+Mammals 1st Edition,16,African Wild Ass,Holo,21
+Mammals 1st Edition,17,Darwin's Fox,Holo,22
+Mammals 1st Edition,18,Mountain Gorilla,Holo,23
+Mammals 1st Edition,19,Ili Pika,Holo,24
+Mammals 1st Edition,20,Wild Bactrian Camel,Holo,25
+Mammals 1st Edition,21,Black Panther,Base,26
+Mammals 1st Edition,21,Black Panther,Holo,27
+Mammals 1st Edition,22,Borneo Pygmy Elephant,Holo,28
+Mammals 1st Edition,23,Giant Panda,Holo,29
+Mammals 1st Edition,24,Ring-Tailed Lemur,Holo,30
+Mammals 1st Edition,25,Bengal Tiger,Holo,31
+Mammals 1st Edition,26,Wild Water Buffalo,Holo,32
+Mammals 1st Edition,27,Giant Anteater,Holo,33
+Mammals 1st Edition,28,Baird's Tapir,Holo,34
+Mammals 1st Edition,29,Giant Otter,Holo,35
+Mammals 1st Edition,30,Okapi,Holo,36
+Mammals 1st Edition,31,African Wild Dog,Holo,37
+Mammals 1st Edition,32,Snow Leopard,Holo,38
+Mammals 1st Edition,33,Cheetah,Holo,39
+Mammals 1st Edition,34,Red Panda,Holo,40
+Mammals 1st Edition,35,Southern White Rhino,Holo,41
+Mammals 1st Edition,36,Manatee,Holo,42
+Mammals 1st Edition,37,Wild Yak,Holo,43
+Mammals 1st Edition,38,Jaguar,Holo,44
+Mammals 1st Edition,39,African Lion,Holo,45
+Mammals 1st Edition,40,Tasmanian Devil,Holo,46
+Mammals 1st Edition,41,Gray-Faced Sengi,Holo,47
+Mammals 1st Edition,42,Blue Whale,Holo,48
+Mammals 1st Edition,43,Maned Wolf,Holo,49
+Mammals 1st Edition,44,Gaur,Holo,50
+Mammals 1st Edition,45,Polar Bear,Holo,51
+Mammals 1st Edition,46,Wolverine,Holo,52
+Mammals 1st Edition,47,Dugong,Holo,53
+Mammals 1st Edition,48,Alpine Ibex,Holo,54
+Mammals 1st Edition,49,Canadian Lynx,Holo,55
+Mammals 1st Edition,50,Spotted Hyena,Holo,56
+Mammals 1st Edition,51,Orca,Holo,57
+Mammals 1st Edition,52,Koala,Holo,58
+Mammals 1st Edition,53,Humpback Whale,Holo,59
+Mammals 1st Edition (Kickstarter),0,Earth,Base,60
+Mammals 1st Edition (Kickstarter),1,South China Tiger,Base,61
+Mammals 1st Edition (Kickstarter),2,Vaquita,Holo,62
+Mammals 1st Edition (Kickstarter),3,Hainan Gibbon,Holo,63
+Mammals 1st Edition (Kickstarter),4,Wondiwoi Tree Kangaroo,Holo,64
+Mammals 1st Edition (Kickstarter),5,Amur Leopard,Base,65
+Mammals 1st Edition (Kickstarter),6,Pygmy Three-Toed Sloth,Holo,66
+Mammals 1st Edition (Kickstarter),7,Gervais Beaked Whale,Holo,67
+Mammals 1st Edition (Kickstarter),8,Seychelles Sheath-Tailed Bat,Holo,68
+Mammals 1st Edition (Kickstarter),9,Saola,Holo,69
+Mammals 1st Edition (Kickstarter),10,Brown Headed Spider Monkey,Holo,70
+Mammals 1st Edition (Kickstarter),12,Northern Hairy-Nosed Wombat,Holo,71
+Mammals 1st Edition (Kickstarter),13,Cozumel Raccoon,Holo,72
+Mammals 1st Edition (Kickstarter),14,Black Footed Ferret,Holo,73
+Mammals 1st Edition (Kickstarter),15,Hirola,Holo,74
+Mammals 1st Edition (Kickstarter),16,African Wild Ass,Holo,75
+Mammals 1st Edition (Kickstarter),17,Darwin's Fox,Holo,76
+Mammals 1st Edition (Kickstarter),18,Mountain Gorilla,Holo,77
+Mammals 1st Edition (Kickstarter),19,Ili Pika,Holo,78
+Mammals 1st Edition (Kickstarter),20,Wild Bactrian Camel,Holo,79
+Mammals 1st Edition (Kickstarter),21,Black Panther,Holo,80
+Mammals 1st Edition (Kickstarter),22,Borneo Pygmy Elephant,Holo,81
+Mammals 1st Edition (Kickstarter),23,Giant Panda,Holo,82
+Mammals 1st Edition (Kickstarter),24,Ring-Tailed Lemur,Holo,83
+Mammals 1st Edition (Kickstarter),25,Bengal Tiger,Holo,84
+Mammals 1st Edition (Kickstarter),27,Giant Anteater,Holo,85
+Mammals 1st Edition (Kickstarter),28,Baird's Tapir,Holo,86
+Mammals 1st Edition (Kickstarter),31,African Wild Dog,Holo,87
+Mammals 1st Edition (Kickstarter),31,African Wild Dog,Uncommon,88
+Mammals 1st Edition (Kickstarter),32,Snow Leopard,Holo,89
+Mammals 1st Edition (Kickstarter),33,Cheetah,Holo,90
+Mammals 1st Edition (Kickstarter),34,Red Panda,Holo,91
+Mammals 1st Edition (Kickstarter),35,Southern White Rhino,Holo,92
+Mammals 1st Edition (Kickstarter),36,Manatee,Holo,93
+Mammals 1st Edition (Kickstarter),37,Wild Yak,Holo,94
+Mammals 1st Edition (Kickstarter),38,Jaguar,Holo,95
+Mammals 1st Edition (Kickstarter),38,Jaguar,Uncommon,96
+Mammals 1st Edition (Kickstarter),39,African Lion,Holo,97
+Mammals 1st Edition (Kickstarter),40,Tasmanian Devil,Holo,98
+Mammals 1st Edition (Kickstarter),41,Gray-Faced Sengi,Holo,99
+Mammals 1st Edition (Kickstarter),42,Blue Whale,Holo,100
+Mammals 1st Edition (Kickstarter),43,Maned Wolf,Holo,101
+Mammals 1st Edition (Kickstarter),44,Gaur,Holo,102
+Mammals 1st Edition (Kickstarter),45,Polar Bear,Holo,103
+Mammals 1st Edition (Kickstarter),46,Wolverine,Holo,104
+Mammals 1st Edition (Kickstarter),47,Dugong,Holo,105
+Mammals 1st Edition (Kickstarter),48,Alpine Ibex,Holo,106
+Mammals 1st Edition (Kickstarter),48,Alpine Ibex,Uncommon,107
+Mammals 1st Edition (Kickstarter),49,Canadian Lynx,Holo,108
+Mammals 1st Edition (Kickstarter),50,Spotted Hyena,Holo,109
+Mammals 1st Edition (Kickstarter),51,Orca,Holo,110
+Mammals 1st Edition (Kickstarter),52,Koala,Holo,111
+Mammals 1st Edition (Kickstarter),53,Humpback Whale,Holo,112
+Mammals 1st Edition (Kickstarter),61,Sea Otter,Common,113
+Mammals 1st Edition (Kickstarter),101,Human,Holo,114
+Mammals 1st Edition (Kickstarter),101,Human,Holo - Kickstarter Exclusive,115
+Mammals Special Edition,0,Earth,Base,116
+Mammals Special Edition,1,South China Tiger,Base,117
+Mammals Special Edition,3,Hainan Gibbon,Base,118
+Mammals Special Edition,5,Amur Leopard,Extended Art,119
+Mammals Special Edition,13,Cozumel Raccoon,Extended Art,120
+Mammals Special Edition,21,Black Panther,Extended Art,121
+Mammals Special Edition,22,Borneo Pygmy Elephant,Extended Art,122
+Mammals Special Edition,25,Bengal Tiger,Extended,123
+Mammals Special Edition,25,Bengal Tiger,Extended Art,124
+Mammals Special Edition,34,Red Panda,Extended Art,125
+Mammals Special Edition,35,Southern White Rhino,Extended Art,126
+Mammals Special Edition,38,Jaguar,Base,127
+Mammals Special Edition,45,Polar Bear,Extended Art,128
+Mammals Special Edition,46,Wolverine,Extended Art,129
+Mammals Special Edition,52,Koala,Extended Art,130
+Mammals Special Edition,56,Wild Horse,Base,131
+Mammals Special Edition,64,Beluga,Base,132
+Mammals Special Edition,109,Kit Fox,Base,133
+Mammals Special Edition,110,Fossa,Holo,134
+Mammals Special Edition,112,Tapanuli Orangutan,Holo,135
+Mammals Special Edition,117,Migaloo,Base,136
+Mammals Special Edition,118,Giant Panda,Extended Art,137
+Mammals Special Edition,121,Africa,Full Art,138
+Mammals Special Edition,122,Antartica,Full Art,139
+Mammals Special Edition,123,Asia,Full Art,140
+Mammals Special Edition,124,Europe,Full Art,141
+Mammals Special Edition,125,North America,Full Art,142
+Mammals Special Edition,126,Oceania,Full Art,143
+Mammals Special Edition,127,South America,Full Art,144
+Birds 1st Edition,1,Stresemann's Bristlefront,Base,145
+Birds 1st Edition,3,New Caledonian Owlet-Nightjar,Holo,146
+Birds 1st Edition,4,Imperial Amazon,Full Art,147
+Birds 1st Edition,4,Imperial Amazon,Holo,148
+Birds 1st Edition,5,Bali Myna,Full Art,149
+Birds 1st Edition,5,Bali Myna,Holo,150
+Birds 1st Edition,6,Madagascar Pochard,Full Art,151
+Birds 1st Edition,6,Madagascar Pochard,Holo,152
+Birds 1st Edition,7,Orange-Bellied Parrot,Holo,153
+Birds 1st Edition,8,Cebu Flowerpecker,Full Art,154
+Birds 1st Edition,8,Cebu Flowerpecker,Holo,155
+Birds 1st Edition,9,Blue-Eyed Ground-Dove,Full Art,156
+Birds 1st Edition,9,Blue-Eyed Ground-Dove,Holo,157
+Birds 1st Edition,10,Blue-Throated Hillstar,Full Art,158
+Birds 1st Edition,10,Blue-Throated Hillstar,Holo,159
+Birds 1st Edition,11,Great Indian Bustard,Holo,160
+Birds 1st Edition,12,Kakapo,Full Art,161
+Birds 1st Edition,12,Kakapo,Holo,162
+Birds 1st Edition,13,Northern Bald Ibis,Full Art,163
+Birds 1st Edition,13,Northern Bald Ibis,Holo,164
+Birds 1st Edition,14,Antioquia Brushfinch,Full Art,165
+Birds 1st Edition,14,Antioquia Brushfinch,Holo,166
+Birds 1st Edition,15,Moheli Scops-Owl,Full Art,167
+Birds 1st Edition,15,Moheli Scops-Owl,Holo,168
+Birds 1st Edition,16,California Condor,Full Art,169
+Birds 1st Edition,16,California Condor,Holo,170
+Birds 1st Edition,17,Philippine Eagle,Full Art,171
+Birds 1st Edition,17,Philippine eagle,Holo,172
+Birds 1st Edition,18,Short-Crested Coquette,Full Art,173
+Birds 1st Edition,18,Short-Crested Coquette,Holo,174
+Birds 1st Edition,19,Forest Owlet,Full Art,175
+Birds 1st Edition,19,Forest Owlet,Holo,176
+Birds 1st Edition,20,Long-Whiskered Owlet,Full Art,177
+Birds 1st Edition,21,Sun Parakeet,Full Art,178
+Birds 1st Edition,21,Sun Parakeet,Holo,179
+Birds 1st Edition,22,Galapagos Penguin,Full Art,180
+Birds 1st Edition,22,Galapagos Penguin,Holo,181
+Birds 1st Edition,23,Rufous-Headed Hornbill,Full Art,182
+Birds 1st Edition,23,Rufous-Headed Hornbill,Holo,183
+Birds 1st Edition,24,Yellow-Crested Helmetshrike,Holo,184
+Birds 1st Edition,25,Juan Fernandez Firecrown,Full Art,185
+Birds 1st Edition,25,Juan Fernandez Firecrown,Holo,186
+Birds 1st Edition,26,Kea,Full Art,187
+Birds 1st Edition,27,Hyacinth Macaw,Full Art,188
+Birds 1st Edition,27,Hyacinth Macaw,Holo,189
+Birds 1st Edition,28,Christmas Island Frigatebird,Holo,190
+Birds 1st Edition,29,Shoebill,Full Art,191
+Birds 1st Edition,29,Shoebill,Holo,192
+Birds 1st Edition,30,Blue Lorikeet,Full Art,193
+Birds 1st Edition,30,Blue Lorikeet,Holo,194
+Birds 1st Edition,31,Neergaard's Sunbird,Full Art,195
+Birds 1st Edition,31,Neergaard's Sunbird,Holo,196
+Birds 1st Edition,32,New Zealand Rock Wren,Full Art,197
+Birds 1st Edition,32,New Zealand Rock Wren,Holo,198
+Birds 1st Edition,33,New Zealand Kaka,Full Art,199
+Birds 1st Edition,33,New Zealand Kaka,Holo,200
+Birds 1st Edition,34,South Philippine Dwarf-Kingfisher,Holo,201
+Birds 1st Edition,34,Southern Philippines Dwarf Kingfisher,Holo,202
+Birds 1st Edition,35,Andean Condor,Full Art,203
+Birds 1st Edition,35,Andean Condor,Holo,204
+Birds 1st Edition,36,Blue Bird-of-Paradise,Holo,205
+Birds 1st Edition,37,Oriental Bay Owl,Holo,206
+Birds 1st Edition,38,Great Eared Nightjar,Full Art,207
+Birds 1st Edition,38,Great Eared Nightjar,Holo,208
+Birds 1st Edition,39,Toco Toucan,Full Art,209
+Birds 1st Edition,39,Toco Toucan,Holo,210
+Birds 1st Edition,40,Tawny Frogmouth,Full Art,211
+Birds 1st Edition,40,Tawny Frogmouth,Holo,212
+Birds 1st Edition,41,White-Crested Turaco,Full Art,213
+Birds 1st Edition,41,White-Crested Turaco,Holo,214
+Birds 1st Edition,42,Dalmatian Pelican,Full Art,215
+Birds 1st Edition,42,Dalmatian Pelican,Holo,216
+Birds 1st Edition,43,Northern Spotted Owl,Full Art,217
+Birds 1st Edition,43,Northern Spotted Owl,Holo,218
+Birds 1st Edition,44,Honduran Emerald,Full Art,219
+Birds 1st Edition,44,Honduran Emerald,Holo,220
+Birds 1st Edition,45,Plate-Billed Mountain Toucan,Full Art,221
+Birds 1st Edition,45,Plate-Billed Mountain Toucan,Holo,222
+Birds 1st Edition,47,Saker Falcon,Full Art,223
+Birds 1st Edition,47,Saker Falcon,Holo,224
+Birds 1st Edition,48,Wandering Albatross,Holo,225
+Birds 1st Edition,49,Snowy Owl,Full Art,226
+Birds 1st Edition,49,Snowy Owl,Holo,227
+Birds 1st Edition,50,Martial Eagle,Holo,228
+Birds 1st Edition,51,Great Hornbill,Full Art,229
+Birds 1st Edition,52,Blue Crane,Full Art,230
+Birds 1st Edition,53,Gyrfalcon,Full Art,231
+Birds 1st Edition,54,Rufous Sabrewing,Full Art,232
+Birds 1st Edition,55,Bee Hummingbird,Full Art,233
+Birds 1st Edition,56,Resplendent Quetzal,Full Art,234
+Birds 1st Edition,57,Scarlet Macaw,Full Art,235
+Birds 1st Edition,59,Red Kite,Full Art,236
+Birds 1st Edition,60,Blue-Footed Booby,Full Art,237
+Birds 1st Edition,61,White Cockatoo,Full Art,238
+Birds 1st Edition,62,Lilac-Breasted Roller,Full Art,239
+Birds 1st Edition,63,Blue and Yellow Macaw,Base,240
+Birds 1st Edition,63,Blue-and-Yellow Macaw,Full Art,241
+Birds 1st Edition,64,Indian Peafowl,Full Art,242
+Birds 1st Edition,65,Golden Eagle,Full Art,243
+Birds 1st Edition,67,Peregrine Falcon,Base,244
+Birds 1st Edition,69,Bald Eagle,Base,245
+Birds 1st Edition,106,Blue Jay,Base,246
+Birds 1st Edition,108,Mallard,Base,247
+Promos,33,New Zealand Kaka,Auckland Card Show,248
+Promos,101,Human,Base,249
+Promos,101,Human,Box Topper,250
+Promos,103,Mountain Lion,Full Art,251
+Promos,103,Mountain Lion,Holo,252
+Promos,104,Amazonian Manatee,Full Art,253
+Promos,105,Margay,Full Art,254
+Promos,106,Reticulated Giraffe,Full Art,255
+Promos,107,Utah Prairie Dog,Full Art,256
+Promos,108,Aye Aye,Full Art,257
+Promos,109,Kit Fox,Full Art,258
+Promos,110,Fossa,Full Art,259
+Promos,111,Yangtze Finless Porpoise,Full Art,260
+Promos,112,Tapanuli Orangutan,Full Art,261
+Promos,113,Asiatic Lion,Full Art,262
+Promos,114,Siberian Tiger,Base,263
+Promos,114,Siberian Tiger,Full Art,264
+Promos,115,Spirit Bear,Base,265
+Promos,115,Spirit Bear,Full Art,266
+Promos,116,Javan Rhino,Full Art,267
+Promos,116,Javan Rhino,Holo,268
+Promos,117,Migaloo,Base,269
+Promos,118,Giant Panda,Holo,270
+Promos,118,Giant Panda,WWF (logo on back),271
+Promos,119,Qinling Panda,Holo,272
+Promos,120,Albino Giant Panda,Gold Booster Box Exclusive,273
+Mammals Photography,1,Cheetah,Base,274
+Mammals Photography,1,Cheetah,Photography,275
+Mammals Photography,2,Zebra,Base,276
+Mammals Photography,2,Zebra,Photography,277
+Mammals Photography,3,Humpback Whale,Photography,278
