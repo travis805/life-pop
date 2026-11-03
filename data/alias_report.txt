@@ -26,7 +26,7 @@
   TAG Birds #01/130 Stresemann's Bristlefront [-] -> Birds 1st Edition #1 Stresemann's Bristlefront [Base]
   TAG Mammals Photography #1 Cheetah [-] -> Mammals Photography #1 Cheetah [Base]
   TAG Mammals Photography #2 Zebra [-] -> Mammals Photography #2 Zebra [Base]
-## Fuzzy matches (45)
+## Fuzzy matches (44)
   TAG Mammals 1st Edition #34/100 Red Panda [-] -> Mammals 1st Edition #34 Red Panda [Holo]
   TAG Promo #120/100 Albino Giant Panda [-] -> Promos #120 Albino Giant Panda [Gold Booster Box Exclusive]
   TAG Mammals Photography #3 Humpback Whale [-] -> Mammals Photography #3 Humpback Whale [Photography]
@@ -43,7 +43,6 @@
   PSA 1st Edition Promos #120 Albino Giant Panda [-] -> Promos #120 Albino Giant Panda [Gold Booster Box Exclusive]
   PSA Photography Series 1 #3 Humpback Whale [-] -> Mammals Photography #3 Humpback Whale [Photography]
   PSA Birds #7 Orange-Bellied Parrot [-] -> Birds 1st Edition #7 Orange-Bellied Parrot [Holo]
-  PSA Birds #63 Blue and Yellow Macaw [-] -> Birds 1st Edition #63 Blue-and-Yellow Macaw [Full Art]
   PSA Birds #65 Golden Eagle [-] -> Birds 1st Edition #65 Golden Eagle [Full Art]
   ACE Mammals 1st Edition #3/100 Hainan Gibbon [-] -> Mammals 1st Edition #3 Hainan Gibbon [Holo]
   ACE Mammals 1st Edition #4/100 Wondiwoi Tree Kangaroo [-] -> Mammals 1st Edition #4 Wondiwoi Tree Kangaroo [Holo]
@@ -110,7 +109,7 @@
   AGS 2023 MAMMALS 01/05/2023 #1 SOUTH CHINA TIGER [-] -> Mammals 1st Edition #1 South China Tiger [Base]
   AGS 2023 LIFE 01/14/2026 #0 Earth [-] -> Mammals 1st Edition #0 Earth [Base]
   AGS Kickstarter Set 11/17/2022 #48 Alpine Ibex [-] -> Mammals 1st Edition (Kickstarter) #48 Alpine Ibex [Holo]
-## Canonical card created from PSA (not in an earlier-processed source) (100)
+## Canonical card created from PSA (not in an earlier-processed source) (101)
   PSA Mammals #0 Earth [Holo 1/1] -> Mammals 1st Edition #0 Earth [Holo 1/1]
   PSA Mammals #2 Vaquita [Holo] -> Mammals 1st Edition #2 Vaquita [Holo]
   PSA Mammals Kickstarter #6 Pygmy Three-Toed Sloth [Holo] -> Mammals 1st Edition (Kickstarter) #6 Pygmy Three-Toed Sloth [Holo]
@@ -207,6 +206,7 @@
   PSA Mammals Special Edition #0 Earth [-] -> Mammals Special Edition #0 Earth [Base]
   PSA Mammals Special Edition #1 South China Tiger [-] -> Mammals Special Edition #1 South China Tiger [Base]
   PSA Mammals Special Edition #117 Migaloo [-] -> Mammals Special Edition #117 Migaloo [Base]
+  PSA Birds #63 Blue and Yellow Macaw [-] -> Birds 1st Edition #63 Blue and Yellow Macaw [Base]
   PSA Birds #67 Peregrine Falcon [-] -> Birds 1st Edition #67 Peregrine Falcon [Base]
   PSA Birds #69 Bald Eagle [-] -> Birds 1st Edition #69 Bald Eagle [Base]
   PSA Birds #106 Blue Jay [-] -> Birds 1st Edition #106 Blue Jay [Base]

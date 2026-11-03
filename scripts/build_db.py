@@ -37,6 +37,14 @@ GRADERS = [  # code, name, url, method
 ]
 GRADER_URL = {g[0]: g[2] for g in GRADERS}
 
+# Variant for pop rows whose grader states none, where the closest-card guess is wrong (Travis confirmed the print).
+# data/variant_overrides.csv: grader,raw_set,raw_num,raw_name,variant,note
+VARIANT_OVERRIDES = {}
+_vo = DATA / "variant_overrides.csv"
+if _vo.exists():
+    for _r in csv.DictReader(open(_vo, newline="")):
+        VARIANT_OVERRIDES[(_r["grader"], _r["raw_set"], _r["raw_num"], _r["raw_name"])] = _r["variant"]
+
 # canonical sets: name -> (year, sort_order)
 SETS = {
     "Mammals 1st Edition": (2023, 1),
@@ -181,6 +189,8 @@ class Registry:
                 SETS[s] = (None, 90 + len([k for k in SETS if k.startswith('Unmapped')]))
                 self.report["Unmapped set labels (new canonical set created)"].append(f"{grader}: {raw_set}")
         v = norm_variant(desc, qualifier, grader)
+        if v is None:
+            v = VARIANT_OVERRIDES.get((grader, raw_set, str(raw_num or ""), raw_name))
         nn = norm_name(raw_name)
         cands = list(self.by_num[(s, n, nn)] if n else self.by_name[(s, nn)])
         kind = "exact"
