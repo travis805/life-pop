@@ -20,11 +20,14 @@
   // Weekly eBay sold-listings pull (worker `scheduled` handler), Mondays 15:00 UTC.
   "triggers": { "crons": ["0 15 * * 1"] },
   // Submit-a-sale limiter: 5 requests per 60 seconds per hashed IP (keyed in the Worker).
-  "ratelimits": [{ "name": "SUBMIT_LIMIT", "namespace_id": "1001", "simple": { "limit": 5, "period": 60 } }]
-  // Secrets (wrangler secret put): SOLDCOMPS_KEY, TURNSTILE_SECRET, IP_SALT. Var: TURNSTILE_SITE_KEY (public site key).
-  // Local values live in .dev.vars (gitignored).
+  "ratelimits": [{ "name": "SUBMIT_LIMIT", "namespace_id": "1001", "simple": { "limit": 5, "period": 60 } }],
+  // Turnstile widget for the submit form (public site key) and the hostnames siteverify must report.
+  "vars": { "TURNSTILE_SITE_KEY": "0x4AAAAAAFxlodOgAQ3z-arT", "TURNSTILE_HOSTNAMES": "lifepop.tacla.co" }
+  // Secrets (wrangler secret put): SOLDCOMPS_KEY, TURNSTILE_SECRET, IP_SALT.
+  // Local values live in .dev.vars (gitignored, overrides vars): Cloudflare's test keys plus TURNSTILE_HOSTNAMES=example.com
+  // and TURNSTILE_ALLOW_TEST=1, since the test secret reports hostname example.com and no action.
   // Cloudflare Access is OPTIONAL. Leave ACCESS_AUD unset and /api/* is public (the data is public
   // pop reports). To gate the site: create an Access application for lifepop.tacla.co, then add
-  //   "vars": { "ACCESS_TEAM_DOMAIN": "https://tight-wave-d7c1.cloudflareaccess.com", "ACCESS_AUD": "<application AUD tag>" }
+  //   (merged into "vars" above) { "ACCESS_TEAM_DOMAIN": "https://tight-wave-d7c1.cloudflareaccess.com", "ACCESS_AUD": "<application AUD tag>" }
   // With ACCESS_AUD set, the Worker verifies the Access JWT on every /api/* request and fails closed (401).
 }

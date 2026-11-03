@@ -195,6 +195,8 @@ export function CardSales({ sales, onSubmit }) {
 }
 
 // ---------- submit form ----------
+// Must match TURNSTILE_ACTION in worker/sales.js (siteverify returns it and the Worker checks it).
+const TURNSTILE_ACTION = 'submit_sale'
 let turnstileLoad
 function loadTurnstile() {
   if (window.turnstile) return Promise.resolve(window.turnstile)
@@ -240,7 +242,7 @@ export function SubmitSale({ allCards, initialCardId, onClose }) {
     let gone = false
     loadTurnstile().then(t => {
       if (gone || !boxRef.current) return
-      widget.current = t.render(boxRef.current, { sitekey: siteKey, callback: setToken, 'expired-callback': () => setToken(''), 'error-callback': () => setToken('') })
+      widget.current = t.render(boxRef.current, { sitekey: siteKey, action: TURNSTILE_ACTION, callback: setToken, 'expired-callback': () => setToken(''), 'error-callback': () => setToken('') })
     }).catch(e => setErr(e.message))
     return () => { gone = true; if (widget.current != null && window.turnstile) try { window.turnstile.remove(widget.current) } catch { /* already gone */ } widget.current = null }
   }, [siteKey, done])

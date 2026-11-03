@@ -115,12 +115,21 @@ export function parseDollars(v) {
   return Math.round(parseFloat(s) * 100)
 }
 
+// Turnstile check: success, the widget's action and an allowed hostname (TURNSTILE_HOSTNAMES, comma-separated)
+// must all match. Tokens are single-use, so siteverify itself rejects a replay.
+const TURNSTILE_ACTION = 'submit_sale'
 async function verifyTurnstile(env, token, ip) {
+  const hosts = String(env.TURNSTILE_HOSTNAMES || '').split(',').map(h => h.trim().toLowerCase()).filter(Boolean)
+  if (!hosts.length) return false
   const form = new URLSearchParams({ secret: env.TURNSTILE_SECRET, response: token })
   if (ip) form.set('remoteip', ip)
   try {
-    const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', { method: 'POST', body: form })
-    return Boolean((await res.json()).success)
+    const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', { method: 'POST', body: form, signal: AbortSignal.timeout(10000) })
+    if (!res.ok) return false
+    const r = await res.json()
+    // Cloudflare's test secret answers with hostname example.com and no action; only accept that in local dev.
+    const testKey = r.metadata?.result_with_testing_key === true
+    return r.success === true && hosts.includes(String(r.hostname || '').toLowerCase()) && (r.action === TURNSTILE_ACTION || (testKey && env.TURNSTILE_ALLOW_TEST === '1'))
   } catch { return false }
 }
 
@@ -169,7 +178,7 @@ export async function submitSale(request, env) {
   if (note.length > 200) return bad('Keep the note under 200 characters.')
 
   const token = typeof b.turnstile_token === 'string' ? b.turnstile_token : ''
-  if (!token || token.length > 2048 || !(await verifyTurnstile(env, token, request.headers.get('cf-connecting-ip')))) return bad('The human check failed. Please try again.')
+  if (!token || token.length > 2048 || !(await verifyTurnstile(env, token, request.headers.get('cf-connecting-ip')))) return bad('The human check failed. Please try again.', 403)
 
   const dayAgo = new Date(Date.now() - 86400000).toISOString()
   const used = await first(db, 'SELECT COUNT(*) AS n FROM sale_submissions WHERE ip_hash = ? AND created_at >= ?', ipHash, dayAgo)
