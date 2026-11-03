@@ -105,7 +105,8 @@ export async function runEbayJob(env, fetchImpl = fetch, now = new Date()) {
     await logRun(db, run)
     return run
   }
-  const state = { base: env.SOLDCOMPS_BASE || BASE, key: env.SOLDCOMPS_KEY, fetch: fetchImpl, requests: 0, remaining: null }
+  // Wrapped: calling the global fetch as a method of `state` throws "Illegal invocation" on Workers.
+  const state = { base: env.SOLDCOMPS_BASE || BASE, key: env.SOLDCOMPS_KEY, fetch: (...a) => fetchImpl(...a), requests: 0, remaining: null }
   try {
     // Look back to 3 days before the last clean run (first run: 90 days); duplicates are skipped by (source, source_ref).
     const last = await db.prepare('SELECT MAX(run_at) AS d FROM sales_runs WHERE error IS NULL').first()
