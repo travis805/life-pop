@@ -4,7 +4,17 @@ async function get(path) {
   return res.json()
 }
 
+async function post(path, body) {
+  const res = await fetch(path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) })
+  const data = await res.json().catch(() => ({}))
+  if (!res.ok) throw new Error(data.error || `${path} returned ${res.status}`)
+  return data
+}
+
 export const api = {
+  sales: (limit = 1000) => get(`/api/sales?limit=${limit}`),
+  salesConfig: () => get('/api/sales/config'),
+  submitSale: body => post('/api/sales/submit', body),
   summary: () => get('/api/summary'),
   sets: () => get('/api/sets'),
   history: () => get('/api/history'),

@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { api } from './api.js'
-import { n0, pct, dateLabel, graderColor } from './format.js'
+import { n0, pct, dateLabel, graderColor, usd } from './format.js'
+import { Section, Hero, downloadCsv } from './ui.jsx'
+import { SalesPage, SubmitSale, CardSales } from './Sales.jsx'
 import { GemRateBars, GradeBars, HistoryChart, Legend } from './charts.jsx'
 
 // ---------- small hooks ----------
@@ -17,6 +19,20 @@ function useStreamMode() {
     })
   }, [])
   return [stream, toggle]
+}
+
+// Tab lives in the query string (?tab=sales), so #card/<id> links keep working on both tabs.
+function useTab() {
+  const [tab, setTabState] = useState(() => (new URLSearchParams(location.search).get('tab') === 'sales' ? 'sales' : 'population'))
+  const setTab = useCallback(next => {
+    const p = new URLSearchParams(location.search)
+    if (next === 'sales') p.set('tab', 'sales')
+    else p.delete('tab')
+    const qs = p.toString()
+    history.replaceState(null, '', location.pathname + (qs ? '?' + qs : '') + location.hash)
+    setTabState(next)
+  }, [])
+  return [tab, setTab]
 }
 
 const cardFromHash = () => {
@@ -47,30 +63,6 @@ function useOpenCard() {
 }
 
 // ---------- building blocks ----------
-function Section({ title, hint, children, right, className }) {
-  return (
-    <section className={'card' + (className ? ' ' + className : '')}>
-      <div className="card-head">
-        <h2>{title}</h2>
-        {right}
-      </div>
-      {hint && <p className="hint">{hint}</p>}
-      {children}
-    </section>
-  )
-}
-
-function Hero({ label, value, sub, extra }) {
-  return (
-    <div className="hero-stat">
-      <div className="hero-label">{label}</div>
-      <div className="hero-value">{value}</div>
-      <div className="hero-sub">{sub}</div>
-      {extra && <div className="hero-extra">{extra}</div>}
-    </div>
-  )
-}
-
 function Tile({ g }) {
   return (
     <div className="tile">
@@ -338,7 +330,7 @@ function BuyButton({ listing }) {
 }
 
 // ---------- card detail ----------
-function CardDetail({ id, onClose, listing }) {
+function CardDetail({ id, onClose, listing, onSubmit }) {
   const [data, setData] = useState(null)
   const [err, setErr] = useState(null)
   const [copied, setCopied] = useState(false)
@@ -410,6 +402,7 @@ function CardDetail({ id, onClose, listing }) {
                 </table>
               </>
             )}
+            {data.sales && <CardSales sales={data.sales} onSubmit={() => onSubmit(data.card.id)} />}
             <button className="more" onClick={copy}>{copied ? 'Link copied' : 'Copy link to this card'}</button>
           </>
         )}
@@ -419,11 +412,6 @@ function CardDetail({ id, onClose, listing }) {
 }
 
 // ---------- cards table ----------
-const csvCell = v => {
-  const s = v == null ? '' : String(v)
-  return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s
-}
-
 function CardTable({ sets, graders, allCards, asOf, onOpen, listings }) {
   const [setId, setSetId] = useState('')
   const [grader, setGrader] = useState('')
@@ -451,6 +439,7 @@ function CardTable({ sets, graders, allCards, asOf, onOpen, listings }) {
 
   const showSet = !setId
   const hasShop = Object.keys(listings).length > 0
+  const hasSales = allCards.some(c => c.last_sale)
   const cols = useMemo(() => {
     const gl = grader ? grader + ' ' : ''
     const list = [
@@ -463,12 +452,13 @@ function CardTable({ sets, graders, allCards, asOf, onOpen, listings }) {
     ]
     if (showSet) list.push({ key: 'set_name', label: 'Set', type: 'text' })
     if (!grader) for (const g of graders) list.push({ key: 'g:' + g, label: g, type: 'count', grader: g })
+    if (hasSales) list.push({ key: 'last_sale', label: 'Last sale', type: 'count' })
     if (hasShop) list.push({ key: 'shop', label: 'Shop', type: 'none' })
     return list
-  }, [graders, grader, showSet, hasShop])
+  }, [graders, grader, showSet, hasShop, hasSales])
 
   const sorted = useMemo(() => {
-    const val = (r, k) => (k.startsWith('g:') ? r.counts[k.slice(2)]?.total || 0 : k === 'number' ? Number(r.number || -1) : k === 'gem_rate' ? (r.gem_rate ?? -1) : r[k])
+    const val = (r, k) => (k.startsWith('g:') ? r.counts[k.slice(2)]?.total || 0 : k === 'number' ? Number(r.number || -1) : k === 'gem_rate' ? (r.gem_rate ?? -1) : k === 'last_sale' ? (r.last_sale?.price_cents ?? -1) : r[k])
     const out = [...rows]
     out.sort((a, b) => {
       const x = val(a, sort.key), y = val(b, sort.key)
@@ -482,18 +472,11 @@ function CardTable({ sets, graders, allCards, asOf, onOpen, listings }) {
 
   const download = () => {
     const head = ['Set', 'Number', 'Card', 'Variant', ...graders.map(g => g + ' graded'), `${grader || 'All graders'} total`, `${grader || 'All graders'} gems`, `${grader || 'All graders'} gem rate`, 'Taclaco total', ...graders.map(g => 'Taclaco ' + g)]
-    const lines = [head.map(csvCell).join(',')]
+    const lines = [head]
     for (const r of sorted) {
-      lines.push([r.set_name, r.number, r.name, r.variant, ...graders.map(g => r.counts[g]?.total || 0), r.total, r.gems, r.gem_rate == null ? '' : (r.gem_rate * 100).toFixed(1) + '%', r.mine, ...graders.map(g => r.mine_by_grader[g] || 0)].map(csvCell).join(','))
+      lines.push([r.set_name, r.number, r.name, r.variant, ...graders.map(g => r.counts[g]?.total || 0), r.total, r.gems, r.gem_rate == null ? '' : (r.gem_rate * 100).toFixed(1) + '%', r.mine, ...graders.map(g => r.mine_by_grader[g] || 0)])
     }
-    const blob = new Blob([lines.join('\r\n') + '\r\n'], { type: 'text/csv;charset=utf-8' })
-    const a = document.createElement('a')
-    a.href = URL.createObjectURL(blob)
-    a.download = `life-tcg-graded-pop-${asOf || 'latest'}.csv`
-    document.body.appendChild(a)
-    a.click()
-    a.remove()
-    setTimeout(() => URL.revokeObjectURL(a.href), 1000)
+    downloadCsv(`life-tcg-graded-pop-${asOf || 'latest'}.csv`, lines)
   }
 
   const cell = (r, c) => {
@@ -508,6 +491,11 @@ function CardTable({ sets, graders, allCards, asOf, onOpen, listings }) {
       case 'mine': return (
         <td key={c.key} className="num" title={Object.entries(r.mine_by_grader).map(([g, n]) => `${g} ${n}`).join(', ') || 'None'}>
           {r.mine ? <span className="badge">{r.mine}</span> : <span className="dash">·</span>}
+        </td>
+      )
+      case 'last_sale': return (
+        <td key={c.key} className="num" title={r.last_sale ? `${dateLabel(r.last_sale.sale_date)}, ${r.last_sale.grader} ${r.last_sale.grade_label}` : 'No sales yet'}>
+          {r.last_sale ? usd(r.last_sale.price_cents) : <span className="dash">·</span>}
         </td>
       )
       case 'shop': return <td key={c.key}><BuyButton listing={listings[r.id]} /></td>
@@ -613,6 +601,8 @@ export default function App() {
   const [err, setErr] = useState(null)
   const [open, openCard, closeCard] = useOpenCard()
   const [stream, toggleStream] = useStreamMode()
+  const [tab, setTab] = useTab()
+  const [submitFor, setSubmitFor] = useState(undefined) // undefined = form closed, null = open without a card, number = prefilled card id
   const [listings, setListings] = useState({})
   const ready = Boolean(summary && sets && history && allCards)
 
@@ -659,10 +649,16 @@ export default function App() {
         </div>
       </header>
 
+      <nav className="tabs wrap" aria-label="Sections">
+        <button className={tab === 'population' ? 'on' : ''} aria-current={tab === 'population' ? 'page' : undefined} onClick={() => setTab('population')}>Population</button>
+        <button className={tab === 'sales' ? 'on' : ''} aria-current={tab === 'sales' ? 'page' : undefined} onClick={() => setTab('sales')}>Sales</button>
+      </nav>
+
       <main className="wrap">
         {err && <p className="error">Could not load data: {err}</p>}
         {!ready && !err && <p className="note">Loading...</p>}
-        {ready && (
+        {ready && tab === 'sales' && <SalesPage sets={sets} stream={stream} onOpen={openCard} onSubmit={setSubmitFor} />}
+        {ready && tab === 'population' && (
           <>
             <div className="hero">
               <Hero label="Total graded" value={n0(summary.total_graded)} sub={`across ${n0(summary.cards_graded)} card variants`} />
@@ -730,7 +726,8 @@ export default function App() {
           </>
         )}
       </main>
-      {open != null && !stream && <CardDetail id={open} onClose={closeCard} listing={listings[open]} />}
+      {open != null && !stream && <CardDetail id={open} onClose={closeCard} listing={listings[open]} onSubmit={setSubmitFor} />}
+      {submitFor !== undefined && !stream && <SubmitSale allCards={allCards || []} initialCardId={submitFor} onClose={() => setSubmitFor(undefined)} />}
     </>
   )
 }

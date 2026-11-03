@@ -282,3 +282,46 @@ a.buy {
 }
 a.buy:hover { background: var(--accent); color: var(--surface); }
 .panel-buy { margin: 6px 0 0; font-size: 13px; }
+
+/* Tabs and Sales */
+.tabs { display: flex; gap: 4px; padding-top: 10px; padding-bottom: 0; }
+.tabs button {
+  font: inherit; font-size: 14px; font-weight: 600; padding: 8px 16px; cursor: pointer; background: none; color: var(--muted);
+  border: 1px solid transparent; border-bottom: 2px solid transparent; border-radius: 8px 8px 0 0;
+}
+.tabs button:hover { color: var(--text); }
+.tabs button.on { color: var(--text); border-bottom-color: var(--accent); }
+body.stream .tabs button { font-size: 20px; }
+table.data td.sale-card { white-space: normal; min-width: 180px; max-width: 260px; }
+.sales-intro { display: flex; align-items: center; justify-content: space-between; gap: 12px 18px; flex-wrap: wrap; }
+.sales-intro p { margin: 0; max-width: 70ch; color: var(--muted); font-size: 13.5px; }
+.empty-state { margin: 0; padding: 18px 4px; color: var(--muted); }
+.sbadge { display: inline-block; border-radius: 999px; padding: 1px 8px; font-size: 11.5px; font-weight: 600; white-space: nowrap; background: var(--accent-soft); color: var(--text); border: 1px solid transparent; }
+.sbadge.ebay { border-color: var(--g-cgc); }
+.sbadge.taclaco, .sbadge.collector { border-color: var(--accent); }
+.sbadge.unverified { background: none; color: var(--muted); border: 1px dashed var(--faint); }
+.mini-tag { font-size: 11px; font-weight: 600; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 0 6px; margin-left: 4px; white-space: nowrap; }
+a.plainlink { color: var(--accent); text-decoration: none; font-weight: 600; font-size: 13px; }
+a.plainlink:hover { text-decoration: underline; }
+.rare-list.big { font-size: 1.15em; }
+.panel-sales { margin: 10px 0 4px; }
+.panel-sales li { align-items: flex-start; }
+body.stream .sbadge { font-size: 15px; }
+
+.modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.55); display: flex; align-items: flex-start; justify-content: center; z-index: 30; overflow-y: auto; padding: 24px 12px; }
+.modal { position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; width: min(520px, 100%); padding: 20px 18px 22px; }
+.sale-form { display: grid; gap: 12px; }
+.sale-form .hint { margin: 0; }
+.sale-form label { display: grid; gap: 4px; font-size: 12.5px; font-weight: 600; color: var(--muted); }
+.sale-form input, .sale-form select {
+  font: inherit; font-size: 15px; font-weight: 400; color: var(--text); padding: 8px 10px; border-radius: 8px;
+  border: 1px solid var(--line); background: var(--bg); min-width: 0; width: 100%;
+}
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.picker { list-style: none; margin: 4px 0 0; padding: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.picker button { all: unset; box-sizing: border-box; display: block; width: 100%; padding: 8px 10px; cursor: pointer; font-size: 13.5px; font-weight: 400; color: var(--text); border-bottom: 1px solid var(--line); }
+.picker li:last-child button { border-bottom: none; }
+.picker button:hover, .picker button:focus-visible { background: var(--accent-soft); }
+.picked { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); font-weight: 400; color: var(--text); font-size: 13.5px; }
+.picked .linkish { color: var(--accent); font-weight: 600; flex: none; }
+.turnstile { min-height: 65px; }

@@ -100,15 +100,37 @@ For hot reload of the UI, run `npm run cf:dev` in one terminal and `npm run dev`
 and proxies `/api` to port 8787.
 Check it: `npm run build`, then `curl localhost:8787/api/summary`.
 
-## API (read-only, GET)
+## Sales tab (graded sale prices)
+
+A second tab (`?tab=sales`) lists what graded LIFE TCG cards actually sold for. Prices are integer USD cents. Three sources:
+- **eBay** (`source = 'ebay'`): a weekly Cloudflare Cron Trigger (`0 15 * * 1`, Mondays) runs `worker/sales_ebay.js`, which reads sold listings from the SoldComps API. `worker/sales_match.js` places each title on a card, grader and grade. Only exact matches (set, number, name and variant agree) go live; uncertain ones wait in `sales_review`. Lots, raw cards, sealed product and any title that does not say "LIFE TCG" (Elixir of Life, Circle of Life, Life Herb...) are dropped silently and counted in `sales_runs.dropped`. Listings in eBay's Graded condition with no grader in the title go to review.
+- **Collectors** (`source = 'collector'`): the Submit a sale form posts to `POST /api/sales/submit` (the only non-GET route). Submissions are stored as `pending` in `sale_submissions` and never shown until approved. No name or email is collected; cert numbers and notes are never exposed. Protection: Turnstile, a Workers rate limit (5 per minute) and 20 submissions per 24 hours per hashed IP (SHA-256 of `IP_SALT` plus the IP, nulled after 30 days).
+- **Taclaco** (`source = 'taclaco'`): supported by the schema and UI; a separate script will load these.
+
+Unverified collector sales are shown and labeled but left out of every median, the Last sale column, Top sales and the stream view. Medians are over the last 12 months per card, grader and grade.
+
+Sales are NOT in `d1_load.sql` (card ids are renumbered on each rebuild). Each row stores a stable `card_key` = `<set>|<number>|<name>|<variant>` and the `sales_v` view joins it to `cards` at read time. A card renamed by a rebuild leaves its sales orphaned (`card_id` NULL, hidden): list them with `orphans` and fix by hand.
+
+**SoldComps quota.** The free tier is 100 requests a month. A run makes at most 4 scrape calls: keyword `life tcg` with `conditionId=2750` (eBay Graded, `hydrateBoa=true`, page 1, page 2 only if more exist and page 1 still reaches back to `soldAfter`), then the same keyword with no condition filter (2 pages max, no hydration). `hydrateBoa` costs one more request per best-offer item it resolves. `soldAfter` is 3 days before the last clean run (90 days on the first run). Before each call the job checks the remaining quota (`/usage` is free, then the `X-Usage-Remaining` header) and stops under 15. Every run logs a row in `sales_runs`. Accepted best-offer prices only come from the graded query; elsewhere a best offer carries the listed price.
+
+**Secrets and vars** (production): `npx wrangler secret put SOLDCOMPS_KEY`, `TURNSTILE_SECRET`, `IP_SALT`; the public `TURNSTILE_SITE_KEY` is a plain var (set in the dashboard or `vars`). Locally they live in `.dev.vars` (gitignored): the Turnstile test keys `1x00000000000000000000AA` (site) and `1x0000000000000000000000000000000AA` (secret) accept any token, such as `XXXX.DUMMY.TOKEN.XXXX`. Without a site key the form says submissions are not open (localhost falls back to the test key).
+
+**Production setup, once, before deploying:** `npx wrangler d1 execute life-pop --remote --file data/d1_migrate_sales.sql`. The pop pages keep working even if the sales tables are missing.
+
+**Moderation** (Travis asks Claude; no admin page). `node scripts/sales_admin.mjs <command>` targets the local D1 unless you add `--remote`:
+`pending`, `approve <id> [--verified]`, `reject <id> "<reason>"`, `review`, `resolve <item_id> <card_id> "<grade label>" [--grader PSA]`, `skip <item_id>`, `orphans`, `runs`. Approve with `--verified` once the proof or cert checks out; without it the sale shows as unverified.
+
+**Testing locally.** `node scripts/check_sales_match.mjs` runs the title matcher over `scripts/fixtures/sales_titles.json` (real eBay titles plus synthetic ones) against the cards in `data/life_pop.sqlite`. `node scripts/test_sales_ebay.mjs` runs the whole weekly job with a mocked SoldComps fetch serving the real responses in `scripts/fixtures/real_graded.json` and `real_plain.json`, against an in-memory SQLite database (Node 22+), and checks the dedupe, lookback and quota guards. Neither calls the real API. The form and routes: `npm run cf:dev`, then POST to `/api/sales/submit` with the test token. After a schema change run `npx wrangler d1 execute life-pop --local --file schema.sql` (or `npm run db:local`).
+
+## API (read-only GET, plus one POST)
 
 `/api/summary` (latest per grader: totals, gems, gem rate, cards graded, as-of date, source url, grade distribution, Taclaco count and share per grader and overall),
 `/api/sets` (includes Taclaco count per set and grader), `/api/cards?set=<id>&grader=<code>&q=<text>` (Taclaco count per card and grader),
-`/api/store` (live graded listings by card id), `/api/changes` (month over month), `/api/card/:id` (per-grader totals, gem rate, pop rank within the set, Taclaco counts), `/api/history`. Counts only, never cert numbers.
+`/api/store` (live graded listings by card id), `/api/changes` (month over month), `/api/card/:id` (per-grader totals, gem rate, pop rank within the set, Taclaco counts), `/api/history`, `/api/sales?card=&grader=&set=&source=&limit=` (recent sales plus summary, top sales and medians), `/api/sales/config` (Turnstile site key), and `POST /api/sales/submit`. `/api/card/:id` carries a `sales` block and `/api/cards` a `last_sale` per card. Counts only, never cert numbers.
 
 ## UI
 
-Single page, light and dark. Hero numbers (total graded, overall gem rate, Taclaco share), grader tiles,
+Two tabs, Population and Sales (`?tab=sales`; `#card/<id>` works on both). Light and dark. Hero numbers (total graded, overall gem rate, Taclaco share), grader tiles,
 "Data as of" date and links to each grader's pop page, Gem rate by grader bars (grade distributions collapsed below), Sets table, Taclaco section, Rarest
 (Most gems and Lowest gem rate among cards with 10+ numerically graded copies, with per-set toggle chips remembered in localStorage), Cards table, History. Cards table: sticky Card column, Gem % and a Min pop filter, grader filter relabels the columns,
 Download CSV of the current view. Click a row for the card detail (shareable `#card/<id>` link).

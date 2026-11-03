@@ -1,0 +1,335 @@
+[
+ {
+  "title": "LIFE TCG Humpback Whale 53/100 Holo Mammals 1st Edition CGC 10",
+  "confidence": "exact",
+  "card": "Mammals 1st Edition|53|Humpback Whale|Holo",
+  "grader": "CGC",
+  "grade_label": "Gem Mint 10"
+ },
+ {
+  "title": "LIFE TCG 2023 Mammals Earth #0 1st Edition PSA 8 Graded Trading Card",
+  "confidence": "fuzzy",
+  "card": "Mammals 1st Edition|0|Earth|Base",
+  "grader": "PSA",
+  "grade_label": "8"
+ },
+ {
+  "title": "2022 Life TCG Kickstarter 1st Edition Holographic African Lion #39 CGC 9 Mint",
+  "confidence": "exact",
+  "card": "Mammals 1st Edition (Kickstarter)|39|African Lion|Holo",
+  "grader": "CGC",
+  "grade_label": "9"
+ },
+ {
+  "title": "Life TCG 1st Editions Earth TAG 9",
+  "confidence": "fuzzy",
+  "card": "Mammals 1st Edition|0|Earth|Base",
+  "grader": "TAG",
+  "grade_label": "9"
+ },
+ {
+  "title": "PSA 9 LIFE TCG Photography Series 1 1st Edition Cheetah 2026 #1 Cert 155005100",
+  "confidence": "fuzzy",
+  "card": "Mammals Photography|1|Cheetah|Base",
+  "grader": "PSA",
+  "grade_label": "9"
+ },
+ {
+  "title": "LIFE TCG Photography Series 1 2026 Zebra #2 Mammal Trading Card PSA 8",
+  "confidence": "fuzzy",
+  "card": "Mammals Photography|2|Zebra|Base",
+  "grader": "PSA",
+  "grade_label": "8"
+ },
+ {
+  "title": "PSA 8 LIFE TCG Photography Series 1 Humpback Whale 2026 #3 Steidle",
+  "confidence": "exact",
+  "card": "Mammals Photography|3|Humpback Whale|Photography",
+  "grader": "PSA",
+  "grade_label": "8"
+ },
+ {
+  "title": "Life TCG 1st edition Mammals #4 Wondiwoi Tree Kangaroo Holo - BGS Graded 9 pop 1",
+  "confidence": "exact",
+  "card": "Mammals 1st Edition|4|Wondiwoi Tree Kangaroo|Holo",
+  "grader": "BGS",
+  "grade_label": "9"
+ },
+ {
+  "title": "2024 LIFE TCG 1ST EDITION PROMOS | FULL  ART RETICULATED GIRAFFE 106",
+  "confidence": "none",
+  "card": null,
+  "grader": null,
+  "grade_label": null,
+  "reject": true
+ },
+ {
+  "title": "WOTC 2001 Harry Potter Vintage TCG Elixir of Life 5/116 Foil PSA 9",
+  "confidence": "none",
+  "card": null,
+  "grader": null,
+  "grade_label": null,
+  "reject": true
+ },
+ {
+  "title": "Lorcana TCG Circle of Life Simba Nala Enchanted Alt Art Holo PSA 10 Gem Mint",
+  "confidence": "none",
+  "card": null,
+  "grader": null,
+  "grade_label": null,
+  "reject": true
+ },
+ {
+  "title": "Pokemon TCG CGC 8 Life Herb 93/112 (2004) EX Fire Red & Leaf Green",
+  "confidence": "none",
+  "card": null,
+  "grader": null,
+  "grade_label": null,
+  "reject": true
+ },
+ {
+  "title": "2024 Premium Collection Live Action Edition #P-048 Arlong PSA 10 GEM MINT B2",
+  "confidence": "none",
+  "card": null,
+  "grader": null,
+  "grade_label": null,
+  "reject": true
+ },
+ {
+  "title": "LIFE TCG Mammals 1st Edition Holo Lot 28 Cards #26-53 PSA 10 mix",
+  "confidence": "none",
+  "card": null,
+  "grader": null,
+  "grade_label": null,
+  "reject": true
+ },
+ {
+  "title": "LIFE TCG Birds Booster Box Sealed CGC 10",
+  "confidence": "none",
+  "card": null,
+  "grader": null,
+  "grade_label": null,
+  "reject": true
+ },
+ {
+  "title": "LIFE TCG Snow Leopard Holo 32/100 raw NM no grade",
+  "confidence": "none",
+  "card": null,
+  "grader": null,
+  "grade_label": null,
+  "reject": true
+ },
+ {
+  "title": "LIFE TCG Bengal Tiger x2 PSA 10 you pick",
+  "confidence": "none",
+  "card": null,
+  "grader": null,
+  "grade_label": null,
+  "reject": true
+ },
+ {
+  "title": "LIFE TCG Custom Proxy Snow Leopard PSA 10 style",
+  "confidence": "none",
+  "card": null,
+  "grader": null,
+  "grade_label": null,
+  "reject": true
+ },
+ {
+  "title": "LIFE TCG Mammals 1st Edition Holo 25 Bengal Tiger ungraded NM",
+  "confidence": "none",
+  "card": null,
+  "grader": null,
+  "grade_label": null,
+  "reject": true
+ },
+ {
+  "title": "PSA 10 LIFE TCG Mammals 1st Edition Snow Leopard #32 Holo",
+  "confidence": "exact",
+  "card": "Mammals 1st Edition|32|Snow Leopard|Holo",
+  "grader": "PSA",
+  "grade_label": "10"
+ },
+ {
+  "title": "2023 LIFE TCG Mammals Snow Leopard 32/100 Holo CGC 10 Pristine",
+  "confidence": "exact",
+  "card": "Mammals 1st Edition|32|Snow Leopard|Holo",
+  "grader": "CGC",
+  "grade_label": "Pristine 10"
+ },
+ {
+  "title": "LIFE TCG Kickstarter Snow Leopard #32 Holo CGC Perfect 10",
+  "confidence": "exact",
+  "card": "Mammals 1st Edition (Kickstarter)|32|Snow Leopard|Holo",
+  "grader": "CGC",
+  "grade_label": "Perfect 10"
+ },
+ {
+  "title": "LIFE TCG Kickstarter Amur Leopard #5 CGC 9.5 Gem Mint",
+  "confidence": "exact",
+  "card": "Mammals 1st Edition (Kickstarter)|5|Amur Leopard|Base",
+  "grader": "CGC",
+  "grade_label": "9.5"
+ },
+ {
+  "title": "LIFE TCG Mammals Amur Leopard #5 Holo TAG 10",
+  "confidence": "exact",
+  "card": "Mammals 1st Edition|5|Amur Leopard|Holo",
+  "grader": "TAG",
+  "grade_label": "10"
+ },
+ {
+  "title": "LIFE TCG Mammals Amur Leopard #5 Holo TAG 10 Pristine",
+  "confidence": "exact",
+  "card": "Mammals 1st Edition|5|Amur Leopard|Holo",
+  "grader": "TAG",
+  "grade_label": "10P"
+ },
+ {
+  "title": "LIFE TCG Mammals Orca #51 Holo BGS 9.5 Gem Mint",
+  "confidence": "exact",
+  "card": "Mammals 1st Edition|51|Orca|Holo",
+  "grader": "BGS",
+  "grade_label": "9.5"
+ },
+ {
+  "title": "LIFE TCG Mammals Orca #51 Holo Beckett BGS Black Label 10",
+  "confidence": "exact",
+  "card": "Mammals 1st Edition|51|Orca|Holo",
+  "grader": "BGS",
+  "grade_label": "Black Label 10"
+ },
+ {
+  "title": "LIFE TCG Mammals Orca #51 Holo ACE 10 Gem Mint",
+  "confidence": "exact",
+  "card": "Mammals 1st Edition|51|Orca|Holo",
+  "grader": "ACE",
+  "grade_label": "10"
+ },
+ {
+  "title": "LIFE TCG Mammals Orca #51 Holo AGS 10 Gem-MT",
+  "confidence": "exact",
+  "card": "Mammals 1st Edition|51|Orca|Holo",
+  "grader": "AGS",
+  "grade_label": "Gem-MT 10"
+ },
+ {
+  "title": "LIFE TCG Mammals Orca #51 Holo AGS 9+",
+  "confidence": "exact",
+  "card": "Mammals 1st Edition|51|Orca|Holo",
+  "grader": "AGS",
+  "grade_label": "9+"
+ },
+ {
+  "title": "LIFE TCG Mammals Orca #51 Holo SGC 9.5",
+  "confidence": "exact",
+  "card": "Mammals 1st Edition|51|Orca|Holo",
+  "grader": "SGC",
+  "grade_label": "9.5"
+ },
+ {
+  "title": "LIFE TCG Mammals Cozumel Racoon #13 Holo ACE 9",
+  "confidence": "exact",
+  "card": "Mammals 1st Edition|13|Cozumel Raccoon|Holo",
+  "grader": "ACE",
+  "grade_label": "9"
+ },
+ {
+  "title": "LIFE TCG Mammals Cozumel Raccoon #13 Holo PSA 9",
+  "confidence": "exact",
+  "card": "Mammals 1st Edition|13|Cozumel Raccoon|Holo",
+  "grader": "PSA",
+  "grade_label": "9"
+ },
+ {
+  "title": "LIFE TCG Birds 1st Edition Sun Parakeet #21 Full Art PSA 10",
+  "confidence": "exact",
+  "card": "Birds 1st Edition|21|Sun Parakeet|Full Art",
+  "grader": "PSA",
+  "grade_label": "10"
+ },
+ {
+  "title": "LIFE TCG Birds Sun Parakeet #21 PSA 10",
+  "confidence": "fuzzy",
+  "card": "Birds 1st Edition|21|Sun Parakeet|Holo",
+  "grader": "PSA",
+  "grade_label": "10"
+ },
+ {
+  "title": "LIFE TCG Special Edition Wolverine #46 Extended Art CGC 9.5",
+  "confidence": "exact",
+  "card": "Mammals Special Edition|46|Wolverine|Extended Art",
+  "grader": "CGC",
+  "grade_label": "9.5"
+ },
+ {
+  "title": "LIFE TCG MSE Red Panda 34 Extended Art PSA 10",
+  "confidence": "exact",
+  "card": "Mammals Special Edition|34|Red Panda|Extended Art",
+  "grader": "PSA",
+  "grade_label": "10"
+ },
+ {
+  "title": "LIFE TCG Promo Margay #105 Full Art TAG 9",
+  "confidence": "exact",
+  "card": "Promos|105|Margay|Full Art",
+  "grader": "TAG",
+  "grade_label": "9"
+ },
+ {
+  "title": "LIFE TCG Mammals Giant Panda #118 Holo PSA 10",
+  "confidence": "exact",
+  "card": "Promos|118|Giant Panda|Holo",
+  "grader": "PSA",
+  "grade_label": "10"
+ },
+ {
+  "title": "LIFE TCG Promos Human #101 Box Topper PSA 9",
+  "confidence": "exact",
+  "card": "Promos|101|Human|Box Topper",
+  "grader": "PSA",
+  "grade_label": "9"
+ },
+ {
+  "title": "LIFE TCG Mammals Giant Panda #23 Holo PSA 9",
+  "confidence": "exact",
+  "card": "Mammals 1st Edition|23|Giant Panda|Holo",
+  "grader": "PSA",
+  "grade_label": "9"
+ },
+ {
+  "title": "LIFE TCG Snow Leopard #32 PSA 10",
+  "confidence": "fuzzy",
+  "card": "Mammals 1st Edition|32|Snow Leopard|Holo",
+  "grader": "PSA",
+  "grade_label": "10"
+ },
+ {
+  "title": "LIFE TCG Mammals Holo 32/100 PSA 10 great card",
+  "confidence": "fuzzy",
+  "card": "Mammals 1st Edition|32|Snow Leopard|Holo",
+  "grader": "PSA",
+  "grade_label": "10"
+ },
+ {
+  "title": "LIFE TCG Orca PSA 10 CGC 10 comparison",
+  "confidence": "none",
+  "card": null,
+  "grader": null,
+  "grade_label": null
+ },
+ {
+  "title": "LIFE TCG Mammals Orca #51 Holo PSA 10.5",
+  "confidence": "none",
+  "card": null,
+  "grader": "PSA",
+  "grade_label": null
+ },
+ {
+  "title": "LIFE TCG Mammals Unicorn #51 Holo PSA 10",
+  "confidence": "fuzzy",
+  "card": "Mammals 1st Edition|51|Orca|Holo",
+  "grader": "PSA",
+  "grade_label": "10"
+ }
+]

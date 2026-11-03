@@ -1,8 +1,13 @@
+import { cardSales, lastSales } from './sales.js'
+
 // Read-only queries against D1. "Latest" always means the most recent snapshot of each grader
 // (the latest_pop view in schema.sql), so a grader that was refreshed later than the others still shows.
 
 const all = async (db, sql, ...binds) => (await db.prepare(sql).bind(...binds).all()).results
 const first = async (db, sql, ...binds) => (await db.prepare(sql).bind(...binds).first())
+
+// Sales tables are optional: if the sales migration has not been applied yet, the pop pages keep working.
+const optional = async (fn, fallback) => { try { return await fn() } catch (err) { console.error('sales query failed: ' + (err instanceof Error ? err.message : String(err))); return fallback } }
 
 const rate = (n, d) => (d > 0 ? n / d : null)
 
@@ -146,6 +151,8 @@ export async function cards(db, { set, grader, q }) {
     })
   }
   const graders = (await all(db, 'SELECT DISTINCT grader FROM snapshots WHERE total_graded > 0 ORDER BY grader')).map(r => r.grader)
+  const last = await optional(() => lastSales(db), new Map())
+  for (const c of out) c.last_sale = last.get(c.id) || null
   return { graders, cards: out }
 }
 
@@ -195,6 +202,7 @@ export async function card(db, id) {
     gems,
     gem_rate: rate(gems, total - authentic),
     rank: rank && { position: rank, of: setTotals.length, set_cards: setCards.n },
+    sales: await optional(() => cardSales(db, id), { count: 0, medians: [], latest: [] }),
   }
 }
 
