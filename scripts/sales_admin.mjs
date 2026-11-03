@@ -6,7 +6,9 @@
 //   node scripts/sales_admin.mjs approve <id> [--verified]     publish a submission (verified = counts toward medians)
 //   node scripts/sales_admin.mjs reject <id> "<reason>"
 //   node scripts/sales_admin.mjs review                        eBay items the matcher could not place
-//   node scripts/sales_admin.mjs resolve <item_id> <card_id> "<grade label>" [--grader PSA]
+//   node scripts/sales_admin.mjs resolve <item_id> <card_id> "<grade label>" [--grader PSA] [--price 100.00] [--no-offer]
+//                                                              (--price: the accepted best offer read off the listing;
+//                                                               --no-offer: the listing sold at its asking price)
 //   node scripts/sales_admin.mjs skip <item_id>
 //   node scripts/sales_admin.mjs orphans                       sales whose card no longer exists after a rebuild
 //   node scripts/sales_admin.mjs runs                          last 10 eBay job runs
@@ -20,6 +22,8 @@ const remote = flag('--remote')
 flag('--local')
 const verified = flag('--verified')
 const graderOpt = option('--grader')
+const priceOpt = option('--price')
+const noOffer = flag('--no-offer')
 const [cmd, ...rest] = args
 
 const die = msg => { console.error(msg); process.exit(1) }
@@ -90,9 +94,16 @@ switch (cmd) {
     if (!GRADE_LABELS[grader].includes(label)) die(`${grader} grades: ${GRADE_LABELS[grader].join(', ')}`)
     const card = sql(`SELECT ${CARD_KEY} AS card_key FROM cards c JOIN sets s ON s.id = c.set_id WHERE c.id = ${cardId}`)[0]
     if (!card) die(`No card ${cardId}`)
+    let price = 'price_cents'
+    if (priceOpt != null) {
+      if (!/^\d{1,6}(\.\d{1,2})?$/.test(priceOpt)) die(`Not a price: ${priceOpt}`)
+      price = String(Math.round(parseFloat(priceOpt) * 100))
+    }
+    const offer = noOffer ? '0' : 'COALESCE(best_offer, 0)'
+    const type = noOffer ? "CASE WHEN sale_type = 'best_offer' THEN 'buy_it_now' ELSE sale_type END" : 'sale_type'
     const now = new Date().toISOString()
     sql(`INSERT OR IGNORE INTO sales (source, source_ref, card_key, grader, grade_label, grade_numeric, price_cents, shipping_cents, best_offer, sale_date, sale_type, url, title, verified, created_at)
-         SELECT 'ebay', item_id, ${esc(card.card_key)}, ${esc(grader)}, ${esc(label)}, ${gradeNumeric(label)}, price_cents, shipping_cents, COALESCE(best_offer, 0), sale_date, sale_type, url, title, 1, ${esc(now)}
+         SELECT 'ebay', item_id, ${esc(card.card_key)}, ${esc(grader)}, ${esc(label)}, ${gradeNumeric(label)}, ${price}, shipping_cents, ${offer}, sale_date, ${type}, url, title, 1, ${esc(now)}
          FROM sales_review WHERE item_id = ${esc(itemId)};
          UPDATE sales_review SET status = 'resolved', decided_at = ${esc(now)} WHERE item_id = ${esc(itemId)}`)
     console.log(`Resolved ${itemId} as ${card.card_key} ${grader} ${label}.`)
@@ -113,5 +124,5 @@ switch (cmd) {
     break
   }
   default:
-    die('Commands: pending | approve <id> [--verified] | reject <id> "<reason>" | review | resolve <item_id> <card_id> "<grade>" [--grader X] | skip <item_id> | orphans | runs   (add --remote for production)')
+    die('Commands: pending | approve <id> [--verified] | reject <id> "<reason>" | review | resolve <item_id> <card_id> "<grade>" [--grader X] [--price N] [--no-offer] | skip <item_id> | orphans | runs   (add --remote for production)')
 }

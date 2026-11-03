@@ -18,10 +18,13 @@ function SaleLink({ s }) {
   return <a className="plainlink" href={s.url} target="_blank" rel="nofollow ugc noopener noreferrer" onClick={e => e.stopPropagation()}>{s.source === 'collector' ? 'Proof' : 'eBay'}</a>
 }
 
+const Ship = ({ s }) => (s.shipping_cents > 0 ? <span className="ship">+{usd(s.shipping_cents)} ship</span> : null)
+
 const Price = ({ s }) => (
   <>
     <span className="strong tabnum">{usd(s.price_cents)}</span>
     {s.best_offer ? <span className="mini-tag" title="Accepted best offer"> Best offer</span> : null}
+    <Ship s={s} />
   </>
 )
 
@@ -69,8 +72,8 @@ export function SalesPage({ sets, stream, onOpen, onSubmit }) {
       <ul className="rare-list">
         {sum.top.length ? sum.top.map(s => (
           <li key={s.id}>
-            {stream ? <span><span className="strong">{s.name}</span><span className="muted"> {s.variant} · {gradeText(s)}</span></span> : cardCell(s)}
-            <span className="rare-right"><span className="strong tabnum">{usd(s.price_cents)}</span> · {gradeText(s)} · {dateLabel(s.sale_date)}</span>
+            {stream ? <span><span className="strong">{s.name}</span><span className="muted"> {s.variant}</span></span> : cardCell(s)}
+            <span className="rare-right"><span className="sale-price tabnum">{usd(s.price_cents)}</span> · {gradeText(s)} · {dateLabel(s.sale_date)}{stream && <> <SourceBadge s={s} /></>}</span>
           </li>
         )) : <li className="muted">No sales in the last 12 months.</li>}
       </ul>
@@ -85,7 +88,7 @@ export function SalesPage({ sets, stream, onOpen, onSubmit }) {
 
   return (
     <>
-      <div className="hero">
+      <div className="hero sales-hero">
         <Hero label="Sales tracked" value={n0(tracked)} sub="graded LIFE TCG sales" />
         <Hero label="Last 90 days" value={n0(recent)} sub="sales" />
         <Hero label="Highest sale" value={top ? usd(top.price_cents) : 'n/a'} sub={top ? `${top.name} ${gradeText(top)}` : 'in the last 12 months'} />
@@ -93,7 +96,11 @@ export function SalesPage({ sets, stream, onOpen, onSubmit }) {
 
       {!stream && (
         <section className="card sales-intro">
-          <p>eBay sold prices for graded LIFE TCG cards, updated weekly, plus private sales sent in by collectors. Collector sales are checked by Taclaco before they appear; unverified ones are labeled and left out of median prices.</p>
+          <div>
+            <p>eBay sold prices for graded LIFE TCG cards, updated weekly, plus private sales sent in by collectors. Collector sales are checked by Taclaco before they appear; unverified ones are labeled and left out of median prices.</p>
+            <p>Prices are what the card sold for, before shipping and tax.</p>
+            {sum.updated_at && <p className="updated">eBay sales updated {dateLabel(sum.updated_at.slice(0, 10))}</p>}
+          </div>
           <button className="more inline" onClick={() => onSubmit(null)}>Submit a sale</button>
         </section>
       )}
@@ -107,7 +114,7 @@ export function SalesPage({ sets, stream, onOpen, onSubmit }) {
               {rows.slice(0, 10).map(s => (
                 <li key={s.id}>
                   <span><span className="strong">{s.name}</span><span className="muted"> {s.variant} · {gradeText(s)}</span></span>
-                  <span className="rare-right"><span className="strong tabnum">{usd(s.price_cents)}</span> · {dateLabel(s.sale_date)}</span>
+                  <span className="rare-right"><span className="sale-price tabnum">{usd(s.price_cents)}</span> · {dateLabel(s.sale_date)} <SourceBadge s={s} /></span>
                 </li>
               ))}
             </ul>
@@ -118,7 +125,7 @@ export function SalesPage({ sets, stream, onOpen, onSubmit }) {
         <>
           <Section title="Recent sales" hint="Newest first. Click a card for its pop and price history.">
             <div className="filters">
-              <input type="search" placeholder="Search card, number or grade" value={q} onChange={e => setQ(e.target.value)} aria-label="Search sales" />
+              <input type="search" placeholder="Search cards" value={q} onChange={e => setQ(e.target.value)} aria-label="Search sales" />
               <select value={setId} onChange={e => setSetId(e.target.value)} aria-label="Filter by set">
                 <option value="">All sets</option>
                 {sets.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
@@ -137,7 +144,7 @@ export function SalesPage({ sets, stream, onOpen, onSubmit }) {
               <span className="count">{n0(rows.length)} sales</span>
               <button className="more inline" onClick={download} disabled={!rows.length}>Download CSV</button>
             </div>
-            <div className="table-wrap">
+            <div className="table-wrap sales-table">
               <table className="data">
                 <thead><tr><th>Date</th><th>Card</th><th>Grade</th><th className="num">Price</th><th>Source</th><th>Link</th></tr></thead>
                 <tbody>
@@ -155,6 +162,21 @@ export function SalesPage({ sets, stream, onOpen, onSubmit }) {
                 </tbody>
               </table>
             </div>
+            <ul className="sale-stack">
+              {rows.slice(0, 500).map(s => (
+                <li key={s.id}>
+                  {cardCell(s)}
+                  <div className="sale-line">
+                    <span><i className="dot-i" style={{ background: graderColor(s.grader) }} />{gradeText(s)}</span>
+                    <span><Price s={s} /></span>
+                    <span className="muted">{dateLabel(s.sale_date)}</span>
+                    <SourceBadge s={s} />
+                    <SaleLink s={s} />
+                  </div>
+                </li>
+              ))}
+              {rows.length === 0 && <li className="empty-state">No sales match.</li>}
+            </ul>
             {rows.length > 500 && <p className="note">Showing the newest 500. Download the CSV for all {n0(rows.length)}.</p>}
           </Section>
           {topList}
@@ -171,10 +193,12 @@ export function CardSales({ sales, onSubmit }) {
       <h3 className="panel-sub">Sales</h3>
       {sales.medians.length > 0 ? (
         <table className="mini">
-          <thead><tr><th>Grade</th><th className="num">Median, 12 mo</th><th className="num">Sales</th></tr></thead>
+          <thead><tr><th>Grade</th><th className="num">Price</th><th className="num">Sales</th></tr></thead>
           <tbody>
             {sales.medians.map(m => (
-              <tr key={m.grader + m.grade_label}><td><i className="dot-i" style={{ background: graderColor(m.grader) }} />{m.grader} {m.grade_label}</td><td className="num strong">{usd(m.median_cents)}</td><td className="num">{m.n}</td></tr>
+              <tr key={m.grader + m.grade_label}><td><i className="dot-i" style={{ background: graderColor(m.grader) }} />{m.grader} {m.grade_label}</td><td className="num">{m.n >= 3
+                ? <><span className="strong">{usd(m.median_cents)}</span><span className="row-label">median of {m.n}, 12 mo</span></>
+                : <><span className="strong">{usd(m.last_cents ?? m.median_cents)}</span><span className="row-label">last sale{m.last_date ? ' ' + dateLabel(m.last_date) : ''}</span></>}</td><td className="num">{m.n}</td></tr>
             ))}
           </tbody>
         </table>
@@ -215,7 +239,7 @@ export function SubmitSale({ allCards, initialCardId, onClose }) {
   const [card, setCard] = useState(() => allCards.find(c => c.id === initialCardId) || null)
   const [search, setSearch] = useState('')
   const [grader, setGrader] = useState('PSA')
-  const [grade, setGrade] = useState(GRADE_LABELS.PSA[0])
+  const [grade, setGrade] = useState('')
   const [price, setPrice] = useState('')
   const [date, setDate] = useState('')
   const [type, setType] = useState('ebay')
@@ -253,11 +277,12 @@ export function SubmitSale({ allCards, initialCardId, onClose }) {
     return allCards.filter(c => `${c.name} ${c.number} ${c.variant} ${c.set_name}`.toLowerCase().includes(needle)).slice(0, 8)
   }, [allCards, search])
 
-  const pickGrader = g => { setGrader(g); setGrade(GRADE_LABELS[g][0]) }
+  const pickGrader = g => { setGrader(g); setGrade('') }
   const submit = async e => {
     e.preventDefault()
     setErr(null)
     if (!card) return setErr('Pick a card from the list.')
+    if (!grade) return setErr('Pick a grade.')
     if (!token) return setErr('Please complete the human check.')
     setBusy(true)
     try {
@@ -302,12 +327,12 @@ export function SubmitSale({ allCards, initialCardId, onClose }) {
                 <select value={grader} onChange={e => pickGrader(e.target.value)}>{GRADERS.map(g => <option key={g}>{g}</option>)}</select>
               </label>
               <label>Grade
-                <select value={grade} onChange={e => setGrade(e.target.value)}>{GRADE_LABELS[grader].map(g => <option key={g}>{g}</option>)}</select>
+                <select value={grade} onChange={e => setGrade(e.target.value)} required><option value="">Pick a grade</option>{GRADE_LABELS[grader].map(g => <option key={g}>{g}</option>)}</select>
               </label>
             </div>
             <div className="form-row">
               <label>Price (USD)
-                <input inputMode="decimal" value={price} onChange={e => setPrice(e.target.value)} placeholder="125.00" required />
+                <input inputMode="decimal" value={price} onChange={e => setPrice(e.target.value)} placeholder="0.00" required />
               </label>
               <label>Sale date
                 <input type="date" value={date} onChange={e => setDate(e.target.value)} max={new Date().toISOString().slice(0, 10)} required />
@@ -325,7 +350,8 @@ export function SubmitSale({ allCards, initialCardId, onClose }) {
             <label>Note (optional)
               <input value={note} onChange={e => setNote(e.target.value)} maxLength={200} />
             </label>
-            {siteKey === '' ? <p className="note">Submissions are not open yet.</p> : <div ref={boxRef} className="turnstile" />}
+            {siteKey === '' && <p className="note">Submissions are not open yet.</p>}
+            <div ref={boxRef} className="turnstile" />
             {err && <p className="error" role="alert">{err}</p>}
             <button className="more" type="submit" disabled={busy || siteKey === ''}>{busy ? 'Sending...' : 'Submit sale'}</button>
           </form>

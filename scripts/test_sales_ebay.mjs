@@ -31,6 +31,8 @@ const mockFetch = async (url, init) => {
   const page = u.searchParams.get('page')
   const graded = u.searchParams.get('conditionId') === '2750'
   const body = page === '1' ? fixture(graded ? 'real_graded.json' : 'real_plain.json') : { items: [], hasNextPage: false }
+  // An exact title flagged as an accepted best offer but not hydrated: the price is unknown, so it must go to review.
+  if (page === '1' && !graded) body.items = [...body.items, { itemId: 'boa-unknown', url: 'https://www.ebay.com/itm/1', title: 'LIFE TCG Humpback Whale 53/100 Holo Mammals 1st Edition PSA 9', endedAt: '2026-10-30', soldPrice: '120.00', soldCurrency: 'USD', buyingFormat: 'buyItNow', bestOfferAccepted: true, listingType: 'sold' }]
   return Response.json(body, { headers: { 'x-usage-remaining': String(97 - calls.length) } })
 }
 
@@ -60,6 +62,7 @@ check(!review.some(r => !r.title.toLowerCase().includes('life tcg')), 'non LIFE 
 calls = []
 const before = [sales.length, review.length]
 const run2 = await runEbayJob({ DB: db, SOLDCOMPS_KEY: 'test-key' }, mockFetch, new Date('2026-11-09T15:00:00Z'))
+check(review.some(r => r.item_id === 'boa-unknown' && /best offer/.test(r.reason)) && !sales.some(x => x.source_ref === 'boa-unknown'), 'unhydrated best offer went live instead of review')
 check(run2.inserted === 0 && run2.reviewed === 0, 'second run added rows')
 check(calls.some(c => c.includes('soldAfter=2026-10-30')), 'second run soldAfter should be 2026-10-30: ' + calls[0])
 check(sqlite.prepare('SELECT COUNT(*) n FROM sales').get().n === before[0] && sqlite.prepare('SELECT COUNT(*) n FROM sales_review').get().n === before[1], 'row counts changed')

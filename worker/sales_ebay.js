@@ -146,6 +146,10 @@ export async function runEbayJob(env, fetchImpl = fetch, now = new Date()) {
         // Slabs listed as Graded condition without a grader in the title are worth a look; everything else is noise.
         if (m.noGrader && it.graded) review('graded, grader not in title', null)
         else run.dropped++
+      } else if (m.confidence === 'exact' && it.bestOfferAccepted && !hydrated) {
+        // SoldComps flags "or Best Offer" listings unreliably and, without hydration, gives the asking price.
+        // Read the listing (the struck-through asking price sits next to the real one) and resolve with --price.
+        review('best offer, accepted price unknown (check the listing)', m)
       } else if (m.confidence === 'exact') {
         stmts.push(db.prepare(`INSERT OR IGNORE INTO sales
           (source, source_ref, card_key, grader, grade_label, grade_numeric, price_cents, shipping_cents, best_offer, sale_date, sale_type, url, title, verified, created_at)

@@ -27,15 +27,18 @@ function medians(rows) {
   const groups = new Map()
   for (const r of rows) {
     const k = `${r.card_id}|${r.grader}|${r.grade_label}`
-    if (!groups.has(k)) groups.set(k, { card_id: r.card_id, grader: r.grader, grade_label: r.grade_label, prices: [] })
-    groups.get(k).prices.push(r.price_cents)
+    if (!groups.has(k)) groups.set(k, { card_id: r.card_id, grader: r.grader, grade_label: r.grade_label, prices: [], last_date: '', last_cents: null })
+    const g = groups.get(k)
+    g.prices.push(r.price_cents)
+    if (r.sale_date && r.sale_date >= g.last_date) { g.last_date = r.sale_date; g.last_cents = r.price_cents }
   }
-  return [...groups.values()].map(g => ({ card_id: g.card_id, grader: g.grader, grade_label: g.grade_label, n: g.prices.length, median_cents: median(g.prices) }))
+  return [...groups.values()].map(g => ({ card_id: g.card_id, grader: g.grader, grade_label: g.grade_label, n: g.prices.length, median_cents: median(g.prices), last_cents: g.last_cents, last_date: g.last_date || null }))
 }
 
 const trustedYear = (db, extra = '', ...binds) => all(db, `
-  SELECT card_id, grader, grade_label, price_cents FROM sales_v
-  WHERE card_id IS NOT NULL AND sale_date >= ? AND ${TRUSTED} ${extra}`, daysAgo(365), ...binds)
+  SELECT card_id, grader, grade_label, price_cents, sale_date FROM sales_v
+  WHERE card_id IS NOT NULL AND sale_date >= ? AND ${TRUSTED} ${extra}
+  ORDER BY sale_date ASC, id ASC`, daysAgo(365), ...binds)
 
 export async function salesList(db, { card, grader, set, source, limit }) {
   const where = ['1 = 1']
@@ -55,9 +58,13 @@ export async function salesList(db, { card, grader, set, source, limit }) {
     FROM sales_v WHERE card_id IS NOT NULL`, daysAgo(90), daysAgo(90))
   const top = await all(db, `SELECT ${SALE_COLS} ${FROM} WHERE v.sale_date >= ? AND ${trusted('v.')}
     ORDER BY v.price_cents DESC, v.sale_date DESC LIMIT 10`, daysAgo(365))
+  // Last successful eBay pull. The table may be missing (local or older databases).
+  let updated_at = null
+  try { updated_at = (await first(db, 'SELECT MAX(run_at) AS d FROM sales_runs WHERE error IS NULL'))?.d || null } catch { /* table missing */ }
   return {
     sales: rows.map(publicSale),
     summary: {
+      updated_at,
       count: counts.count || 0,
       count_90: counts.count_90 || 0,
       trusted_count: counts.trusted_count || 0,

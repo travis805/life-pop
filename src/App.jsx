@@ -335,6 +335,11 @@ function CardDetail({ id, onClose, listing, onSubmit }) {
   const [err, setErr] = useState(null)
   const [copied, setCopied] = useState(false)
   useEffect(() => {
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = prev }
+  }, [])
+  useEffect(() => {
     setData(null)
     setErr(null)
     api.card(id).then(setData).catch(e => setErr(e.message))
